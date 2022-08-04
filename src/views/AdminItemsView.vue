@@ -84,16 +84,19 @@
             <!-- Modal body -->
             <div class="p-6 space-y-6">
                 <div class="relative mb-4">
-                    <label for="name" class="leading-7 text-sm text-gray-600 block text-left">Name</label>
-                    <input type="text" id="name" name="name" v-model="anime.name" class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                    <label for="name" class="leading-7 text-sm text-gray-600 block text-left">Name <span class="text-red-900 font-bold" v-show="v$.anime.name.$error"> (Nome requerido)</span></label>
+                    <input type="text" id="name" name="name" v-model="anime.name" @change="v$.anime.name.$touch()" :class="['w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out',v$.anime.name.$error ? 'border-red-900' : '']">
                 </div>
                 <div class="relative mb-4">
-                    <label for="description" class="leading-7 text-sm text-gray-600 block text-left">Description</label>
-                    <textarea id="description" name="description" v-model="anime.description" class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
+                    <label for="description" class="leading-7 text-sm text-gray-600 block text-left">Description<span class="text-red-900 font-bold" v-show="v$.anime.description.$error"> (Descrição requerida)</span></label>
+                    <textarea id="description" name="description" v-model="anime.description" @change="v$.anime.description.$touch()" :class="[`w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out`,v$.anime.description.$error ? 'border-red-900' : '']"></textarea>
                 </div>
                 <div class="relative mb-4">
                     <label for="image" class="leading-7 text-sm text-gray-600 block text-left">Image</label>
-                    <input type="file" id="image" name="image" ref="fileImage" class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                    <input type="file" id="image" name="image" ref="fileImage" :class="[`w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out`]"> <br>
+                    <span class="text-left block" v-show="updateModal">
+                      *caso não insira uma imagem, a foto não mudará
+                    </span>
                 </div>
             </div>
             <!-- Modal footer -->
@@ -113,8 +116,15 @@
 </template>
 <script>
 import firebase from 'firebase';
+import { mapGetters } from "vuex";
+import useVuelidate from '@vuelidate/core'
+import { required } from '@vuelidate/validators'
+
 export default {
     name: 'HomeView',
+    setup () {
+      return { v$: useVuelidate() }
+    },
     data() {
         return {
             showload:true,
@@ -131,7 +141,30 @@ export default {
             ids:[]
         }
     },
-  methods:{
+    validations () {
+      return{
+        anime:{
+          name:{required},
+          description:{required}
+        }
+      }
+    },
+   
+    computed: {
+    // map `this.user` to `this.$store.getters.user`
+    ...mapGetters({
+      user: "user"
+    })
+  },
+    methods:{
+    logout(){
+        firebase.auth().logout().then((res)=>{
+            console.log(res)
+        })
+        .catch((err)=>{
+            console.log(err)
+        })
+    },
     closeModals(){
       this.addModal= false
       this.updateModal = false
@@ -171,6 +204,10 @@ export default {
         });
     },
     addItem(){
+        if(this.v$.$invalid){
+          this.v$.$touch()
+          return
+        }
         this.showload = true
         firebase.storage()
         .ref(this.$route.params.item).child(this.anime.name)
@@ -203,6 +240,10 @@ export default {
         })
     },
     updateItem(){
+      if(this.v$.$invalid){
+          this.v$.$touch()
+          return
+        }
       this.showload = true
       if(this.$refs.fileImage.files[0]){
         firebase.storage()
@@ -262,11 +303,13 @@ export default {
         
     }
   },
-  created(){
-    this.getData()
-  },
   mounted(){
-    
-  }
+    this.getData()
+    console.log(this.$cookies.get("LoginId"))
+    if(this.$cookies.get("LoginId")==null){
+      this.$router.push('/admin')
+    }
+  },
+
 }
 </script>

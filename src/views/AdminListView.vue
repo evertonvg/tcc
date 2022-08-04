@@ -11,7 +11,7 @@
             <nav class="md:ml-auto flex flex-wrap items-center text-base justify-center">
 
             </nav>
-            <button class="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0">Logout
+            <button class="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0" @click="logout">Logout
             <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-1" viewBox="0 0 24 24">
                 <path d="M5 12h14M12 5l7 7-7 7"></path>
             </svg>
@@ -35,9 +35,35 @@
 
 <script>
 // @ is an alias to /src
+import firebase from 'firebase';
+import { mapGetters } from "vuex";
 
 export default {
   name: 'HomeView',
+  computed: {
+    // map `this.user` to `this.$store.getters.user`
+    ...mapGetters({
+      user: "user"
+    })
+  },
+  methods:{
+    logout(){
+        firebase.auth().signOut().then(()=>{
+            this.$cookies.remove("LoginId")
+            this.$router.push('/admin')
+        })
+        .catch((err)=>{
+            console.log(err)
+        })
+        
+    }
+  },
+    mounted(){
+        console.log(this.$cookies.get("LoginId"))
+        if(this.$cookies.get("LoginId")==null){
+            this.$router.push('/admin')
+        }
+    }
  
 }
 </script>
