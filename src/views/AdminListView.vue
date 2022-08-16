@@ -25,9 +25,21 @@
                     Animes
                 </router-link>
             </li>
-            <li class="p-3">List Item 2</li>
-            <li class="p-3">List Item 3</li>
-            <li class="p-3">List Item 4</li>
+            <li class="p-3">
+                <router-link to="/admin/categories">
+                    Categorias
+                </router-link>
+            </li>
+            <li class="p-3">
+                <router-link to="/admin/evaluations">
+                    Avaliações
+                </router-link>
+            </li>
+            <li class="p-3">
+                <router-link to="/admin/comments">
+                    Comentários
+                </router-link>
+            </li>
         </ul>
     </div>
 </div>
