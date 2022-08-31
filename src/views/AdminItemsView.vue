@@ -117,6 +117,12 @@
                   scope="col"
                   class="text-sm font-medium text-gray-900 px-6 py-4 text-center"
                 >
+                  active season
+                </th>
+                <th
+                  scope="col"
+                  class="text-sm font-medium text-gray-900 px-6 py-4 text-center"
+                >
                   operations
                 </th>
               </tr>
@@ -173,6 +179,11 @@
                   {{ anime.active }}
                 </td>
                 <td
+                  class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap text-center"
+                >
+                  {{ anime.activeSeason }}
+                </td>
+                <td
                   class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap gap-2 flex items-center justify-center"
                 >
                   <a
@@ -194,6 +205,7 @@
                     :data-ovas="anime.ovas"
                     :data-categories="anime.categories"
                     :data-active="anime.active"
+                    :data-seasonactive="anime.activeSeason"
                     @click="openUpdateModal"
                   >
                     Edit
@@ -236,6 +248,12 @@
                   scope="col"
                   class="text-sm font-medium text-gray-900 px-6 py-4 text-center"
                 >
+                  active
+                </th>
+                <th
+                  scope="col"
+                  class="text-sm font-medium text-gray-900 px-6 py-4 text-center"
+                >
                   operations
                 </th>
               </tr>
@@ -258,6 +276,9 @@
                 <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                   {{ anime.description.substr(0, 50) }}
                 </td>
+                <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                  {{ anime.active }}
+                </td>
                 <td
                   class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap gap-2 flex items-center justify-center"
                 >
@@ -267,6 +288,7 @@
                     :data-name="anime.name"
                     :data-description="anime.description"
                     :data-image="anime.image"
+                    :data-active="anime.active"
                     @click="openUpdateModal"
                   >
                     Edit
@@ -435,7 +457,12 @@
                   'w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out',
                 ]"
               >
-                <option v-for="(cat, ind) in categories" :key="ind" :value="cat.name">
+                <option
+                  v-for="(cat, ind) in categories"
+                  :key="ind"
+                  :value="cat.name"
+                  :selected="anime.categories.includes(cat.name)"
+                >
                   {{ cat.name }}
                 </option>
               </select>
@@ -474,19 +501,30 @@
                 *caso não insira uma imagem, a foto não mudará
               </span>
             </div>
-            <div class="relative mb-4">
+            <div class="relative mb-4" v-show="updateModal">
               <label for="active" class="leading-7 text-sm text-gray-600 block text-left"
                 >active</label
               >
               <input
-                type="check"
+                type="checkbox"
+                class="block"
                 id="active"
                 name="active"
                 v-model="anime.active"
-                v-show="updateModal"
-                :class="[
-                  `w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out`,
-                ]"
+              />
+            </div>
+            <div class="relative mb-4" v-show="updateModal">
+              <label
+                for="activeseason"
+                class="leading-7 text-sm text-gray-600 block text-left"
+                >active season</label
+              >
+              <input
+                type="checkbox"
+                class="block"
+                id="activeseason"
+                name="activeseason"
+                v-model="anime.activeSeason"
               />
             </div>
           </div>
@@ -583,6 +621,21 @@
                 ]"
               ></textarea>
             </div>
+            <div class="relative mb-4" v-show="updateModal">
+              <label
+                for="activecat"
+                class="leading-7 text-sm text-gray-600 block text-left"
+                >active</label
+              >
+              <input
+                type="checkbox"
+                id="activecat"
+                name="activecat"
+                v-model="anime.active"
+                class="block"
+              />
+              <br />
+            </div>
             <div class="relative mb-4">
               <label for="image" class="leading-7 text-sm text-gray-600 block text-left"
                 >Image</label
@@ -620,7 +673,7 @@
               data-modal-toggle="defaultModal"
               type="button"
               class="text-white bg-yellow-700 hover:bg-yellow-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-              @click="updateItem"
+              @click="updateItemCategories"
             >
               Update
             </button>
@@ -663,6 +716,7 @@ export default {
         movies: "",
         ovas: "",
         active: false,
+        activeSeason: false,
       },
       category: {
         name: "",
@@ -711,7 +765,8 @@ export default {
       this.anime.movies = "";
       this.anime.ovas = "";
       this.anime.categories = "";
-      this.anime.active = "";
+      this.anime.active = false;
+      this.anime.activeSeason = false;
     },
     openUpdateModal(ev) {
       this.addModal = false;
@@ -726,6 +781,7 @@ export default {
       this.anime.ovas = ev.target.dataset.ovas;
       this.anime.categories = ev.target.dataset.categories;
       this.anime.active = ev.target.dataset.active;
+      this.anime.activeSeason = ev.target.dataset.seasonactive;
     },
     most() {
       console.log(this.anime.categories);
@@ -753,6 +809,7 @@ export default {
       if (this.$route.params.item == "animes") {
         let categories = firebase.database().ref("categories");
         categories.orderByValue().on("value", (snapshot) => {
+          this.categories = [];
           snapshot.forEach((ss) => {
             this.categories.push(ss.val());
           });
@@ -791,6 +848,7 @@ export default {
                   seasons: this.anime.seasons,
                   ovas: this.anime.ovas,
                   active: this.anime.active,
+                  activeSeason: this.anime.activeSeason,
                 })
                 .then(() => {
                   this.resetItems();
@@ -807,6 +865,50 @@ export default {
           console.log(err);
         });
     },
+
+    addItemCategories() {
+      // if(this.v$.$invalid){
+      //   this.v$.$touch()
+      //   return
+      // }
+      this.showload = true;
+      firebase
+        .storage()
+        .ref(this.$route.params.item)
+        .child(this.anime.name)
+        .child(this.$refs.fileImageCategory.files[0].name)
+        .put(this.$refs.fileImageCategory.files[0])
+        .then((res) => {
+          res.ref
+            .getDownloadURL()
+            .then((image) => {
+              this.anime.image = image;
+            })
+            .then(() => {
+              let ref = firebase.database().ref(this.$route.params.item);
+              ref
+                .push({
+                  name: this.anime.name,
+                  description: this.anime.description,
+                  image: this.anime.image,
+                  active: this.anime.active,
+                })
+                .then(() => {
+                  this.resetItems();
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+
     updateItem() {
       if (this.v$.$invalid) {
         this.v$.$touch();
@@ -836,6 +938,14 @@ export default {
                     name: this.anime.name,
                     description: this.anime.description,
                     image: this.anime.image,
+                    release: this.anime.release,
+                    closure: this.anime.closure,
+                    categories: this.anime.categories,
+                    movies: this.anime.movies,
+                    seasons: this.anime.seasons,
+                    ovas: this.anime.ovas,
+                    active: this.anime.active,
+                    activeSeason: this.anime.activeSeason,
                   })
                   .then(() => {
                     this.resetItems();
@@ -857,6 +967,71 @@ export default {
           .update({
             name: this.anime.name,
             description: this.anime.description,
+            release: this.anime.release,
+            closure: this.anime.closure,
+            categories: this.anime.categories,
+            movies: this.anime.movies,
+            seasons: this.anime.seasons,
+            ovas: this.anime.ovas,
+            active: this.anime.active,
+            activeSeason: this.anime.activeSeason,
+          })
+          .then(() => {
+            this.resetItems();
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    },
+    updateItemCategories() {
+      this.showload = true;
+      if (this.$refs.fileImageCategory.files[0]) {
+        firebase
+          .storage()
+          .ref(this.$route.params.item)
+          .child(this.anime.name)
+          .child(this.$refs.fileImageCategory.files[0].name)
+          .put(this.$refs.fileImageCategory.files[0])
+          .then((res) => {
+            res.ref
+              .getDownloadURL()
+              .then((image) => {
+                this.anime.image = image;
+              })
+              .then(() => {
+                let ref = firebase
+                  .database()
+                  .ref(this.$route.params.item)
+                  .child(this.anime.id);
+                ref
+                  .update({
+                    name: this.anime.name,
+                    description: this.anime.description,
+                    image: this.anime.image,
+                    active: this.anime.active,
+                  })
+                  .then(() => {
+                    this.resetItems();
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  });
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      } else {
+        let ref = firebase.database().ref(this.$route.params.item).child(this.anime.id);
+        ref
+          .update({
+            name: this.anime.name,
+            description: this.anime.description,
+            active: this.anime.active,
           })
           .then(() => {
             this.resetItems();
@@ -867,9 +1042,6 @@ export default {
       }
     },
 
-    editItem(ev) {
-      console.log(ev);
-    },
     deleteItem(ev) {
       let ref = firebase.database().ref(this.$route.params.item);
       ref
@@ -883,6 +1055,7 @@ export default {
   mounted() {
     this.getData();
     console.log(this.$cookies.get("LoginId"));
+    console.log(this.$refs.fileImageCategory);
     if (this.$cookies.get("LoginId") == null) {
       this.$router.push("/admin");
     }
