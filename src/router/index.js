@@ -30,6 +30,11 @@ const routes = [
     path: '/admin/:item',
     name: 'admin item',
     component: () => import(/* webpackChunkName: "about" */ '../views/AdminItemsView.vue')
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'not-found',
+    component: () => import(/* webpackChunkName: "about" */ '../views/notfoundView.vue')
   }
 ]
 

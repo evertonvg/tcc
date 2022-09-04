@@ -1,12 +1,34 @@
 <template>
-  <!-- <nav>
-    <router-link to="/login">Login</router-link> |
-    <router-link to="/">Home</router-link>
-  </nav> -->
-  <router-view/>
+  <menuVue />
+  <warningVue />
+  <transition name="fade">
+    <router-view />
+  </transition>
 </template>
+<script>
+import menuVue from "./components/menuVue.vue";
+import warningVue from "./components/warningVue.vue";
+export default {
+  components: {
+    menuVue,
+    warningVue,
+  },
+};
+</script>
 
-<style>
+<style lang="postcss">
+@font-face {
+  font-family: "otaku";
+  src: url("@/assets/fonts/otaku-rant.ttf");
+}
+@font-face {
+  font-family: "otaku-bold";
+  src: url("@/assets/fonts/otaku-rant-bold.ttf");
+}
+@font-face {
+  font-family: "otaku-italic";
+  src: url("@/assets/fonts/otaku-rant-italic.ttf");
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -15,16 +37,17 @@
   color: #2c3e50;
 }
 
-nav {
-  padding: 30px;
+.container {
+  @apply mx-auto;
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
 }
 
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-nav a.router-link-exact-active {
-  color: #42b983;
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: translateY(-25px);
 }
 </style>
