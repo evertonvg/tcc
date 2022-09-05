@@ -130,6 +130,12 @@ export default {
           }
 
           this.$cookies.set("nameAnime", res.additionalUserInfo.profile.name);
+
+          this.$store.commit(
+            "SET_MESSAGE",
+            `Bem vindo(a) ${this.$cookies.get("nameAnime")} ^^`
+          );
+          this.$store.commit("SET_IMAGE_MESSAGE", "welcome");
           this.$router.push("/");
         })
         .catch((err) => {
@@ -142,7 +148,7 @@ export default {
     if (this.$cookies.get("loginIdAnime") != null) {
       this.$router.push("/");
     }
-    document.title = "Otakus Stars - Bem vindo ao otaku stars, faça login para continuar";
+    document.title = "Otaku Stars - Bem vindo ao otaku stars, faça login para continuar";
   },
 };
 </script>

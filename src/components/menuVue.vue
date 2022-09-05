@@ -1,6 +1,9 @@
 <template>
-  <nav v-show="$route.name != 'login'" class="bg-blue h-20 text-white font-otaku-bold">
-    <div class="container flex items-center justify-center h-full">
+  <nav
+    v-show="$route.name != 'login'"
+    class="bg-blue h-20 text-white font-otaku-bold px-3 z-20 relative"
+  >
+    <div class="container items-center justify-center h-full flex">
       <div class="flex items-center justify-center">
         <router-link to="/" class="h-full">
           <img src="@/assets/img/icon.png" class="h-16" />
@@ -16,10 +19,12 @@
             referrerpolicy="no-referrer"
             class="rounded-full h-10"
           />
-          <span>conectado como {{ $cookies.get("nameAnime") }} </span>
+          <span class="hidden sm:block"
+            >conectado como {{ $cookies.get("nameAnime") }}
+          </span>
         </div>
       </div>
-      <div>
+      <div class="hidden lg:block">
         <ul class="h-full flex items-center justify-end gap-2">
           <li v-show="$cookies.get('loginIdAnime') == null">
             <router-link to="/login" class="">Conecte-se</router-link>
@@ -40,19 +45,78 @@
           </li>
         </ul>
       </div>
+      <div class="block lg:hidden">
+        <div class="flex lg:hidden">
+          <div class="space-y-3" @click="open = !open">
+            <span
+              :class="[
+                'block w-12 h-1 bg-white transition-all',
+                open ? ' rotate-45 translate-y-4' : '',
+              ]"
+            ></span>
+            <span
+              :class="[
+                'block w-12 h-1 bg-white transition-all',
+                open ? ' rotate-45' : '',
+              ]"
+            ></span>
+            <span
+              :class="[
+                'block w-12 h-1 bg-white transition-all',
+                open ? ' -rotate-45 -translate-y-4' : '',
+              ]"
+            ></span>
+          </div>
+        </div>
+      </div>
     </div>
   </nav>
+  <div
+    :class="[
+      'fixed lg:hidden top-0 right-0 w-screen h-screen bg-black transition-all z-10 opacity-75',
+      !open ? 'translate-x-full' : '',
+    ]"
+  >
+    <div class="absolute w-3/4 h-screen flex top-0 right-0 bg-lightblue font-otaku-bold">
+      <ul class="h-full flex items-center justify-center flex-col gap-2 pl-8">
+        <li v-show="$cookies.get('loginIdAnime') == null">
+          <router-link to="/login" class="text-2xl">Conecte-se</router-link>
+        </li>
+        <li>
+          <router-link class="text-2xl" to="/destaques">destaques</router-link>
+        </li>
+        <li>
+          <router-link class="text-2xl" to="/categorias">categorias</router-link>
+        </li>
+        <li>
+          <router-link class="text-2xl" to="/pesquisar">Pesquisar</router-link>
+        </li>
+        <li v-show="$cookies.get('loginIdAnime') != null" class="ml-4">
+          <button @click="logout" class="flex items-center justify-center text-2xl">
+            Sair<Logout :size="50" />
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
 </template>
 <script>
 import firebase from "firebase";
 import Logout from "vue-material-design-icons/Logout.vue";
 export default {
+  data() {
+    return {
+      open: false,
+    };
+  },
   methods: {
     logout() {
       firebase
         .auth()
         .signOut()
         .then(() => {
+          this.$store.commit("SET_MESSAGE", `Sayonara, sentiremos saudades :(`);
+          this.$store.commit("SET_IMAGE_MESSAGE", "goodbye");
           this.$cookies.remove("loginIdAnime");
           this.$router.push("/login");
         })

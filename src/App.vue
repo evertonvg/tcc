@@ -1,6 +1,8 @@
 <template>
   <menuVue />
-  <warningVue />
+  <transition name="fade">
+    <warningVue v-if="$store.state.message != null" />
+  </transition>
   <transition name="fade">
     <router-view />
   </transition>

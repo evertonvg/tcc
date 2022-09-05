@@ -4,12 +4,20 @@ export default createStore({
   state: {
     user: {
       loggedIn: false,
-      data: null
-    }
+      data: null,
+      imageMessage:null
+    },
+    message:null
   },
   getters: {
     user(state){
       return state.user
+    },
+    message(state){
+      return state.message
+    },
+    imageMessage(state){
+      return state.imageMessage
     }
   },
   mutations: {
@@ -18,7 +26,13 @@ export default createStore({
     },
     SET_USER(state, data) {
       state.user.data = data;
-    }
+    },
+    SET_MESSAGE(state, data) {
+      state.message = data;
+    },
+    SET_IMAGE_MESSAGE(state, data) {
+      state.imageMessage = data;
+    },
   },
   actions: {
     fetchUser({ commit }, user) {
