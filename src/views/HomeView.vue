@@ -1,12 +1,9 @@
 <template>
-  <div>
-    <!-- <h1>Home</h1>
-    <button @click="logout">Logout</button>
-    <p>
-      {{ $cookies.get("nameAnime") }}
-    </p>
-    <img :src="$cookies.get('imageAnime')" referrerpolicy="no-referrer" /> -->
-  </div>
+  <section class="mt-20 bg-lightblue">
+    <div class="mx-auto container font-otaku ">
+      <h2 class="text-left text-2xl font-bold pt-6">Noticias sobre o mundo dos animes</h2>
+    </div>
+  </section>
 </template>
 
 <script>

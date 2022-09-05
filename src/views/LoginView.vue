@@ -1,9 +1,9 @@
 <template>
   <section
-    class="text-gray-600 body-font bg-cover bg-center bg-no-repeat h-screen transition-all font-otaku-bold"
+    class="text-gray-600 body-font bg-cover bg-center bg-no-repeat h-screen transition-all font-anime"
     ref="logsection"
   >
-    <div class="container px-5 py-12 mx-auto flex flex-wrap items-center">
+    <div class="container px-2 py-4 mx-auto flex flex-wrap items-center">
       <div
         class="lg:w-2/6 md:w-1/2 bg-gray rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0"
       >
@@ -23,7 +23,7 @@
             A maior rede de avaliativa de animes do Brasil.
           </p>
         </div>
-        <h2 class="text-gray-900 text-lg font-medium title-font mb-2">
+        <h2 class="text-gray-900 text-lg font-medium title-font mb-4">
           Entre com uma de suas redes sociais
         </h2>
         <div class="flex items-center justify-center gap-4 mb-10">

@@ -25,6 +25,18 @@ export default {
 }
 @font-face {
   font-family: "otaku-bold";
+  src: url("@/assets/fonts/animeace2_bld.ttf");
+}
+@font-face {
+  font-family: "anime-italic";
+  src: url("@/assets/fonts/animeace2_ital.ttf");
+}
+@font-face {
+  font-family: "anime";
+  src: url("@/assets/fonts/animeace2_reg.ttf");
+}
+@font-face {
+  font-family: "anime-bold";
   src: url("@/assets/fonts/otaku-rant-bold.ttf");
 }
 @font-face {

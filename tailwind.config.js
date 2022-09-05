@@ -25,6 +25,9 @@ module.exports = {
       'otaku': ['otaku', 'sans-serif'],
       'otaku-bold': ['otaku-bold', 'sans-serif'],
       'otaku-italic': ['otaku-bold', 'sans-serif'],
+      'anime': ['anime', 'sans-serif'],
+      'anime-bold': ['anime-bold', 'sans-serif'],
+      'anime-italic': ['anime-italic', 'sans-serif'],
     }
   },
   plugins: [],

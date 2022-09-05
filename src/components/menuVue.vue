@@ -1,7 +1,8 @@
 <template>
   <nav
+    ref="menu"
     v-show="$route.name != 'login'"
-    class="bg-blue h-20 text-white font-otaku-bold px-3 z-20 relative"
+    class="bg-blue h-20 text-white px-3 z-20  font-otaku fixed top-0 left-0 w-full"
   >
     <div class="container items-center justify-center h-full flex">
       <div class="flex items-center justify-center">
@@ -23,23 +24,35 @@
             >conectado como {{ $cookies.get("nameAnime") }}
           </span>
         </div>
+        <div
+          v-else
+          :class="[`bg-red rounded-sm p-2 flex items-center justify-center gap-2`]"
+        >
+          <router-link to="/login" class="">Login</router-link>
+        </div>
       </div>
-      <div class="hidden lg:block">
+      <div class="hidden lg:block font-otaku-bold text-xs">
         <ul class="h-full flex items-center justify-end gap-2">
-          <li v-show="$cookies.get('loginIdAnime') == null">
-            <router-link to="/login" class="">Conecte-se</router-link>
+          <li>
+            <router-link to="/destaques" class="hover:text-darkblue transition-colors"
+              >destaques</router-link
+            >
           </li>
           <li>
-            <router-link to="/destaques">destaques</router-link>
+            <router-link to="/categorias" class="hover:text-darkblue transition-colors"
+              >categorias</router-link
+            >
           </li>
           <li>
-            <router-link to="/categorias">categorias</router-link>
-          </li>
-          <li>
-            <router-link to="/pesquisar">Pesquisar</router-link>
+            <router-link to="/pesquisar" class="hover:text-darkblue transition-colors"
+              >Pesquisar</router-link
+            >
           </li>
           <li v-show="$cookies.get('loginIdAnime') != null" class="ml-4">
-            <button @click="logout" class="flex items-center justify-center">
+            <button
+              @click="logout"
+              class="flex items-center justify-center hover:text-darkblue transition-colors"
+            >
               Sair<Logout :size="50" />
             </button>
           </li>
@@ -77,7 +90,9 @@
       !open ? 'translate-x-full' : '',
     ]"
   >
-    <div class="absolute w-3/4 h-screen flex top-0 right-0 bg-lightblue font-otaku-bold">
+    <div
+      class="absolute w-3/4 h-screen flex top-0 right-0 bg-lightblue font-otaku-bold opacity-80"
+    >
       <ul class="h-full flex items-center justify-center flex-col gap-2 pl-8">
         <li v-show="$cookies.get('loginIdAnime') == null">
           <router-link to="/login" class="text-2xl">Conecte-se</router-link>
@@ -124,8 +139,21 @@ export default {
           console.log(err);
         });
     },
+    scrollMenuEffect(value) {
+      if (value > this.pagey) {
+        this.$refs.menu.classList.add("-translate-y-16");
+      } else {
+        this.$refs.menu.classList.remove("-translate-y-16");
+      }
+      this.pagey = value;
+    },
   },
   components: { Logout },
+  mounted() {
+    window.addEventListener("scroll", () => {
+      this.scrollMenuEffect(window.pageYOffset);
+    });
+  },
 };
 </script>
 <style scoped></style>
