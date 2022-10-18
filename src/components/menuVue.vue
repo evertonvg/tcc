@@ -1,8 +1,8 @@
 <template>
   <nav
     ref="menu"
-    v-show="$route.name != 'login'"
-    class="bg-blue h-20 text-white px-3 z-20  font-otaku fixed top-0 left-0 w-full"
+    v-show="$route.name != 'login' && !$route.fullPath.toString().includes('admin')"
+    class="bg-blue h-20 text-white px-3 z-20  fixed top-0 left-0 w-full font-roboto"
   >
     <div class="container items-center justify-center h-full flex">
       <div class="flex items-center justify-center">
@@ -31,7 +31,7 @@
           <router-link to="/login" class="">Login</router-link>
         </div>
       </div>
-      <div class="hidden lg:block font-otaku-bold text-xs">
+      <div class="hidden lg:block font-roboto text-lg">
         <ul class="h-full flex items-center justify-end gap-2">
           <li>
             <router-link to="/destaques" class="hover:text-darkblue transition-colors"
@@ -58,7 +58,7 @@
           </li>
         </ul>
       </div>
-      <div class="block lg:hidden">
+      <div class="block lg:hidden font-roboto">
         <div class="flex lg:hidden">
           <div class="space-y-3" @click="open = !open">
             <span
@@ -86,12 +86,12 @@
   </nav>
   <div
     :class="[
-      'fixed lg:hidden top-0 right-0 w-screen h-screen bg-black transition-all z-10 opacity-75',
+      'fixed lg:hidden top-0 right-0 w-screen h-screen bg-black transition-all z-10 opacity-75 font-roboto',
       !open ? 'translate-x-full' : '',
     ]"
   >
     <div
-      class="absolute w-3/4 h-screen flex top-0 right-0 bg-lightblue font-otaku-bold opacity-80"
+      class="absolute w-3/4 h-screen flex top-0 right-0 bg-lightblue font-roboto opacity-100"
     >
       <ul class="h-full flex items-center justify-center flex-col gap-2 pl-8">
         <li v-show="$cookies.get('loginIdAnime') == null">
@@ -153,6 +153,7 @@ export default {
     window.addEventListener("scroll", () => {
       this.scrollMenuEffect(window.pageYOffset);
     });
+
   },
 };
 </script>

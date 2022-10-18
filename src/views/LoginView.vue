@@ -1,6 +1,6 @@
 <template>
   <section
-    class="text-gray-600 body-font bg-cover bg-center bg-no-repeat h-screen transition-all font-anime"
+    class="text-gray-600 body-font bg-cover bg-right md:bg-center bg-no-repeat h-screen transition-all font-roboto"
     ref="logsection"
   >
     <div class="container px-2 py-4 mx-auto flex flex-wrap items-center">
@@ -136,6 +136,7 @@ export default {
             `Bem vindo(a) ${this.$cookies.get("nameAnime")} ^^`
           );
           this.$store.commit("SET_IMAGE_MESSAGE", "welcome");
+          this.$store.commit('SET_LOADING',true);
           this.$router.push("/");
         })
         .catch((err) => {
@@ -149,6 +150,7 @@ export default {
       this.$router.push("/");
     }
     document.title = "Otaku Stars - Bem vindo ao otaku stars, faça login para continuar";
+    this.$store.commit('SET_LOADING',false);
   },
 };
 </script>

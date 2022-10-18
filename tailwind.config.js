@@ -28,6 +28,7 @@ module.exports = {
       'anime': ['anime', 'sans-serif'],
       'anime-bold': ['anime-bold', 'sans-serif'],
       'anime-italic': ['anime-italic', 'sans-serif'],
+      'roboto': ['roboto', 'sans-serif'],
     }
   },
   plugins: [],

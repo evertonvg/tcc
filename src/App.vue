@@ -1,20 +1,29 @@
 <template>
-  <menuVue />
+  <transition name="fade">
+    <LoadingVue />
+  </transition>
+  <transition name="fade">
+    <menuVue />
+  </transition>
   <transition name="fade">
     <warningVue v-if="$store.state.message != null" />
   </transition>
-  <transition name="fade">
-    <router-view />
-  </transition>
+  <router-view v-slot="{ Component }">
+    <transition name="fade">
+      <component :is="Component" />
+    </transition>
+  </router-view>
 </template>
 <script>
 import menuVue from "./components/menuVue.vue";
 import warningVue from "./components/warningVue.vue";
+import LoadingVue from "./components/loadingVue.vue";
 export default {
   components: {
     menuVue,
     warningVue,
-  },
+    LoadingVue
+},
 };
 </script>
 
@@ -56,7 +65,7 @@ export default {
 }
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.5s ease;
+  transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
 .fade-enter-from,

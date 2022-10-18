@@ -1,6 +1,6 @@
 <template>
-  <div class="flex flex-col">
-    <header class="text-gray-600 body-font bg-blue-500">
+  <div class="flex flex-col" style="background: linear-gradient(to right, #ED8263, #F9CE7C);">
+    <header class="text-gray-600 body-font bg-lightblue">
       <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
         <a class="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0">
           <svg
@@ -156,7 +156,7 @@
                 <td
                   class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap text-center"
                 >
-                  {{ anime.closure }}
+                  {{ anime.closure == '0001-01-01' ? 'Em andamento' : anime.closure}}
                 </td>
                 <td
                   class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap text-center"
@@ -536,7 +536,7 @@
               v-show="addModal"
               data-modal-toggle="defaultModal"
               type="button"
-              class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              class="border-b-darkblue bg-darkblue text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
               @click="addItem"
             >
               Add
@@ -545,7 +545,7 @@
               v-show="updateModal"
               data-modal-toggle="defaultModal"
               type="button"
-              class="text-white bg-yellow-700 hover:bg-yellow-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              class="border-b-darkblue bg-darkblue text-white bg-yellow-700 hover:bg-yellow-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
               @click="updateItem"
             >
               Update
@@ -663,7 +663,7 @@
               v-show="addModal"
               data-modal-toggle="defaultModal"
               type="button"
-              class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              class="text-white border border-b-darkblue bg-darkblue bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
               @click="addItemCategories"
             >
               Add
@@ -672,7 +672,7 @@
               v-show="updateModal"
               data-modal-toggle="defaultModal"
               type="button"
-              class="text-white bg-yellow-700 hover:bg-yellow-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              class="text-white border-b-darkblue bg-darkblue  bg-yellow-700 hover:bg-yellow-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
               @click="updateItemCategories"
             >
               Update

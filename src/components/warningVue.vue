@@ -1,7 +1,7 @@
 <template>
   <transition name="fade">
     <div
-      class="rounded-sm font-otaku-bold fixed top-40 left-1/2 transform -translate-x-1/2 p-6 max-w-2xl min-w-[320px] bg-darkblue text-white"
+      class="rounded-sm font-otaku-bold fixed top-40 left-1/2 transform -translate-x-1/2 p-6 max-w-2xl min-w-[320px] bg-darkblue text-white z-10"
     >
       <Close class="absolute top-1 right-1 cursor-pointer" @click="closeInfo" />
       <img

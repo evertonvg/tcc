@@ -7,7 +7,8 @@ export default createStore({
       data: null,
       imageMessage:null
     },
-    message:null
+    message:null,
+    loading:true,
   },
   getters: {
     user(state){
@@ -18,6 +19,9 @@ export default createStore({
     },
     imageMessage(state){
       return state.imageMessage
+    },
+    loading(state){
+      return state.loading
     }
   },
   mutations: {
@@ -33,6 +37,9 @@ export default createStore({
     SET_IMAGE_MESSAGE(state, data) {
       state.imageMessage = data;
     },
+    SET_LOADING(state,data){
+      state.loading = data
+    }
   },
   actions: {
     fetchUser({ commit }, user) {
