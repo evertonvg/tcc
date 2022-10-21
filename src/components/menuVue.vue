@@ -2,7 +2,7 @@
   <nav
     ref="menu"
     v-show="$route.name != 'login' && !$route.fullPath.toString().includes('admin')"
-    class="bg-blue h-20 text-white px-3 z-20  fixed top-0 left-0 w-full font-roboto"
+    class="bg-blue h-20 text-white px-3 z-20  fixed top-0 left-0 w-full font-roboto transition-transform"
   >
     <div class="container items-center justify-center h-full flex">
       <div class="flex items-center justify-center">
@@ -133,6 +133,7 @@ export default {
           this.$store.commit("SET_MESSAGE", `Sayonara, sentiremos saudades :(`);
           this.$store.commit("SET_IMAGE_MESSAGE", "goodbye");
           this.$cookies.remove("loginIdAnime");
+          this.$store.commit('SET_LOADING',true);
           this.$router.push("/login");
         })
         .catch((err) => {
@@ -141,9 +142,9 @@ export default {
     },
     scrollMenuEffect(value) {
       if (value > this.pagey) {
-        this.$refs.menu.classList.add("-translate-y-16");
+        this.$refs.menu.classList.add("-translate-y-20");
       } else {
-        this.$refs.menu.classList.remove("-translate-y-16");
+        this.$refs.menu.classList.remove("-translate-y-20");
       }
       this.pagey = value;
     },

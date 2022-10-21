@@ -4,6 +4,7 @@
 
 module.exports = {
   content: [
+    "./**/*.html",
     "./index.html",
     "./src/**/*.{vue,js,ts,jsx,tsx}",
   ],
@@ -15,10 +16,14 @@ module.exports = {
         blue:'#5F8FDC',
         gray:"#EBEBEB",
         red:'#AC3D54',
+        red2:'#783B35',
         lightblue:'#ACC5EC',
         darkblue:'#00008b',
         white:'#fff',
-        black:'#000'
+        black:'#000',
+        orange1:'#ED8263',
+        orange2:'#F9CE7C',
+        star:'#E7711B',
 
     },
     fontFamily: {

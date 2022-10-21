@@ -1,28 +1,33 @@
 <template>
-  <transition name="fade">
+  <transition name="fade" >
     <LoadingVue />
   </transition>
-  <transition name="fade">
-    <menuVue />
+  <transition name="fade" >
+    <MenuVue />
   </transition>
   <transition name="fade">
-    <warningVue v-if="$store.state.message != null" />
+    <WarningVue v-if="$store.state.message != null" />
   </transition>
   <router-view v-slot="{ Component }">
     <transition name="fade">
       <component :is="Component" />
     </transition>
   </router-view>
+  <transition name="fade">
+    <FooterVue/>
+  </transition>
 </template>
 <script>
-import menuVue from "./components/menuVue.vue";
-import warningVue from "./components/warningVue.vue";
+import MenuVue from "./components/menuVue.vue";
+import WarningVue from "./components/warningVue.vue";
 import LoadingVue from "./components/loadingVue.vue";
+import FooterVue from "./components/footerVue.vue";
 export default {
   components: {
-    menuVue,
-    warningVue,
-    LoadingVue
+    MenuVue,
+    WarningVue,
+    LoadingVue,
+    FooterVue
 },
 };
 </script>
@@ -60,8 +65,11 @@ export default {
   color: #2c3e50;
 }
 
-.container {
-  @apply mx-auto;
+.btn{
+  @apply bg-red text-white font-roboto font-normal px-2 py-1 rounded-sm transition-colors cursor-pointer;
+}
+.btn:hover{
+  @apply bg-red2;
 }
 .fade-enter-active,
 .fade-leave-active {
