@@ -18,7 +18,7 @@
             </button>
         </div>
     </header>
-    <div class="w-1/3 bg-white rounded-lg shadow container flex justify-center mx-auto">
+    <div class="w-1/3 bg-white rounded-lg shadow container flex justify-center mx-auto my-28">
         <ul class="divide-y-2 divide-gray-100">
             <li class="p-3">
                 <router-link to="/admin/animes">
@@ -71,10 +71,10 @@ export default {
     }
   },
     mounted(){
-        console.log(this.$cookies.get("LoginId"))
         if(this.$cookies.get("LoginId")==null){
             this.$router.push('/admin')
         }
+        this.$store.commit('SET_LOADING',false)
     }
  
 }

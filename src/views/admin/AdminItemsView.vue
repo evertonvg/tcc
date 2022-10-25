@@ -458,7 +458,7 @@
                 ]"
               >
                 <option
-                  v-for="(cat, ind) in categories"
+                  v-for="(cat, ind) in categoriesActive"
                   :key="ind"
                   :value="cat.name"
                   :selected="anime.categories.includes(cat.name)"
@@ -736,6 +736,7 @@ export default {
       },
       items: [],
       categories: [],
+      categoriesActive:[],
       ids: [],
     };
   },
@@ -752,6 +753,13 @@ export default {
     closeModals() {
       this.addModal = false;
       this.updateModal = false;
+    },
+    activeOptions(element){
+      element.forEach((el)=>{
+        if(el.active==true){
+          this.categoriesActive.push(el)
+        }
+      })
     },
     openAddModal() {
       this.addModal = true;
@@ -813,6 +821,7 @@ export default {
           snapshot.forEach((ss) => {
             this.categories.push(ss.val());
           });
+          this.activeOptions(this.categories)
         });
       }
     },
@@ -935,8 +944,8 @@ export default {
                   .child(this.anime.id);
                 ref
                   .update({
-                    name: this.anime.name,
-                    description: this.anime.description,
+                    name: this.anime.name.toString(),
+                    description: this.anime.description.toString(),
                     image: this.anime.image,
                     release: this.anime.release,
                     closure: this.anime.closure,
@@ -1052,13 +1061,14 @@ export default {
         });
     },
   },
+
+
   mounted() {
     this.getData();
-    console.log(this.$cookies.get("LoginId"));
-    console.log(this.$refs.fileImageCategory);
     if (this.$cookies.get("LoginId") == null) {
       this.$router.push("/admin");
     }
+    this.$store.commit('SET_LOADING',false)
   },
 };
 </script>

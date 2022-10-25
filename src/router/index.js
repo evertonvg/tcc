@@ -8,28 +8,45 @@ const routes = [
     component: LoginView
   },
   {
-    path: '/admin',
-    name: 'admin',
-    component: () => import(/* webpackChunkName: "about" */ '../views/AdminView.vue')
-  },
-  {
     path: '/',
     name: 'home',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/HomeView.vue')
+  },
+  {
+    path: '/categories',
+    name: 'categories',
+    component: () => import(/* webpackChunkName: "about" */ '../views/CategoriesView.vue')
+  },
+  {
+    path: '/admin',
+    name: 'admin',
+    component: () => import(/* webpackChunkName: "about" */ '../views/admin/AdminView.vue')
   },
   {
     path: '/admin/items',
     name: 'admin itens',
-    component: () => import(/* webpackChunkName: "about" */ '../views/AdminListView.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/admin/AdminListView.vue')
 
   },
   {
-    path: '/admin/:item',
-    name: 'admin item',
-    component: () => import(/* webpackChunkName: "about" */ '../views/AdminItemsView.vue')
+    path: '/admin/animes',
+    name: 'admin anime',
+    component: () => import(/* webpackChunkName: "about" */ '../views/admin/AdminAnimesView.vue')
+  },
+  {
+    path: '/admin/categories',
+    name: 'admin category',
+    component: () => import(/* webpackChunkName: "about" */ '../views/admin/AdminCategoriesView.vue')
+  },
+  {
+    path: '/admin/comments',
+    name: 'admin comments',
+    component: () => import(/* webpackChunkName: "about" */ '../views/admin/AdminCommentsView.vue')
+  },
+  {
+    path: '/admin/evaluations',
+    name: 'admin evaluations',
+    component: () => import(/* webpackChunkName: "about" */ '../views/admin/AdminEvaluationsView.vue')
   },
   {
     path: '/:pathMatch(.*)*',

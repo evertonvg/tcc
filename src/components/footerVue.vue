@@ -1,7 +1,7 @@
 <template>
   <footer v-show="$route.name != 'login'" class="bg-blue py-12 mt-12">
-    <div class="container flex items-center justify-between flex-col gap-4">
-        <p class="text-white text-center">
+    <div class="container flex items-center justify-between flex-col gap-4 mx-auto">
+        <p class="text-white text-center mx-auto">
             2023 - Everton Vargas Guetierres&#169; - todos os direitos reservados
         </p>
         <div class="flex gap-3">

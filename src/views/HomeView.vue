@@ -27,7 +27,8 @@ export default {
   methods: {
     getDestaques(){
       let ref = firebase.database().ref('animes');
-      ref.orderByValue().on("value", (snapshot) => {
+      ref.orderByChild('active').equalTo(true).on("value", (snapshot) => {
+        this.destaques = []
         snapshot.forEach((ss) => {
           this.destaques.push(ss.val());
         });

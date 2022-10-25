@@ -39,12 +39,12 @@
             >
           </li>
           <li>
-            <router-link to="/categorias" class="hover:text-darkblue transition-colors"
+            <router-link to="/categories" class="hover:text-darkblue transition-colors"
               >categorias</router-link
             >
           </li>
           <li>
-            <router-link to="/pesquisar" class="hover:text-darkblue transition-colors"
+            <router-link to="/search" class="hover:text-darkblue transition-colors"
               >Pesquisar</router-link
             >
           </li>
@@ -101,10 +101,10 @@
           <router-link class="text-2xl" to="/destaques">destaques</router-link>
         </li>
         <li>
-          <router-link class="text-2xl" to="/categorias">categorias</router-link>
+          <router-link class="text-2xl" to="/categories">categorias</router-link>
         </li>
         <li>
-          <router-link class="text-2xl" to="/pesquisar">Pesquisar</router-link>
+          <router-link class="text-2xl" to="/search">Pesquisar</router-link>
         </li>
         <li v-show="$cookies.get('loginIdAnime') != null" class="ml-4">
           <button @click="logout" class="flex items-center justify-center text-2xl">
