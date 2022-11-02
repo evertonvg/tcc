@@ -2,9 +2,9 @@
   <transition name="fade" >
     <LoadingVue />
   </transition>
-  <transition name="fade" >
-    <MenuVue />
-  </transition>
+
+  <MenuVue />
+
   <transition name="fade">
     <WarningVue v-if="$store.state.message != null" />
   </transition>

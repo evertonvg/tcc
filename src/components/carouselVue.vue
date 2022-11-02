@@ -1,6 +1,6 @@
 <template>
     <h2 class="text-left text-2xl font-bold pt-6 my-4">{{title}}</h2>
-    <carousel :settings="settings" :breakpoints="breakpoints">
+    <carousel :settings="settings" :breakpoints="breakpoints" v-if="items.length">
         <slide v-for="(item,index) in items" :key="index">
             <div class="w-full h-80 px-2">
                 <router-link :to="`/anime/${item.name.toString().toLowerCase().replaceAll(' ','-')}`" class="h-full relative w-full">
