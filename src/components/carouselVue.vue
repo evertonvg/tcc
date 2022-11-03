@@ -3,7 +3,7 @@
     <carousel :settings="settings" :breakpoints="breakpoints" v-if="items.length">
         <slide v-for="(item,index) in items" :key="index">
             <div class="w-full h-80 px-2">
-                <router-link :to="`/anime/${item.name.toString().toLowerCase().replaceAll(' ','-')}`" class="h-full relative w-full">
+                <router-link :to="`/animes/${item.slug}`" class="h-full relative w-full">
                     <cardVue :item="item" />
                 </router-link>
             </div>

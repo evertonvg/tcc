@@ -12,13 +12,19 @@
                   scope="col"
                   class="text-sm font-medium text-gray-900 px-6 py-4 text-center"
                 >
-                  name
+                  name - slug
                 </th>
                 <th
                   scope="col"
                   class="text-sm font-medium text-gray-900 px-6 py-4 text-center"
                 >
                   image
+                </th>
+                <th
+                  scope="col"
+                  class="text-sm font-medium text-gray-900 px-6 py-4 text-center"
+                >
+                  Banner
                 </th>
                 <th
                   scope="col"
@@ -86,14 +92,23 @@
             <tbody>
               <tr class="border-b" v-for="(ani, index) in animes" :key="index">
                 <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                  {{ ani.name }}
+                  {{ ani.name }} - {{ani.slug}}
                 </td>
                 <td
                   class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap text-center"
                 >
                   <img
                     :src="ani.image"
-                    alt="ani.name"
+                    :alt="ani.name"
+                    class="w-40 h-full object-cover mx-auto"
+                  />
+                </td>
+                <td
+                  class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap text-center"
+                >
+                  <img
+                    :src="ani.imageBanner"
+                    :alt="ani.name"
                     class="w-40 h-full object-cover mx-auto"
                   />
                 </td>
@@ -130,7 +145,7 @@
                   <router-link
                     class="btn"
                     :data-id="ids[index]"
-                    :to="`/anime/${ani.name.toString().replaceAll(' ','-').toLowerCase()}`"
+                    :to="`/anime/${ani.slug}`"
                   >Visit
                   </router-link>
                   <button
@@ -140,6 +155,7 @@
                     :data-description="ani.description"
                     :data-categories="ani.categories"
                     :data-image="ani.image"
+                    :data-imageb="ani.imageBanner"
                     :data-active="ani.active"
                     :data-acseason="ani.activeSeason"
                     :data-release="ani.release"
@@ -352,6 +368,24 @@
                 *caso não insira uma imagem, a foto não mudará
               </span>
             </div>
+            <div class="relative mb-4">
+              <label for="image-banner" class="leading-7 text-sm text-gray-600 block text-left"
+                >Image Banner</label
+              >
+              <input
+                type="file"
+                id="image-banner"
+                name="image"
+                ref="fileImageBanner"
+                :class="[
+                  `w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out`,
+                ]"
+              />
+              <br />
+              <span class="text-left block" v-show="updateModal">
+                *caso não insira uma imagem, o banner não mudará
+              </span>
+            </div>
             <div class="relative mb-4" v-show="updateModal">
               <label for="active" class="leading-7 text-sm text-gray-600 block text-left"
                 >active</label
@@ -430,6 +464,7 @@ export default {
         name: "",
         description: "",
         image: "",
+        imageBanner:"",
         active: false,
         activeSeason: false,
         release:"",
@@ -465,6 +500,7 @@ export default {
       this.anime.name = "";
       this.anime.description = "";
       this.anime.image = "";
+      this.imageBanner = "";
       this.anime.active = false;
       this.anime.activeSeason = false;
       this.anime.release = "";
@@ -478,7 +514,8 @@ export default {
       this.anime.id = ev.target.dataset.id.toString(),
       this.anime.name = ev.target.dataset.name.toString();
       this.anime.description = ev.target.dataset.description.toString();
-      this.anime.image = ev.target.dataset.image.toString();
+      this.anime.image = ev.target.dataset.image;
+      this.anime.imageBanner = ev.target.dataset.imageb;
       this.anime.active = ev.target.dataset.active == 'true' ? true : ev.target.dataset.active == true? true : false;
       this.anime.activeSeason = ev.target.dataset.acseason == 'true' ? true : ev.target.dataset.acseason == true? true : false;
       this.anime.release = ev.target.dataset.release;
@@ -512,98 +549,112 @@ export default {
       });
     },
     addItem() {
-        this.showload = true;
-        firebase
-            .storage()
-            .ref('animes')
-            .child(this.anime.name)
-            .child(this.$refs.fileImage.files[0].name)
-            .put(this.$refs.fileImage.files[0])
-            .then((res) => {
-            res.ref
-                .getDownloadURL()
-                .then((image) => {
-                this.anime.image = image;
-            }).then(() => {
+
+        firebase.storage().ref('animes').child(this.anime.name).child(this.$refs.fileImage.files[0].name)
+        .put(this.$refs.fileImage.files[0])
+          .then((res) => {
+          res.ref.getDownloadURL()
+          .then((image) => {
+            this.anime.image = image;
+          })
+          .then(()=>{
+            firebase.storage().ref('animes').child(this.anime.name).child(this.$refs.fileImageBanner.files[0].name)
+            .put(this.$refs.fileImageBanner.files[0])
+            .then((ress) => {
+              ress.ref.getDownloadURL()
+              .then((imageb) => {
+                  this.anime.imageBanner = imageb;
+              })
+              .then(()=>{
                 let ref = firebase.database().ref('animes');
                 ref.push({
-                    name: this.anime.name,
-                    description: this.anime.description,
-                    image: this.anime.image,
-                    active: this.anime.active,
-                    activeSeason: false,
-                    release: this.anime.release,
-                    closure:this.anime.closure,
-                    movies:this.anime.movies,
-                    seasons:this.anime.seasons,
-                    ovas:this.anime.ovas,
-                    categories:this.anime.categories,
-                })
-                    .then(() => {
+                  name: this.anime.name,
+                  slug:this.anime.name.toString().toLowerCase().replaceAll(' ','-').replaceAll(':','-').normalize('NFD').replaceAll(/[\u0300-\u036f]/g, ""),
+                  description: this.anime.description,
+                  image: this.anime.image,
+                  imageBanner: this.anime.imageBanner,
+                  active: this.anime.active,
+                  activeSeason: false,
+                  release: this.anime.release,
+                  closure:this.anime.closure,
+                  movies:this.anime.movies,
+                  seasons:this.anime.seasons,
+                  ovas:this.anime.ovas,
+                  categories:this.anime.categories,
+                }).then(() => {
                     this.closeModals();
                     this.showLoad = false
-                })
-                    .catch((err) => {
-                    console.log(err);
+                }).catch((err) => {
+                  console.log(err);
                 });
+              })
             })
-                .catch((err) => {
-                console.log(err);
-            });
-        })
             .catch((err) => {
-            console.log(err);
+              console.log(err);
+            });
+          })
+        })
+        .catch((err) => {
+          console.log(err);
         });
+  
     },
-    updateItem() {
-      if (this.$refs.fileImage.files[0]) {
-          firebase.storage()
+    async updateItem() {
+      if(this.$refs.fileImage.files[0]) {
+        firebase.storage()
               .ref("animes")
               .child(this.anime.name)
               .child(this.$refs.fileImage.files[0].name)
               .put(this.$refs.fileImage.files[0])
               .then((res) => {
-              res.ref
-                  .getDownloadURL()
-                  .then((image) => {
+                res.ref.getDownloadURL()
+                .then((image) => {
                   this.anime.image = image;
-              }).then(() => {
-                      let ref = firebase.database().ref("animes").child(this.anime.id);
-                      ref.update({
-                        name: this.anime.name,
-                        description: this.anime.description,
-                        image: this.anime.image,
-                        active: this.anime.active,
-                        activeSeason: this.anime.activeSeason,
-                        release: this.anime.release,
-                        closure:this.anime.closure,
-                        movies:this.anime.movies,
-                        seasons:this.anime.seasons,
-                        ovas:this.anime.ovas,
-                        categories:this.anime.categories,
-                      })
-                      .then(() => {
-                          this.closeModals();
-                          this.showLoad = false
-                      })
-                      .catch((err) => {
-                          console.log(err);
-                      });
+                  let ref = firebase.database().ref("animes").child(this.anime.id);
+                  ref.update({
+                    image: this.anime.image,
                   })
-                  .catch((err) => {
-                      console.log(err);
-                  });
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
           })
-              .catch((err) => {
+          .catch((err) => {
               console.log(err);
           });
-      }
-      else {
+        }
+
+        if(this.$refs.fileImageBanner.files[0]) {
+        firebase.storage()
+              .ref("animes")
+              .child(this.anime.name)
+              .child(this.$refs.fileImageBanner.files[0].name)
+              .put(this.$refs.fileImageBanner.files[0])
+              .then((res) => {
+                res.ref.getDownloadURL()
+                .then((imageb) => {
+                  this.anime.imageBanner = imageb;
+                  let ref = firebase.database().ref("animes").child(this.anime.id);
+                  ref.update({
+                    imageBanner: this.anime.imageBanner,
+                  })
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+          })
+          .catch((err) => {
+              console.log(err);
+          });
+        }
+      
           let ref = firebase.database().ref("animes").child(this.anime.id);
           ref.update({
             name: this.anime.name,
+            slug:this.anime.name.toString().toLowerCase().replaceAll(' ','-').replaceAll(':','-').normalize('NFD').replaceAll(/[\u0300-\u036f]/g, ""),
             description: this.anime.description,
-            image: this.anime.image,
+            // image: this.anime.image,
+            // imageBanner: this.anime.imageBanner,
             active: this.anime.active,
             activeSeason: this.anime.activeSeason,
             release: this.anime.release,
@@ -619,7 +670,7 @@ export default {
           }).catch((err) => {
               console.log(err);
           });
-      }
+      
     },
     deleteItem(ev) {
       let ref = firebase.database().ref("animes");
