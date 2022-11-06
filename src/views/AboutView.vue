@@ -17,7 +17,7 @@
         Como funciona o sistema de notas:
         <br>
         Cada temporada de um anime possui 4 notas: animação, personagens, história e trilha sonora, cada uma dessas
-        podendo ir de 0 a 10, essas notas geram a nota total final da temporada através de uma média,
+        podendo ir de 5 a 10, essas notas geram a nota total final da temporada através de uma média,
         ou seja, nota da animação, personagem, história e trilha sonora divido por 4.
         <br>
         A nota final da obra toda será dada pela media das notas de cada temporada.

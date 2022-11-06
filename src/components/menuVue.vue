@@ -4,7 +4,7 @@
     v-show="$route.name != 'login' && !$route.fullPath.toString().includes('admin')"
     class="bg-blue h-20 text-white px-3 z-20  fixed top-0 left-0 w-full font-roboto transition-transform"
   >
-    <div class="container items-center justify-center h-full flex">
+    <div class="container items-center justify-center h-full flex mx-auto">
       <div class="flex items-center justify-center">
         <router-link to="/" class="h-full">
           <img src="@/assets/img/icon.png" class="h-16" />
