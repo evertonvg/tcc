@@ -48,6 +48,11 @@
               >Pesquisar</router-link
             >
           </li>
+          <li>
+            <router-link to="/about" class="hover:text-darkblue transition-colors"
+              >Sobre</router-link
+            >
+          </li>
           <li v-show="$cookies.get('loginIdAnime') != null" class="ml-4">
             <button
               @click="logout"
@@ -105,6 +110,9 @@
         </li>
         <li>
           <router-link class="text-2xl" to="/search">Pesquisar</router-link>
+        </li>
+        <li>
+          <router-link class="text-2xl" to="/about">Sobre</router-link>
         </li>
         <li v-show="$cookies.get('loginIdAnime') != null" class="ml-4">
           <button @click="logout" class="flex items-center justify-center text-2xl">

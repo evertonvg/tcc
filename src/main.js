@@ -8,6 +8,11 @@ import vueCookies from 'vue-cookies'
 
 import Logout from 'vue-material-design-icons/Logout.vue';
 import Close from 'vue-material-design-icons/Close.vue';
+import Person from 'vue-material-design-icons/AccountBox.vue';
+import History from 'vue-material-design-icons/ClipboardTextClockOutline.vue';
+import Graphic from 'vue-material-design-icons/Camera.vue';
+import Music from 'vue-material-design-icons/MusicNote.vue';
+import Star from 'vue-material-design-icons/StarHalfFull.vue';
 
 
 createApp(App)
@@ -16,4 +21,9 @@ createApp(App)
 .use(router)
 .component('logout', Logout)
 .component('close', Close)
+.component('person', Person)
+.component('history', History)
+.component('music', Music)
+.component('graphic', Graphic)
+.component('star', Star)
 .mount('#app')

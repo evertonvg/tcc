@@ -54,10 +54,16 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/admin/AdminEvaluationsView.vue')
   },
   {
+    path: '/about',
+    name: 'about',
+    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+  },
+  {
     path: '/:pathMatch(.*)*',
     name: 'not-found',
     component: () => import(/* webpackChunkName: "about" */ '../views/notfoundView.vue')
-  }
+  },
+  
 ]
 
 const router = createRouter({
