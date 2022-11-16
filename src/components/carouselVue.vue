@@ -3,8 +3,8 @@
     <carousel :settings="settings" :breakpoints="breakpoints" v-if="items.length">
         <slide v-for="(item,index) in items" :key="index">
             <div class="w-full h-80 px-2">
-                <router-link :to="`/animes/${item.slug}`" class="h-full relative w-full">
-                    <cardVue :item="item" />
+                <router-link :to="`/animes/${item.slug}`" class="h-full relative w-full bg-gradient-to-b from-white to-header">
+                    <cardVue :item="item" class="bg-gradient-to-b from-white to-header" />
                 </router-link>
             </div>
         </slide>
@@ -48,6 +48,10 @@ export default {
                 // 1024 and up
                 1024: {
                     itemsToShow: 5,
+                    snapAlign: 'start',
+                },
+                1440: {
+                    itemsToShow: 6,
                     snapAlign: 'start',
                 },
             },

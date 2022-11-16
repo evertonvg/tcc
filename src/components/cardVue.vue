@@ -1,5 +1,5 @@
 <template>
-    <div class="absolute top-1 right-1 flex flex-col items-center justify-center z-30 bg-lightblue p-1">
+    <div class="absolute top-1 right-1 flex flex-col items-center justify-center z-30 bg-lightblue p-1 " >
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="40px" height="40px" viewBox="0 0 32 32">
             <defs>
             <linearGradient id="grad">
@@ -12,7 +12,7 @@
         </svg>
         <span class="text-black font-black text-2xl">7.4</span>
     </div>
-    <img :src="item.image" class="w-full h-full object-cover" alt=example/>
+    <img :src="item.image" class="w-full h-full object-cover" @error="setAltImg" alt=example/>
     <div class="absolute bottom-0 -left-full bg-black/50 w-[200%] p-2  text-left">
         <h3 class="text-sm text-white">
             <span class="opacity-100">
@@ -24,7 +24,12 @@
 
 <script>
 export default {
-    props:['item']
+    props:['item'],
+    methods:{
+        setAltImg(event) { 
+            event.target.src = "icon.png"
+        }
+    }
 }
 </script>
 

@@ -63,6 +63,7 @@
           </li>
         </ul>
       </div>
+
       <div class="block lg:hidden font-roboto">
         <div class="flex lg:hidden">
           <div class="space-y-3" @click="open = !open">
@@ -89,16 +90,19 @@
       </div>
     </div>
   </nav>
+
+
+  <!-- mobile  -->
   <div
     :class="[
-      'fixed lg:hidden top-0 right-0 w-screen h-screen bg-black transition-all z-10 opacity-75 font-roboto',
+      'fixed lg:hidden top-0 right-0 w-screen h-screen bg-black transition-all z-10  font-roboto',
       !open ? 'translate-x-full' : '',
     ]"
   >
     <div
       class="absolute w-3/4 h-screen flex top-0 right-0 bg-lightblue font-roboto opacity-100"
     >
-      <ul class="h-full flex items-center justify-center flex-col gap-2 pl-8">
+      <ul class="h-full flex items-start justify-center flex-col gap-2 pl-8">
         <li v-show="$cookies.get('loginIdAnime') == null">
           <router-link to="/login" class="text-2xl">Conecte-se</router-link>
         </li>
@@ -114,7 +118,7 @@
         <li>
           <router-link class="text-2xl" to="/about">Sobre</router-link>
         </li>
-        <li v-show="$cookies.get('loginIdAnime') != null" class="ml-4">
+        <li v-show="$cookies.get('loginIdAnime') != null">
           <button @click="logout" class="flex items-center justify-center text-2xl">
             Sair<Logout :size="50" />
           </button>

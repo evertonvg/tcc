@@ -4,6 +4,7 @@
   </transition>
 
   <MenuVue />
+  
 
   <transition name="fade">
     <WarningVue v-if="$store.state.message != null" />
@@ -13,6 +14,7 @@
       <component :is="Component" />
     </transition>
   </router-view>
+  {{x}},{{y}}
   <transition name="fade">
     <FooterVue/>
   </transition>
@@ -22,7 +24,9 @@ import MenuVue from "./components/menuVue.vue";
 import WarningVue from "./components/warningVue.vue";
 import LoadingVue from "./components/loadingVue.vue";
 import FooterVue from "./components/footerVue.vue";
+
 export default {
+
   components: {
     MenuVue,
     WarningVue,

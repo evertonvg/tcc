@@ -2,12 +2,12 @@
     <header class="h-[30vh] sm:h-[50vh]  bg-cover bg-no-repeat bg-center overflow-hidden bg-gradient-to-b from-white to-header" ref="banner">
         
     </header>
-    <section class="container mx-auto mt-4 -translate-y-20">
+    <section class="px-5 container mx-auto mt-4 -translate-y-20">
         <div class="flex flex-col sm:flex-row  items-stretch  justify-center gap-4 ">
             <div class="w-[215px] h-[301px] mx-auto" v-if="anime!=null">
                 <img :src="anime.image" :alt="anime.name" class="w-full h-full object-fill" />
             </div>
-            <div class="flex-1 bg-white rounded p-4 pb-16 relative" v-if="anime!=null">
+            <div class="flex-1 bg-white rounded p-4 flex flex-col" v-if="anime!=null">
                 <h1 class="font-semibold text-3xl text-graytext mb-2 flex items-center justify-between">
                     {{anime.name}} 
                     <span class="flex text-star text-3xl">
@@ -29,8 +29,8 @@
                     {{anime.description}}
                     
                 </p>
-                <div class="absolute bottom-4 left-4 flex gap-2 flex-wrap">
-                    <span v-for="(cat,ind) in anime.categories" :key="ind" class="border border-black rounded p-1">
+                <div class="flex flex-1 gap-2 flex-wrap mt-5 items-end">
+                    <span v-for="(cat,ind) in anime.categories" :key="ind" class="border border-black rounded p-1 h-8">
                         {{cat}}
                     </span>
                 </div>
@@ -76,52 +76,161 @@
                     </div>
                
                 </div>
-                <div class="flex-1 rounded  px-4 h-full w-full flex items-center justify-center sm:items-end sm:justify-end">
+                <div class="flex-1 rounded h-full w-full flex items-center justify-center sm:items-end sm:justify-end">
                     <play fillColor="#E7711B" :size="40" title="aba de videos" class="cursor-pointer bg-white" @click="modalMusic=true"/>
                 </div>
             </div>
             
         </div>
+
+
+
+        <!-- dados de temporada  -->
         <transition tag="div" name="fade" class="">
-            <div class="bg-white rounded p-4">
-                <h2 class="text-left mb-8 text-xl">
-                    Faça suas avaliações e confira comentários de outros usuários sobre a temporada selecionada
-                </h2>
-                <div class="flex items-center justify-start gap-2 mb-4">
-                    <span class="w-28 text-left">Animação:</span>
-                    <svg v-for="i in 5" @click="grade.animation=i+5" :key="i"  class="cursor-pointer svg-star"
-                        xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 51 48">
-                        <title>Five Pointed Star</title>
-                        <path :fill="`${i+5<=grade.animation ? '#E7711B' : 'none' }`"  stroke="#E7711B" d="m25,1 6,17h18l-14,11 5,17-15-10-15,10 5-17-14-11h18z"/>
-                    </svg>
+            <div class="rounded flex flex-col sm:flex-row justify-center gap-4">
+                <div class="w-full sm:w-[215px] bg-white p-4">
+                    <ul class="flex flex-col items-start justify-start gap-3">
+                        <li class="flex flex-col items-start justify-start">
+                            <span class="font-semibold">
+                                Autor
+                            </span>
+                            <span>
+                                Kubo Tite
+                            </span>
+                        </li>
+                        <li class="flex flex-col items-start justify-start">
+                            <span class="font-semibold">
+                                lançamento
+                            </span>
+                            <span>
+                                10/2012
+                            </span>
+                        </li>
+                        <li class="flex flex-col items-start justify-start">
+                            <span class="font-semibold">
+                                Número de episódios 
+                            </span>
+                            <span>
+                                12
+                            </span>
+                        </li>
+                        <li class="flex flex-col items-start justify-start">
+                            <span class="font-semibold">
+                                Estúdio
+                            </span>
+                            <span>
+                                Mappa
+                            </span>
+                        </li>
+                        <li class="flex flex-col items-start justify-start">
+                            <span class="font-semibold">
+                                Status
+                            </span>
+                            <span>
+                                lançando
+                            </span>
+                        </li>
+                    </ul>
                 </div>
-                <div class="flex items-center justify-start gap-2 mb-4">
-                    <span class="w-28 text-left">História:</span>
-                    <svg v-for="i in 5" @click="grade.history=i+5" :key="i" class="cursor-pointer svg-star"
-                        xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 51 48">
-                        <title>Five Pointed Star</title>
-                        <path :fill="`${i+5<=grade.history ? '#E7711B' : 'none' }`"  stroke="#E7711B" d="m25,1 6,17h18l-14,11 5,17-15-10-15,10 5-17-14-11h18z"/>
-                    </svg>
+
+                <!-- avaliações e comentarios  -->
+                <div class="flex-1 bg-white p-4">
+                    <div>
+                        <h2 class="text-left mb-8 text-xl font-bold">
+                            Faça suas avaliações
+                        </h2>
+                        <div class="flex items-center justify-start gap-2 mb-4">
+                            <span class="w-28 text-left">Animação:</span>
+                            <svg v-for="i in 5" @click="grade.animation=i+5" :key="i"  class="cursor-pointer svg-star"
+                                xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 51 48">
+                                <title>Five Pointed Star</title>
+                                <path :fill="`${i+5<=grade.animation ? '#E7711B' : 'none' }`"  stroke="#E7711B" d="m25,1 6,17h18l-14,11 5,17-15-10-15,10 5-17-14-11h18z"/>
+                            </svg>
+                        </div>
+                        <div class="flex items-center justify-start gap-2 mb-4">
+                            <span class="w-28 text-left">História:</span>
+                            <svg v-for="i in 5" @click="grade.history=i+5" :key="i" class="cursor-pointer svg-star"
+                                xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 51 48">
+                                <title>Five Pointed Star</title>
+                                <path :fill="`${i+5<=grade.history ? '#E7711B' : 'none' }`"  stroke="#E7711B" d="m25,1 6,17h18l-14,11 5,17-15-10-15,10 5-17-14-11h18z"/>
+                            </svg>
+                        </div>
+                        <div class="flex items-center justify-start gap-2 mb-4">
+                            <span class="w-28 text-left">Personagens:</span>
+                            <svg v-for="i in 5" @click="grade.characters=i+5" :key="i" class="cursor-pointer svg-star"
+                                xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 51 48">
+                                <title>Five Pointed Star</title>
+                                <path :fill="`${i+5<=grade.characters ? '#E7711B' : 'none' }`"  stroke="#E7711B" d="m25,1 6,17h18l-14,11 5,17-15-10-15,10 5-17-14-11h18z"/>
+                            </svg>
+                        </div>
+                        <div class="flex items-center justify-start gap-2 mb-4">
+                            <span class="w-28 text-left">Trilha sonora:</span>
+                            <svg v-for="i in 5" @click="grade.sound=i+5" :key="i" class="cursor-pointer svg-star"
+                                xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 51 48">
+                                <title>Five Pointed Star</title>
+                                <path :fill="`${i+5<=grade.sound ? '#E7711B' : 'none' }`"  stroke="#E7711B" d="m25,1 6,17h18l-14,11 5,17-15-10-15,10 5-17-14-11h18z"/>
+                            </svg>
+                        </div>
+                        <div class="text-left">
+                            <button class="btn">
+                                Enviar Avaliação
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mt-12">
+                        <h2 class="text-left mb-8 text-xl font-bold">
+                            Deixe seu comentário
+                        </h2>
+                        <textarea class="border border-black rounded w-full h-40 p-4" placeholder="escreva seu comentário..."></textarea>
+                        <div class="text-left">
+                            <button class="btn">
+                                Postar Comentário
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mt-12">
+                        <h2 class="text-left mb-8 text-xl font-bold">
+                            Confira outros comentários
+                        </h2>
+                        <div class="flex align-start justify-start mb-8">
+                            <div class="rounded-full h-24 w-24 overflow-hidden">
+                                <img :src="$cookies.get('imageAnime')" class="w-full h-full object-cover" />
+                            </div>
+                            <div class="ml-4 flex-1 flex flex-col align-start justify-start">
+                                <div class="text-left">
+                                    <span>
+                                        {{$cookies.get("nameAnime")}}
+                                    </span>
+                                    <span class="text-white bg-red h-6 p-1 ml-4">
+                                        {{formatted('2021-12-02 12:12:12')}}
+                                    </span>
+                                </div>
+                                <div class="text-left rounded border border-black p-4 mt-2">
+                                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Incidunt quisquam qui, voluptatum aliquam accusamus voluptate reiciendis voluptates quo necessitatibus, molestias autem nostrum ab tempore. Molestias porro itaque repudiandae quidem earum?
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis dolores, quo dolor, quasi minus illum cumque aperiam animi aliquam repellendus eaque porro esse laborum adipisci quibusdam. Possimus eaque consectetur repellendus!
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex align-start justify-start">
+                            <div class="rounded-full h-24 w-24 overflow-hidden">
+                                <img :src="$cookies.get('imageAnime')" class="w-full h-full object-cover" />
+                            </div>
+                            <div class="ml-4 flex-1 flex flex-col align-start justify-start">
+                                <div class="text-left">
+                                    <span>
+                                        {{$cookies.get("nameAnime")}}
+                                    </span>
+                                    <span class="text-white bg-red h-6 p-1 ml-4">
+                                        {{formatted('2021-12-02 12:12:12')}}
+                                    </span>
+                                </div>
+                                <div class="text-left rounded border border-black p-4 mt-2">
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis dolores, quo dolor, quasi minus illum cumque aperiam animi aliquam repellendus eaque porro esse laborum adipisci quibusdam. Possimus eaque consectetur repellendus!
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="flex items-center justify-start gap-2 mb-4">
-                    <span class="w-28 text-left">Personagens:</span>
-                    <svg v-for="i in 5" @click="grade.characters=i+5" :key="i" class="cursor-pointer svg-star"
-                        xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 51 48">
-                        <title>Five Pointed Star</title>
-                        <path :fill="`${i+5<=grade.characters ? '#E7711B' : 'none' }`"  stroke="#E7711B" d="m25,1 6,17h18l-14,11 5,17-15-10-15,10 5-17-14-11h18z"/>
-                    </svg>
-                </div>
-                <div class="flex items-center justify-start gap-2 mb-4">
-                    <span class="w-28 text-left">Trilha sonora:</span>
-                    <svg v-for="i in 5" @click="grade.sound=i+5" :key="i" class="cursor-pointer svg-star"
-                        xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 51 48">
-                        <title>Five Pointed Star</title>
-                        <path :fill="`${i+5<=grade.sound ? '#E7711B' : 'none' }`"  stroke="#E7711B" d="m25,1 6,17h18l-14,11 5,17-15-10-15,10 5-17-14-11h18z"/>
-                    </svg>
-                </div>
-                <button class="btn">
-                    Enviar
-                </button>
             </div>
         </transition>
     </section>
@@ -147,7 +256,14 @@
 
 <script>
 import firebase from "firebase";
+import {  useDateFormat } from '@vueuse/core'
 export default {
+    setup(){
+        const formatted = (data) =>{
+            return useDateFormat(data, 'DD-MM-YYYY')
+        } 
+        return {formatted}
+    },
     data() {
         return {
             modalMusic:false,
