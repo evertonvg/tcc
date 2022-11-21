@@ -26,6 +26,11 @@
                 </router-link>
             </li>
             <li class="p-3">
+                <router-link to="/admin/seasons">
+                    Temporadas
+                </router-link>
+            </li>
+            <li class="p-3">
                 <router-link to="/admin/categories">
                     Categorias
                 </router-link>
