@@ -105,7 +105,7 @@
                   <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                     {{ season.status }}
                   </td>
-                  <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                  <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap max-w-xs overflow-x-auto">
                     {{ season.videos}}
                   </td>
                   <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
@@ -115,16 +115,17 @@
                   <td class="text-sm text-gray-900 font-light px-6 h-full py-4 whitespace-nowrap gap-2 flex items-center justify-center">
                     <button
                       class="btn"
+                      :data-index="index"
                       :data-id="ids[index]"
-                      :data-name-anime="season.anime"
+                      :data-name="season.name"
+                      :data-anime="season.anime"
                       :data-idanime="season.idAnime"
                       :data-order="season.order"
                       :data-author="season.author"
                       :data-launch="season.launch"
                       :data-episodes="season.numberEpisodes"
-                      :data-acseason="season.studio"
+                      :data-studio="season.studio"
                       :data-status="season.status"
-                      :data-videos="season.videos"
                       :data-active="season.active"
                       @click="openUpdateModal"
                     >
@@ -330,12 +331,13 @@
                 <span class="rounded-full w-11 h-11 p-1 bg-blue text-white cursor-pointer ml-4" @click="removeField">-</span>
                 </label
               >
-              <div v-for="(n,index) in videosLength" :key="index" class="flex gap-2">
+              <div v-for="(n,index) in videos.length" :key="index" class="flex gap-2">
                 <input  ref="nameVideo"
                     type="text"
                     id="videos"
                     name="videos"
-                    placeholder="insira o nome do video (opening, ending, etc...)"
+                    v-model="videos[index].name"
+                    placeholder="insira o nome do video (opning, ending, etc...)"
                     :class="[
                     'w-full mb-4 block bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out',
                     ]"
@@ -344,12 +346,25 @@
                 type="text"
                 id="videos"
                 name="videos"
+                v-model="videos[index].link"
                 placeholder="insira o link do youtube do video (formato embed. Exemplo: https://www.youtube.com/embed/LZtkQdLM1rc)"
                 :class="[
                   'w-full mb-4 block bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out',
                 ]"
               />
               </div>
+              <div class="relative mb-4" v-show="updateModal">
+              <label for="active" class="leading-7 text-sm text-gray-600 block text-left"
+                >active</label
+              >
+              <input
+                type="checkbox"
+                class="block"
+                id="active"
+                name="active"
+                v-model="season.active"
+              />
+            </div>
               
             </div>
               
@@ -396,7 +411,10 @@
     components: { AdminHeader },
     data() {
       return {
-        videosLength:1,
+        videos:[{
+          name:'',
+          link:''
+        }],
         showLoad: true,
         addModal: false,
         updateModal: false,
@@ -413,7 +431,6 @@
           numberEpisodes: "",
           studio:"",
           status:"",
-          videos:[],
           active:false,
   
         },
@@ -424,12 +441,20 @@
     },
     methods:{
         addField(){
-            this.videosLength++
+            this.videos.push({
+              name:'',
+              link:''
+            })
         },
         removeField(){
-            this.videosLength--
-            if(this.videosLength<1){
-                this.videosLength=1
+            this.videos.pop()
+            if(this.videos.lenght<1){
+              this.videos.push(
+                {
+                  name:'',
+                  link:''
+                }
+              )
             }
         },
       openAddModal(){
@@ -441,6 +466,18 @@
         this.updateModal = true
         this.nameModal = 'Editar Categoria'
         this.setItems(ev);
+        // 
+        if(this.seasons[ev.target.dataset.index].videos){
+          this.videos = this.seasons[ev.target.dataset.index].videos
+          
+          
+        }else{
+          this.videos = [{
+              name:'',
+              link:''
+            }]
+        }
+        
       },
       closeModals() {
         this.addModal = false;
@@ -448,6 +485,10 @@
         
       },
       resetItems() {
+        this.videos = [{
+          name:'',
+          link:''
+        }]
         this.season.id = "",
         this.season.name = "";
         this.season.anime = "";
@@ -462,17 +503,16 @@
         this.season.active = false;
       },
       setItems(ev){
-        this.season.id = ev.target.dataset.id.toString(),
-        this.season.name = ev.target.dataset.name.toString();
-        this.season.anime = ev.target.dataset.anime.toString();
+        this.season.id = ev.target.dataset.id,
+        this.season.name = ev.target.dataset.name;
+        this.season.anime = ev.target.dataset.anime;
         this.season.idAnime = ev.target.dataset.idanime;
         this.season.order = ev.target.dataset.order;
         this.season.author = ev.target.dataset.author;
         this.season.launch = ev.target.dataset.launch;
-        this.season.numberEpisodes = ev.target.dataset.numberEpisodes;
+        this.season.numberEpisodes = ev.target.dataset.episodes;
         this.season.studio= ev.target.dataset.studio;
         this.season.status = ev.target.dataset.status;
-        this.season.videos = ev.target.dataset.videos.split(','); //
         this.season.active = ev.target.dataset.active == 'true' ? true : ev.target.dataset.active == true? true : false;
       },
         setAnimeId(ev){
@@ -516,6 +556,7 @@
                         author:this.season.author,
                         status:this.season.status,
                         studio:this.season.studio,
+                        videos:this.videos,
                         numberEpisodes: this.season.numberEpisodes,
 
                   })
@@ -528,81 +569,31 @@
                   });
     
       },
-      async updateItem() {
-        if(this.$refs.fileImage.files[0]) {
-          firebase.storage()
-                .ref("animes")
-                .child(this.anime.name)
-                .child(this.$refs.fileImage.files[0].name)
-                .put(this.$refs.fileImage.files[0])
-                .then((res) => {
-                  res.ref.getDownloadURL()
-                  .then((image) => {
-                    this.anime.image = image;
-                    let ref = firebase.database().ref("animes").child(this.anime.id);
-                    ref.update({
-                      image: this.anime.image,
-                    })
-                  })
-                  .catch((err) => {
-                      console.log(err);
-                  });
-            })
+      updateItem() {
+        let ref = firebase.database().ref("seasons").child(this.season.id);
+        ref.update({
+          anime: this.season.anime,
+          idAnime: this.season.idAnime,
+          name: this.season.name,
+          launch: this.season.launch,
+          order:this.season.order,
+          active: this.season.active,
+          author:this.season.author,
+          status:this.season.status,
+          studio:this.season.studio,
+          videos:this.videos,
+          numberEpisodes: this.season.numberEpisodes,
+        }).then(() => {
+            this.closeModals();
+            this.showLoad = false
+        })
             .catch((err) => {
-                console.log(err);
-            });
-          }
-  
-          if(this.$refs.fileImageBanner.files[0]) {
-          firebase.storage()
-                .ref("animes")
-                .child(this.anime.name)
-                .child(this.$refs.fileImageBanner.files[0].name)
-                .put(this.$refs.fileImageBanner.files[0])
-                .then((res) => {
-                  res.ref.getDownloadURL()
-                  .then((imageb) => {
-                    this.anime.imageBanner = imageb;
-                    let ref = firebase.database().ref("animes").child(this.anime.id);
-                    ref.update({
-                      imageBanner: this.anime.imageBanner,
-                    })
-                  })
-                  .catch((err) => {
-                      console.log(err);
-                  });
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-          }
-        
-            let ref = firebase.database().ref("animes").child(this.anime.id);
-            ref.update({
-              name: this.anime.name,
-              slug:this.anime.name.toString().toLowerCase().replaceAll(' ','-').replaceAll(':','-').normalize('NFD').replaceAll(/[\u0300-\u036f]/g, ""),
-              description: this.anime.description,
-              // image: this.anime.image,
-              // imageBanner: this.anime.imageBanner,
-              active: this.anime.active,
-              activeSeason: this.anime.activeSeason,
-              release: this.anime.release,
-              closure:this.anime.closure,
-              movies:this.anime.movies,
-              seasons:this.anime.seasons,
-              ovas:this.anime.ovas,
-              categories:this.anime.categories,
-            }).then(() => {
-                this.closeModals();
-                this.showLoad = false
-                
-            }).catch((err) => {
-                console.log(err);
-            });
+            console.log(err);
+        });
         
       },
       deleteItem(ev) {
-        let ref = firebase.database().ref("animes");
+        let ref = firebase.database().ref("seasons");
         ref.child(ev.target.dataset.id)
             .remove()
       },
