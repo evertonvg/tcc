@@ -75,9 +75,11 @@ export default {
 .btn:hover{
   @apply bg-red2;
 }
-.fade-enter-active,
-.fade-leave-active {
+.fade-enter-active{
   transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.fade-leave-active {
+  transition: none;
 }
 
 .fade-enter-from,

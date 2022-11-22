@@ -36,48 +36,48 @@
                 </div>
             </div>
         </div>
-        <div class="container h-full mx-auto flex items-start justify-start mt-4">
+        <div class="container h-full mx-auto flex items-start justify-start mt-4" v-show="seasons.length">
             <div class="mb-4 flex items-center justify-center gap-4 w-full flex-col sm:flex-row">
                 <div class="flex items-start justify-start w-full sm:w-[215px]">
-                    <select name="" id="" class="h-10 rounded px-4 outline-none cursor-pointer min-w-full text-graytext" v-model="temporada">
-                        <option value="1">Temporada 1</option>
-                        <option value="2">Temporada 2</option>
-                        <option value="3">Temporada 3</option>
-                        <option value="4">Temporada out blood</option>
+                    <select v-model="temporada" class="h-10 rounded px-4 outline-none cursor-pointer min-w-full text-graytext" @change="setVideos">
+                        <option v-for="(season,index) in seasons" :key="index" :value="season.order">{{season.name}}</option>
                     </select>
                 </div>
-                <div class="flex items-center justify-center gap-5 sm:gap-1 lg:gap-5 bg-white rounded px-4">
-                    <div class="flex flex-col-reverse sm:flex-row h-full items-center justify-center font-bold">
-                        <span class="text-star text-3xl
-                        ">4.7</span>
-                        <graphic title="animação" fillColor="#E7711B" :size="40"></graphic>
+
+                <transition-group name="fade">
+                    <div class="flex items-center justify-center gap-5 sm:gap-1 lg:gap-5 bg-white rounded px-4" v-for="(season,index) in seasons" :key="index" v-show="temporada == season.order">
+                        <div class="flex flex-col-reverse sm:flex-row h-full items-center justify-center font-bold">
+                            <span class="text-star text-3xl
+                            ">4.7</span>
+                            <graphic title="animação" fillColor="#E7711B" :size="40"></graphic>
+                        </div>
+                        <div class="flex flex-col-reverse sm:flex-row h-full items-center justify-center font-bold">
+                            <span class="text-star text-3xl
+                            ">4.7</span>
+                            <history title="historia" fillColor="#E7711B" :size="40"></history>
+                        </div>
+                        <div class="flex flex-col-reverse sm:flex-row h-full items-center justify-center font-bold">
+                            <span class="text-star text-3xl
+                            ">4.7</span>
+                            <person title="Personagens" fillColor="#E7711B" :size="40"></person>
+                        </div>
+                        
+                        <div class="flex flex-col-reverse sm:flex-row h-full items-center justify-center font-bold">
+                            <span class="text-star text-3xl
+                            ">4.7</span>
+                            <music title="trilha sonora" fillColor="#E7711B" :size="40"></music>
+                        </div>
+                        
+                        <div class="flex flex-col-reverse sm:flex-row h-full items-center justify-center font-bold">
+                            <span class="text-star text-3xl
+                            ">4.7</span>
+                            <star title="nota final da temporada" fillColor="#E7711B" :size="40"></star>
+                        </div>
+                
                     </div>
-                    <div class="flex flex-col-reverse sm:flex-row h-full items-center justify-center font-bold">
-                        <span class="text-star text-3xl
-                        ">4.7</span>
-                        <history title="historia" fillColor="#E7711B" :size="40"></history>
-                    </div>
-                    <div class="flex flex-col-reverse sm:flex-row h-full items-center justify-center font-bold">
-                        <span class="text-star text-3xl
-                        ">4.7</span>
-                        <person title="Personagens" fillColor="#E7711B" :size="40"></person>
-                    </div>
-                    
-                    <div class="flex flex-col-reverse sm:flex-row h-full items-center justify-center font-bold">
-                        <span class="text-star text-3xl
-                        ">4.7</span>
-                        <music title="trilha sonora" fillColor="#E7711B" :size="40"></music>
-                    </div>
-                    
-                    <div class="flex flex-col-reverse sm:flex-row h-full items-center justify-center font-bold">
-                        <span class="text-star text-3xl
-                        ">4.7</span>
-                        <star title="nota final da temporada" fillColor="#E7711B" :size="40"></star>
-                    </div>
-               
-                </div>
-                <div class="flex-1 rounded h-full w-full flex items-center justify-center sm:items-end sm:justify-end">
-                    <play fillColor="#E7711B" :size="40" title="aba de videos" class="cursor-pointer bg-white" @click="modalMusic=true"/>
+                 </transition-group>
+                <div class="flex-1 rounded h-full w-full flex items-center justify-center sm:items-end sm:justify-end" >
+                    <play fillColor="#E7711B" :size="40" title="aba de videos" class="cursor-pointer bg-white" v-show="videos!=undefined" @click="modalMusic=true"/>
                 </div>
             </div>
             
@@ -86,8 +86,8 @@
 
 
         <!-- dados de temporada  -->
-        <transition tag="div" name="fade" class="">
-            <div class="rounded flex flex-col sm:flex-row justify-center gap-4">
+        <transition-group tag="div" name="fade">
+            <div class="rounded flex flex-col sm:flex-row justify-center gap-4" v-for="(season,index) in seasons" :key="index" v-show="temporada == season.order">
                 <div class="w-full sm:w-[215px] bg-white p-4">
                     <ul class="flex flex-col items-start justify-start gap-3">
                         <li class="flex flex-col items-start justify-start">
@@ -95,7 +95,7 @@
                                 Autor
                             </span>
                             <span>
-                                Kubo Tite
+                                {{season.author}}
                             </span>
                         </li>
                         <li class="flex flex-col items-start justify-start">
@@ -103,7 +103,7 @@
                                 lançamento
                             </span>
                             <span>
-                                10/2012
+                                {{formatted(season.launch)}}
                             </span>
                         </li>
                         <li class="flex flex-col items-start justify-start">
@@ -111,7 +111,7 @@
                                 Número de episódios 
                             </span>
                             <span>
-                                12
+                                {{season.numberEpisodes}} 
                             </span>
                         </li>
                         <li class="flex flex-col items-start justify-start">
@@ -119,7 +119,7 @@
                                 Estúdio
                             </span>
                             <span>
-                                Mappa
+                                {{season.studio}}
                             </span>
                         </li>
                         <li class="flex flex-col items-start justify-start">
@@ -127,15 +127,19 @@
                                 Status
                             </span>
                             <span>
-                                lançando
+                                {{season.status}}
                             </span>
                         </li>
                     </ul>
                 </div>
 
                 <!-- avaliações e comentarios  -->
+                
                 <div class="flex-1 bg-white p-4">
-                    <div>
+                    <div v-show="$cookies.get('loginIdAnime') == null" class="font-bold">
+                        Para Fazer avaliações e comentários você deve fazer <router-link to="/login" :class="[`bg-red rounded-sm p-2 text-white`]">Login</router-link>
+                    </div>
+                    <div v-show="$cookies.get('loginIdAnime') != null">
                         <h2 class="text-left mb-8 text-xl font-bold">
                             Faça suas avaliações
                         </h2>
@@ -177,7 +181,7 @@
                             </button>
                         </div>
                     </div>
-                    <div class="mt-12">
+                    <div class="mt-12" v-show="$cookies.get('loginIdAnime') != null">
                         <h2 class="text-left mb-8 text-xl font-bold">
                             Deixe seu comentário
                         </h2>
@@ -206,6 +210,7 @@
                                     </span>
                                 </div>
                                 <div class="text-left rounded border border-black p-4 mt-2">
+                                    
                                     Lorem ipsum dolor, sit amet consectetur adipisicing elit. Incidunt quisquam qui, voluptatum aliquam accusamus voluptate reiciendis voluptates quo necessitatibus, molestias autem nostrum ab tempore. Molestias porro itaque repudiandae quidem earum?
                                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis dolores, quo dolor, quasi minus illum cumque aperiam animi aliquam repellendus eaque porro esse laborum adipisci quibusdam. Possimus eaque consectetur repellendus!
                                 </div>
@@ -232,17 +237,15 @@
                     </div>
                 </div>
             </div>
-        </transition>
+        </transition-group>
     </section>
     <transition name="fade">
         <div class="fixed top-0 left-0 z-50 w-screen h-screen bg-black/70 flex items-center justify-center" v-if="modalMusic" @click="modalMusic=false">
             <div class="flex flex-col max-w-[90%] w-[960px] gap-5" @click.stop> 
                 <select v-model="video" class="w-full p-4 cursor-pointer outline-none text-graytext">
                     <option value="" selected disabled>Por favor, selecione uma opening ou ending para visualizar</option>
-                    <option class="cursor-pointer hover:bg-star" value="https://www.youtube.com/embed/mFNFmnYio90">op1</option>
-                    <option class="cursor-pointer" value="https://www.youtube.com/embed/wiJO_OgsyPE&list=PLWGyVWslwTRiOTC8hCEnSElK96OhHRPEc&index=2&ab_channel=Vaundy-Topic">op1</option>
-                    <option class="cursor-pointer" value="https://www.youtube.com/embed/FUgH2zd2Nxo&list=PLWGyVWslwTRiOTC8hCEnSElK96OhHRPEc&index=4&ab_channel=Ado-Topic">op1</option>
-                    <option class="cursor-pointer" value="https://www.youtube.com/embed/mFNFmnYio90&list=PLWGyVWslwTRiOTC8hCEnSElK96OhHRPEc&index=8&ab_channel=UNISONSQUAREGARDEN-Topic">end1</option>
+                    <option v-for="(video,index) in videos" :key="index" class="cursor-pointer hover:bg-star" :value="video.link">{{video.name}}</option>
+                    
                 </select>
                 <iframe class="w-full h-[500px] bg-header"  height="315" :src="video" 
                     title="YouTube video player" frameborder="0" 
@@ -260,7 +263,7 @@ import {  useDateFormat } from '@vueuse/core'
 export default {
     setup(){
         const formatted = (data) =>{
-            return useDateFormat(data, 'DD-MM-YYYY')
+            return useDateFormat(data, 'MM/YYYY');
         } 
         return {formatted}
     },
@@ -270,6 +273,10 @@ export default {
             video:'',
             anime: null,
             temporada:1,
+            idAnime:'',
+            seasons:[],
+            idSeasons:[],
+            videos:[],
             grade:{
                 animation:0,
                 sound:0,
@@ -292,13 +299,37 @@ export default {
             let ref = firebase.database().ref('animes');
             ref.orderByChild('slug').equalTo(this.$route.params.slug).limitToFirst(1).on("value", (snapshot) => {
                 this.anime =  []
+                this.idAnime = ''
                 snapshot.forEach((ss) => {
                     this.anime = ss.val();
+                    this.idAnime = ss.key
                 });
                 if(this.anime.imageBanner){
                     this.$refs.banner.style.backgroundImage = `url(${this.anime.imageBanner})`
                 }
+                this.getSeasons(this.idAnime)
                 this.$store.commit('SET_LOADING',false)
+            });
+        },
+        setVideos(ev){
+            let seas = this.seasons.filter((season)=>{
+                return season.order == ev.target.value;
+            })
+            
+            this.videos = seas[0].videos
+            console.log(this.videos)
+        },
+        getSeasons(id){
+            let ref = firebase.database().ref('seasons');
+            ref.orderByChild('idAnime').equalTo(id).on("value", (snapshot) => {
+                this.seasons =  [];
+                this.idSeasons = [];
+                snapshot.forEach((ss) => {
+                    this.idSeasons.push(ss.key)
+                    this.seasons.push(ss.val())
+                });
+                console.log(this.seasons);
+                
             });
         }
     },
