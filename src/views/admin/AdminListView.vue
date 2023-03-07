@@ -27,7 +27,7 @@
             </li>
             <li class="p-3">
                 <router-link to="/admin/seasons">
-                    Temporadas
+                    Temporadas/Filmes/OVAS
                 </router-link>
             </li>
             <li class="p-3">

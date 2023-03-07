@@ -18,7 +18,19 @@
                     scope="col"
                     class="text-sm font-medium text-gray-900 px-6 py-4 text-center"
                   >
+                    Type media
+                  </th>
+                  <th
+                    scope="col"
+                    class="text-sm font-medium text-gray-900 px-6 py-4 text-center"
+                  >
                     name season
+                  </th>
+                  <th
+                    scope="col"
+                    class="text-sm font-medium text-gray-900 px-6 py-4 text-center"
+                  >
+                    description
                   </th>
                   <th
                     scope="col"
@@ -84,8 +96,14 @@
                   <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                     {{ season.anime }} - {{season.idAnime}}
                   </td>
+                  <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                    {{ season.type }}
+                  </td>
                   <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap text-center">
                     {{season.name}}
+                  </td>
+                  <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap text-center">
+                    {{season.description.substr(0, 50)}}
                   </td>
                   <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap text-center">
                     {{season.order}}
@@ -117,7 +135,9 @@
                       class="btn"
                       :data-index="index"
                       :data-id="ids[index]"
+                      :data-type="season.type"
                       :data-name="season.name"
+                      :data-description="season.description"
                       :data-anime="season.anime"
                       :data-idanime="season.idAnime"
                       :data-order="season.order"
@@ -210,21 +230,61 @@
                   </option>
                 </select>
               </div>
+              <!-- type  -->
               <div class="relative mb-4">
-              <label for="name" class="leading-7 text-sm text-gray-600 block text-left"
-                >Name
-                </label
-              >
-              <input
-                type="text"
-                id="name"
-                name="name"
-                v-model="season.name"
-                :class="[
-                  'w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out',
-                ]"
-              />
-            </div>
+                <label for="anime" class="leading-7 text-sm text-gray-600 block text-left"
+                  >Type Media
+                </label>
+                <select 
+                  id="type"
+                  name="type"
+                  v-model="season.type"
+                  :class="[
+                    'w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out',
+                  ]"
+                >
+                  <option value="Temporada">
+                    Temporada
+                  </option>
+                  <option value="Filme">
+                    Filme
+                  </option>
+                  <option value="OVA">
+                    OVA
+                  </option>
+                </select>
+              </div>
+
+              <div class="relative mb-4">
+                <label for="name" class="leading-7 text-sm text-gray-600 block text-left"
+                  >Name
+                  </label
+                >
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  v-model="season.name"
+                  :class="[
+                    'w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out',
+                  ]"
+                />
+              </div>
+              <div class="relative mb-4">
+                <label for="name" class="leading-7 text-sm text-gray-600 block text-left"
+                  >Description
+                  </label
+                >
+                <input
+                  type="text"
+                  id="description"
+                  name="description"
+                  v-model="season.description"
+                  :class="[
+                    'w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out',
+                  ]"
+                />
+              </div>
             <div class="relative mb-4">
               <label for="ovas" class="leading-7 text-sm text-gray-600 block text-left"
                 >Ordem
@@ -239,6 +299,9 @@
                   'w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out',
                 ]"
               />
+              <span class="text-sm">
+                usar ordem dos decimais para animes, centenas para filmes e milhar para OVA
+              </span>
             </div>
             <div class="relative mb-4">
               <label for="author" class="leading-7 text-sm text-gray-600 block text-left"
@@ -424,7 +487,9 @@
           id:"",
           anime: "",
           animeId: "",
+          type:"",
           name:"",
+          description:"",
           order: "",
           author:"",
           launch: "",
@@ -491,8 +556,10 @@
         }]
         this.season.id = "",
         this.season.name = "";
+        this.season.description = "",
         this.season.anime = "";
         this.season.idAnime = "";
+        this.season.type="",
         this.season.order = "";
         this.season.author = "";
         this.season.launch = "";
@@ -505,7 +572,9 @@
       setItems(ev){
         this.season.id = ev.target.dataset.id,
         this.season.name = ev.target.dataset.name;
+        this.season.description = ev.target.dataset.description;
         this.season.anime = ev.target.dataset.anime;
+        this.season.type = ev.target.dataset.type;
         this.season.idAnime = ev.target.dataset.idanime;
         this.season.order = ev.target.dataset.order;
         this.season.author = ev.target.dataset.author;
@@ -550,6 +619,8 @@
                         anime: this.season.anime,
                         idAnime: this.season.idAnime,
                         name: this.season.name,
+                        type: this.season.type,
+                        description: this.season.description,
                         launch: this.season.launch,
                         order:this.season.order,
                         active: this.season.active,
@@ -575,6 +646,8 @@
           anime: this.season.anime,
           idAnime: this.season.idAnime,
           name: this.season.name,
+          description: this.season.description,
+          type: this.season.type,
           launch: this.season.launch,
           order:this.season.order,
           active: this.season.active,

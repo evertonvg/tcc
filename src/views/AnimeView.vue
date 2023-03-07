@@ -5,8 +5,17 @@
         <div class="container h-full mx-auto flex items-start justify-start mt-4" v-show="seasons.length">
             <div class="mb-4 flex items-center justify-center gap-4 w-full flex-col sm:flex-row">
                 <div class="flex items-start justify-start w-full sm:w-[215px]">
-                    <select v-model="temporada" class="h-10 rounded px-4 outline-none cursor-pointer min-w-full text-graytext" @change="setVideos">
-                        <option v-for="(season,index) in seasons" :key="index" :value="season.order">{{season.name}}</option>
+                    
+                    <select v-model="temporada" class="h-10 rounded px-4 outline-none cursor-pointer min-w-full text-graytext" @change="()=>{setVideos,type=temporada}">
+                        <optgroup label="Temporadas" class="font-bold">
+                            <option v-for="(season,index) in seasons" :key="index" :value="season.order" v-show="season.type=='Temporada'" >{{season.name}}</option>
+                        </optgroup>
+                        <optgroup label="Filmes" class="font-bold">
+                            <option v-for="(season,index) in seasons" :key="index" :value="season.order" v-show="season.type=='Filme'" >{{season.name}}</option>
+                        </optgroup>
+                        <optgroup label="OVAS" class="font-bold">
+                            <option v-for="(season,index) in seasons" :key="index" :value="season.order" v-show="season.type=='OVA'" >{{season.name}}</option>
+                        </optgroup>
                     </select>
                 </div>
                 <transition-group name="fade">
@@ -15,6 +24,7 @@
                 <div class="flex-1 rounded h-full w-full flex items-center justify-center sm:items-end sm:justify-end" >
                     <play fillColor="#E7711B" :size="40" title="aba de videos" class="cursor-pointer bg-white" v-show="videos!=undefined" @click="modalMusic=true"/>
                 </div>
+                
             </div>    
         </div>
 
@@ -26,6 +36,12 @@
 
                 <!-- avaliações e comentarios  -->
                 <div class="flex-1 bg-white p-4">
+                    <div class="mb-12">
+                        <h2 class="text-left mb-8 text-xl font-bold">Descrição da temporada/filme/OVA</h2>s
+                        <p class="text-left">
+                            {{season.description  }}
+                        </p>
+                    </div>
                     <div v-show="$cookies.get('loginIdAnime') == null" class="font-bold">
                         Para Fazer avaliações e comentários você deve fazer <router-link to="/login" :class="[`bg-red rounded-sm p-2 text-white`]">Login</router-link>
                     </div>
@@ -97,6 +113,7 @@ export default {
     },
     data() {
         return {
+            type:"",
             modalMusic:false,
             video:'',
             anime: null,

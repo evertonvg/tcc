@@ -13,7 +13,7 @@
         <span class="text-black font-black text-2xl">7.4</span>
     </div>
     <img :src="item.image" class="w-full h-full object-cover" @error="setAltImg" alt=example/>
-    <div class="absolute bottom-0 -left-full bg-black/50 w-[200%] p-2  text-left">
+    <div class="absolute bottom-0 left-0 bg-black/50 w-full p-2  text-left">
         <h3 class="text-sm text-white">
             <span class="opacity-100">
             {{item.name}}
