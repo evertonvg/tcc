@@ -37,7 +37,7 @@
                 <!-- avaliações e comentarios  -->
                 <div class="flex-1 bg-white p-4">
                     <div class="mb-12">
-                        <h2 class="text-left mb-8 text-xl font-bold">Descrição da temporada/filme/OVA</h2>s
+                        <h2 class="text-left mb-8 text-xl font-bold">Descrição da temporada/filme/OVA</h2>
                         <p class="text-left">
                             {{season.description  }}
                         </p>
@@ -64,9 +64,9 @@
                         <h2 class="text-left mb-8 text-xl font-bold">
                             Deixe seu comentário
                         </h2>
-                        <textarea class="border border-black rounded w-full h-40 p-4" placeholder="escreva seu comentário..."></textarea>
+                        <textarea v-model="commentary" class="border border-black rounded w-full h-40 p-4" placeholder="escreva seu comentário..."></textarea>
                         <div class="text-left">
-                            <button class="btn">
+                            <button class="btn disabled:bg-gray" @click="saveComment" :disabled="commentary.length <= 10">
                                 Postar Comentário
                             </button>
                         </div>
@@ -75,8 +75,9 @@
                         <h2 class="text-left mb-8 text-xl font-bold">
                             Confira outros comentários
                         </h2>
-                        <commentaryView comment="lorem ipsum" :photo="$cookies.get('imageAnime')" :data="formatted('2021-12-02 12:12:12')" :name="$cookies.get('nameAnime')" />
-                        <commentaryView comment="lorem ipsum" :photo="$cookies.get('imageAnime')" :data="formatted('2021-12-02 12:12:12')" :name="$cookies.get('nameAnime')" />
+                        <!-- {{ comments }} -->
+                        <commentaryView v-for="(comment,index) in comments" :key="index" v-show="comment.season==temporada" :comment="comment.comment" :photo="comment.photo" :data="formatted(comment.date)" :name="comment.user" />
+                        <p v-show="!comments.length" class="text-black text-center">Sem comentários disponiveis</p>
                     </div>
                 </div>
             </div>
@@ -99,7 +100,7 @@ import {  useDateFormat } from '@vueuse/core';
 export default {
     setup(){
         const formatted = (data) =>{
-            return useDateFormat(data, 'MM/YYYY');
+            return useDateFormat(data, 'DD/MM/YYYY');
         } 
         return {formatted}
     },
@@ -111,6 +112,7 @@ export default {
         commentaryView,
         evaluatestarView
     },
+    
     data() {
         return {
             type:"",
@@ -124,6 +126,11 @@ export default {
             videos:[],
             evaluations:[],
             idEvaluations:[],
+            allComments:[],
+            comments:[],
+            commentary:'',
+            data:'',
+            checkCommentTemp:true,
             grade:{
                 animation:0,
                 sound:0,
@@ -140,9 +147,22 @@ export default {
                 document.body.style.overflow = 'auto'
             }
         },
-        
+        temporada(){
+            this.getTempComments()
+            this.$router.replace({ path: this.$route.fullPath, query: { temp: this.temporada }})
+        }
     },
     methods:{
+        getTempComments(){
+            let comments = []
+            this.allComments.forEach((cmmt)=>{
+                if(parseInt(this.temporada) == parseInt(cmmt.season)){
+                    comments.push(cmmt)
+                }
+            })
+
+            this.comments  = comments
+        },
         emitStar(ev){
             console.log(ev)
         },
@@ -161,8 +181,52 @@ export default {
                     this.$refs.banner.style.backgroundImage = `url(${this.anime.imageBanner})`
                 }
                 this.getSeasons(this.idAnime)
+                this.getComments(this.idAnime)
                 this.$store.commit('SET_LOADING',false)
             });
+        },
+        getComments(id){
+            let ref = firebase.database().ref('comments');
+            ref.orderByChild('idAnime').equalTo(id).on("value", (snapshot) => {
+                this.allComments =  []
+
+                snapshot.forEach((ss) => {
+                    this.allComments.push(ss.val()); 
+                });
+                
+                this.getTempComments()
+           
+            });
+        },
+        saveComment(){
+            let date = new Date().toString()
+            console.log(date)
+            this.$store.commit('SET_LOADING',true)
+            let ref = firebase.database().ref('comments');
+                  ref.push({
+                        idAnime: this.idAnime,
+                        animeName:this.anime.name,
+                        season:this.temporada,
+                        photo:this.$cookies.get('imageAnime'),
+                        user:this.$cookies.get("nameAnime"),
+                        idUser:this.$cookies.get("loginIdAnime"),
+                        date:date,
+                        comment:this.commentary,
+                        active:true
+
+                  })
+                      .then(() => {
+                        this.$store.commit('SET_LOADING',false)
+                        this.$store.commit(
+                            "SET_MESSAGE",
+                            `Seu comentário foi salvo com sucesso ^^`   
+                        );
+                        this.$store.commit("SET_IMAGE_MESSAGE", "welcome");
+                        this.commentary = ''
+                  })
+                      .catch((err) => {
+                      console.log(err);
+                  });
         },
         
         setVideos(ev){
@@ -171,7 +235,6 @@ export default {
             })
             
             this.videos = seas[0].videos
-            console.log(this.videos)
         },
         getSeasons(id){
             let ref = firebase.database().ref('seasons');
@@ -184,6 +247,9 @@ export default {
                     this.getEvaluations(ss.key)
                 });
                 this.videos  = this.seasons[0].videos;
+                if(this.$route.query.temp){
+                    this.temporada=this.$route.query.temp
+                }
             });
         },
         getEvaluations(id){
@@ -196,6 +262,7 @@ export default {
             });
         },
     },
+    
     mounted() {
         document.title = "Otaku Stars - Inicio";
         this.getAnime()
@@ -204,6 +271,8 @@ export default {
                 case 'Escape': this.modalMusic = false
             }
         })
+        
+         
     },
 }
 </script>

@@ -2,7 +2,7 @@
   <nav
     ref="menu"
     v-show="$route.name != 'login' && !$route.fullPath.toString().includes('admin')"
-    class="bg-blue h-20 text-white px-3 z-40  fixed top-0 left-0 w-full font-roboto transition-transform"
+    class="bg-blue h-20 text-white px-3 z-50  fixed top-0 left-0 w-full font-roboto transition-transform"
   >
     <div class="container items-center justify-center h-full flex mx-auto">
       <div class="flex items-center justify-center">
@@ -34,8 +34,8 @@
       <div class="hidden lg:block font-roboto text-lg">
         <ul class="h-full flex items-center justify-end gap-2">
           <li>
-            <router-link to="/destaques" class="hover:text-darkblue transition-colors"
-              >destaques</router-link
+            <router-link to="/" class="hover:text-darkblue transition-colors"
+              >Inicio</router-link
             >
           </li>
           <li>
@@ -95,7 +95,7 @@
   <!-- mobile  -->
   <div
     :class="[
-      'fixed lg:hidden top-0 right-0 w-screen h-screen bg-black transition-all z-10  font-roboto',
+      'fixed lg:hidden top-0 right-0 w-screen h-screen bg-black transition-all z-40  font-roboto',
       !open ? 'translate-x-full' : '',
     ]"
   >
@@ -103,22 +103,22 @@
       class="absolute w-3/4 h-screen flex top-0 right-0 bg-lightblue font-roboto opacity-100"
     >
       <ul class="h-full flex items-start justify-center flex-col gap-2 pl-8">
-        <li v-show="$cookies.get('loginIdAnime') == null">
+        <li v-show="$cookies.get('loginIdAnime') == null" @click="open=!open">
           <router-link to="/login" class="text-2xl">Conecte-se</router-link>
         </li>
-        <li>
-          <router-link class="text-2xl" to="/destaques">destaques</router-link>
+        <li @click="open=!open">
+          <router-link class="text-2xl" to="/">Inicio</router-link>
         </li>
-        <li>
+        <li @click="open=!open">
           <router-link class="text-2xl" to="/categories">categorias</router-link>
         </li>
-        <li>
+        <li @click="open=!open">
           <router-link class="text-2xl" to="/search">Pesquisar</router-link>
         </li>
-        <li>
+        <li @click="open=!open">
           <router-link class="text-2xl" to="/about">Sobre</router-link>
         </li>
-        <li v-show="$cookies.get('loginIdAnime') != null">
+        <li v-show="$cookies.get('loginIdAnime') != null" @click="open=!open">
           <button @click="logout" class="flex items-center justify-center text-2xl">
             Sair<Logout :size="50" />
           </button>
@@ -154,9 +154,13 @@ export default {
     },
     scrollMenuEffect(value) {
       if (value > this.pagey) {
-        this.$refs.menu.classList.add("-translate-y-20");
+        if(this.$refs.menu){
+          this.$refs.menu.classList.add("-translate-y-20");
+        }
       } else {
-        this.$refs.menu.classList.remove("-translate-y-20");
+        if(this.$refs.menu){
+          this.$refs.menu.classList.remove("-translate-y-20");
+        }
       }
       this.pagey = value;
     },
@@ -170,4 +174,3 @@ export default {
   },
 };
 </script>
-<style scoped></style>

@@ -1,5 +1,5 @@
 <template>
-  <section class="mt-40">
+  <section class="mt-40 px-5 md:px-0">
 
     <div class="mx-auto container">
         <h2 class="text-left text-2xl font-bold pt-6 my-4">Lista de categorias</h2>
@@ -37,7 +37,6 @@ export default {
             this.categories.push(ss.val());
             });
             this.$store.commit('SET_LOADING',false)
-            console.log(this.categories)
         });
         }
     },

@@ -1,5 +1,5 @@
 <template>
-    <div class="container mx-auto mt-24 pb-20">
+    <div class="container mx-auto mt-24 pb-20 px-5 md:px-0">
         <h2 class="text-left text-2xl font-bold pt-6 my-4" v-if="$route.params.category">Lista de animes da categoria {{ $route.params.category }}</h2>
         <h2 class="text-left text-2xl font-bold pt-6 my-4" v-else>Lista de animes</h2>
         <div class="flex justify-center pt-20">
@@ -34,8 +34,8 @@
             </div>
         </div>
     </div>
-    <div class="container mx-auto pb-20 grid grid-cols-6 gap-4">
-        <router-link v-show="pesquisa=='' || destaque.length==0 || destaque.name.toLowerCase().includes(pesquisa.toLowerCase())" v-for="(destaque,index) in destaques" :key="index" :to="`/animes/${destaque.slug}`" class="h-full relative w-full bg-gradient-to-b from-white to-header">
+    <div class="container mx-auto pb-20 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 px-5 md:px-0">
+        <router-link v-show="pesquisa=='' || destaque.length==0 || destaque.name.toLowerCase().includes(pesquisa.toLowerCase())" v-for="(destaque,index) in destaques" :key="index" :to="`/animes/${destaque.slug}`" class="sm:h-full relative w-full bg-gradient-to-b from-white to-header h-64">
             <cardVue :item="destaque" class="bg-gradient-to-b from-white to-header" />
         </router-link>
     </div>
@@ -81,26 +81,7 @@
                     arr.push(item)
                     return item
                 }
-
-
-                // if(){
-                    
-                // }
-                
-            //     
-            //     console.log(cat)
-            //     if(cat.includes(this.$route.params.category.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ""))){
-            //         console.log('sim')
-            //     }
-                
-                // Object.values(destaques.categories )
-                // if(item.categories.some(()=>{
-                        // it.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "") == (this.$route.params.category.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ""))
-                //     })){
-                //     return item;
-                // }
             })
-            console.log(arr)
             this.destaques = arr
 
         }
