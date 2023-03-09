@@ -55,8 +55,8 @@
                         <evaluatestarView v-model:grade="grade.sound" name="Trilha sonora:" />
 
                         <div class="text-left">
-                            <button class="btn">
-                                Enviar Avaliação
+                            <button class="btn disabled:bg-gray" :disabled="grade.animation==0 || grade.history==0 || grade.characters==0 || grade.sound==0" @click="saveEvaluation" :data-id="idActiveEvaluation">
+                                {{sendOrUpdateEvaluation}}
                             </button>
                         </div>
                     </div>
@@ -116,6 +116,7 @@ export default {
     data() {
         return {
             type:"",
+            idEvaluation:'',
             modalMusic:false,
             video:'',
             anime: null,
@@ -125,10 +126,14 @@ export default {
             idSeasons:[],
             videos:[],
             evaluations:[],
+            evaluationsUser:[],
             idEvaluations:[],
+            idEvaluationsUser:[],
+            idActiveEvaluation:"",
             allComments:[],
             comments:[],
             commentary:'',
+            sendOrUpdateEvaluation:'',
             data:'',
             checkCommentTemp:true,
             grade:{
@@ -146,10 +151,12 @@ export default {
             }else{
                 document.body.style.overflow = 'auto'
             }
+            
         },
         temporada(){
             this.getTempComments()
             this.$router.replace({ path: this.$route.fullPath, query: { temp: this.temporada }})
+            this.setEvaluation()
         }
     },
     methods:{
@@ -182,9 +189,11 @@ export default {
                 }
                 this.getSeasons(this.idAnime)
                 this.getComments(this.idAnime)
+                this.getEvaluations(this.idAnime)
                 this.$store.commit('SET_LOADING',false)
             });
         },
+ 
         getComments(id){
             let ref = firebase.database().ref('comments');
             ref.orderByChild('idAnime').equalTo(id).on("value", (snapshot) => {
@@ -200,7 +209,6 @@ export default {
         },
         saveComment(){
             let date = new Date().toString()
-            console.log(date)
             this.$store.commit('SET_LOADING',true)
             let ref = firebase.database().ref('comments');
                   ref.push({
@@ -244,7 +252,6 @@ export default {
                 snapshot.forEach((ss) => {
                     this.idSeasons.push(ss.key)
                     this.seasons.push(ss.val())
-                    this.getEvaluations(ss.key)
                 });
                 this.videos  = this.seasons[0].videos;
                 if(this.$route.query.temp){
@@ -254,12 +261,99 @@ export default {
         },
         getEvaluations(id){
             let ref = firebase.database().ref('evaluations');
-            ref.orderByChild('seasonId').equalTo(id).on("value", (snapshot) => {
+            ref.orderByChild('idAnime').equalTo(id).on("value", (snapshot) => {
                 snapshot.forEach((ss) => {
                     this.evaluations.push(ss.val());
                     this.idEvaluations.push(ss.key);
                 });
+                this.evaluationsUser = []
+                this.idEvaluationsUser = []
+                this.evaluations.forEach((ev,index)=>{
+                    if(ev.idUser == this.$cookies.get("loginIdAnime")){
+                        this.evaluationsUser.push(ev)
+                        this.idEvaluationsUser.push(this.idEvaluations[index])
+                    }
+                })
+                this.setEvaluation()
             });
+            
+        },
+        setEvaluation(){
+            let verify = false
+            this.evaluationsUser.forEach((el,ind)=>{
+                if(el.season == this.temporada){
+                    this.idActiveEvaluation = this.idEvaluations[ind]
+                    this.grade.sound = el.sound
+                    this.grade.characters = el.characters
+                    this.grade.history = el.history
+                    this.grade.animation = el.animation
+                    this.sendOrUpdateEvaluation = 'Atualizar Avaliação'
+                    verify = true
+                }
+                
+            })
+            if(verify==false){
+                this.idActiveEvaluation = ''
+                this.grade.sound = 0
+                this.grade.characters = 0
+                this.grade.history = 0
+                this.grade.animation = 0
+                this.sendOrUpdateEvaluation = 'Enviar Avaliação'
+            }
+            
+            
+        },
+        saveEvaluation(){
+            let date = new Date().toString()
+            this.$store.commit('SET_LOADING',true)
+            // console.log(this.idActiveEvaluation)
+            if(this.idActiveEvaluation==''){
+                let ref = firebase.database().ref('evaluations');
+                ref.push({
+                    idAnime: this.idAnime,
+                    animeName:this.anime.name,
+                    season:this.temporada,
+                    user:this.$cookies.get("nameAnime"),
+                    idUser:this.$cookies.get("loginIdAnime"),
+                    date:date,
+                    sound:this.grade.sound,
+                    characters:this.grade.characters,
+                    animation:this.grade.animation,
+                    history:this.grade.history,
+                    active:true
+
+                }).then(() => {
+                    this.$store.commit('SET_LOADING',false)
+                    this.$store.commit(
+                        "SET_MESSAGE",
+                        `Sua avaliação foi enviada com sucesso ^.^`   
+                    );
+                    this.$store.commit("SET_IMAGE_MESSAGE", "welcome");
+  
+                }).catch((err) => {
+                    console.log(err);
+                });
+            }else{
+                let ref = firebase.database().ref("evaluations").child(this.idActiveEvaluation);
+                ref.update({
+                    
+                    date:date,
+                    sound:this.grade.sound,
+                    characters:this.grade.characters,
+                    animation:this.grade.animation,
+                    history:this.grade.history,
+   
+                }).then(() => {
+                    this.$store.commit('SET_LOADING',false)
+                    this.$store.commit(
+                        "SET_MESSAGE",
+                        `Sua avaliação foi atualizada com sucesso ^.^`   
+                    );
+                    this.$store.commit("SET_IMAGE_MESSAGE", "welcome");
+                }).catch((err) => {
+                    console.log(err);
+                });
+            }
         },
     },
     
@@ -270,9 +364,7 @@ export default {
             switch(ev.key){
                 case 'Escape': this.modalMusic = false
             }
-        })
-        
-         
+        })    
     },
 }
 </script>
