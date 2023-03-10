@@ -108,26 +108,30 @@ export default {
         .auth()
         .signInWithPopup(provider)
         .then((res) => {
-          console.log(res);
-
+          console.log(res)
           this.$cookies.set("loginIdAnime", res.credential.accessToken);
+          
           switch (link) {
             case "google":
               this.$cookies.set("imageAnime", res.additionalUserInfo.profile.picture);
+              this.$cookies.set("idUser", res.additionalUserInfo.profile.id);
               break;
             case "facebook":
               this.$cookies.set(
                 "imageAnime",
                 res.additionalUserInfo.profile.picture.data.url
               );
+              this.$cookies.set("idUser", res.additionalUserInfo.profile.id);
               break;
             case "twitter":
               this.$cookies.set(
                 "imageAnime",
                 res.additionalUserInfo.profile.profile_image_url_https
               );
+              this.$cookies.set("idUser", res.additionalUserInfo.profile.id);
               break;
           }
+          
 
           this.$cookies.set("nameAnime", res.additionalUserInfo.profile.name);
 

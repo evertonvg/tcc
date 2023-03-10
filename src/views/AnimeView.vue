@@ -269,7 +269,7 @@ export default {
                 this.evaluationsUser = []
                 this.idEvaluationsUser = []
                 this.evaluations.forEach((ev,index)=>{
-                    if(ev.idUser == this.$cookies.get("loginIdAnime")){
+                    if(ev.idUser == this.$cookies.get("idUser")){
                         this.evaluationsUser.push(ev)
                         this.idEvaluationsUser.push(this.idEvaluations[index])
                     }
@@ -314,7 +314,7 @@ export default {
                     animeName:this.anime.name,
                     season:this.temporada,
                     user:this.$cookies.get("nameAnime"),
-                    idUser:this.$cookies.get("loginIdAnime"),
+                    idUser:this.$cookies.get("idUser"),
                     date:date,
                     sound:this.grade.sound,
                     characters:this.grade.characters,
