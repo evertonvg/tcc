@@ -7,13 +7,13 @@
                 <div class="flex items-start justify-start w-full sm:w-[215px]">
                     
                     <select v-model="temporada" class="h-10 rounded px-4 outline-none cursor-pointer min-w-full text-graytext" @change="()=>{setVideos,type=temporada}">
-                        <optgroup label="Temporadas" class="font-bold">
+                        <optgroup label="Temporadas" class="font-bold" v-show="seasons.some((item)=>{return item.type=='Temporada'})">
                             <option v-for="(season,index) in seasons" :key="index" :value="season.order" v-show="season.type=='Temporada'" >{{season.name}}</option>
                         </optgroup>
-                        <optgroup label="Filmes" class="font-bold">
+                        <optgroup label="Filmes" class="font-bold" v-show="seasons.some((item)=>{return item.type=='Filme'})">
                             <option v-for="(season,index) in seasons" :key="index" :value="season.order" v-show="season.type=='Filme'" >{{season.name}}</option>
                         </optgroup>
-                        <optgroup label="OVAS" class="font-bold">
+                        <optgroup label="OVAS" class="font-bold" v-show="seasons.some((item)=>{return item.type=='OVA'})">
                             <option v-for="(season,index) in seasons" :key="index" :value="season.order" v-show="season.type=='OVA'" >{{season.name}}</option>
                         </optgroup>
                     </select>
