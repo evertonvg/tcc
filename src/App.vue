@@ -79,7 +79,7 @@ export default {
   transition: opacity 0.5s ease, transform 0.5s ease;
 }
 .fade-leave-active {
-  transition: none;
+  transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
 .fade-enter-from,

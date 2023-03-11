@@ -14,6 +14,7 @@ import Graphic from 'vue-material-design-icons/Camera.vue';
 import Music from 'vue-material-design-icons/MusicNote.vue';
 import Star from 'vue-material-design-icons/StarHalfFull.vue';
 import Play from 'vue-material-design-icons/PlaySpeed.vue'
+import ArrowDown from 'vue-material-design-icons/ChevronDoubleDown.vue'
 
 
 createApp(App)
@@ -26,6 +27,7 @@ createApp(App)
 .component('history', History)
 .component('music', Music)
 .component('graphic', Graphic)
+.component('ArrowDown', ArrowDown)
 .component('star', Star)
 .component('play', Play)
 .mount('#app')

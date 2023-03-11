@@ -35,7 +35,7 @@ export default {
     data() {
         return {
             settings: {
-                itemsToShow: 1,
+                itemsToShow: 2,
                 snapAlign: 'center',
                 autoplay:"10000"
             },

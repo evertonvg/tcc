@@ -38,11 +38,11 @@
               >Inicio</router-link
             >
           </li>
-          <li>
+          <!-- <li>
             <router-link to="/categories" class="hover:text-darkblue transition-colors"
               >categorias</router-link
             >
-          </li>
+          </li> -->
           <li>
             <router-link to="/search" class="hover:text-darkblue transition-colors"
               >Pesquisar</router-link
@@ -109,9 +109,9 @@
         <li @click="open=!open">
           <router-link class="text-2xl" to="/">Inicio</router-link>
         </li>
-        <li @click="open=!open">
+        <!-- <li @click="open=!open">
           <router-link class="text-2xl" to="/categories">categorias</router-link>
-        </li>
+        </li> -->
         <li @click="open=!open">
           <router-link class="text-2xl" to="/search">Pesquisar</router-link>
         </li>
