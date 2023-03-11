@@ -45,19 +45,31 @@
             this.setFilter()
             this.page = 1
             this.attTotalPages()
-            
+            this.attUrl()
         },
         setCategories(){
             this.setFilter()
             this.page = 1
             this.attTotalPages()
+            this.attUrl()
         },
         page(){
-            this.$router.replace({ path: this.$route.fullPath, query: { page: this.page }})
+            this.attUrl()
         }
       
     },
     methods: {
+        attUrl(){
+            console.log(this.setCategories)
+            this.$router.replace({ 
+                path: this.$route.fullPath, query: { 
+                    page: this.page,
+                    name: this.pesquisa,
+                    categories: this.setCategories.map((item)=>{
+                        return item
+                    }).toString()
+                }})
+        },
         attSearch(value){
             this.pesquisa = value
         },
@@ -144,6 +156,11 @@
         if(this.$route.query.page){
             this.page=this.$route.query.page
         }
+        if(this.$route.query.name){
+            this.pesquisa=this.$route.query.name
+            this.attSearch(this.$route.query.name)
+        }
+        
         
     },
   };

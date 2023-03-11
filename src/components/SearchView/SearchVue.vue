@@ -83,6 +83,9 @@
             if(window.innerWidth <600){
                 this.enableCats = false
             }
+            if(this.$route.query.categories){
+                this.filtercategories=this.$route.query.categories.split(',')
+            }
             
         }
     }
