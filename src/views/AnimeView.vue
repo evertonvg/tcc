@@ -328,7 +328,7 @@ export default {
                         "SET_MESSAGE",
                         `Sua avaliação foi enviada com sucesso ^.^`   
                     );
-                    this.$store.commit("SET_IMAGE_MESSAGE", "welcome");
+                    this.$store.commit("SET_IMAGE_MESSAGE", "logout");
   
                 }).catch((err) => {
                     console.log(err);
@@ -349,7 +349,7 @@ export default {
                         "SET_MESSAGE",
                         `Sua avaliação foi atualizada com sucesso ^.^`   
                     );
-                    this.$store.commit("SET_IMAGE_MESSAGE", "welcome");
+                    this.$store.commit("SET_IMAGE_MESSAGE", "logout");
                 }).catch((err) => {
                     console.log(err);
                 });

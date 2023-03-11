@@ -1,6 +1,6 @@
 <template>
   <section
-    class="text-gray-600 body-font bg-cover bg-right md:bg-center bg-no-repeat h-screen transition-all font-roboto"
+    class="text-gray-600 body-font bg-cover bg-right md:bg-center bg-no-repeat h-screen transition-all font-roboto overflow-hidden"
     ref="logsection"
   >
     <div class="container px-2 py-4 mx-auto flex flex-wrap items-center">

@@ -32,11 +32,17 @@ export default {
     methods:{
         getCategories(){
         let ref = firebase.database().ref('categories');
-        ref.orderByValue().on("value", (snapshot) => {
+        ref.orderByChild('active').equalTo(true).on("value", (snapshot) => {
+            this.categories = [];
             snapshot.forEach((ss) => {
             this.categories.push(ss.val());
             });
             this.$store.commit('SET_LOADING',false)
+            this.categories.sort((x,y)=>{
+                let a = x.name.toLowerCase()
+                let b = y.name.toLowerCase()
+                return  a == b ? 0 : a > b ? 1 : -1
+            })
         });
         }
     },
