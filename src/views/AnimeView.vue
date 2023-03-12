@@ -76,7 +76,12 @@
                             Confira outros comentários
                         </h2>
                         <!-- {{ comments }} -->
-                        <commentaryView v-for="(comment,index) in comments" :key="index" v-show="comment.season==temporada" :comment="comment.comment" :photo="comment.photo" :data="formatted(comment.date)" :name="comment.user" />
+                        <transition-group name="fade">
+                            <commentaryView v-for="(comment,index) in comments" :key="index" v-show="index < commentaryLimit" :comment="comment.comment" :photo="comment.photo" :data="formatted(comment.date)" :name="comment.user" />
+                        </transition-group>
+                        <button class="btn disabled:bg-gray" @click="showMoreComments" v-show="commentaryLimit < comments.length">
+                            Ver mais comentários
+                        </button>
                         <p v-show="!comments.length" class="text-black text-center">Sem comentários disponiveis</p>
                     </div>
                 </div>
@@ -117,6 +122,7 @@ export default {
         return {
             type:"",
             idEvaluation:'',
+            commentaryLimit:4,
             modalMusic:false,
             video:'',
             anime: null,
@@ -132,6 +138,7 @@ export default {
             idActiveEvaluation:"",
             allComments:[],
             comments:[],
+            commentsSeason:[],
             commentary:'',
             sendOrUpdateEvaluation:'',
             data:'',
@@ -157,9 +164,13 @@ export default {
             this.getTempComments()
             this.$router.replace({ path: this.$route.fullPath, query: { temp: this.temporada }})
             this.setEvaluation()
+            this.commentaryLimit = 4
         }
     },
     methods:{
+        showMoreComments(){
+            this.commentaryLimit = this.commentaryLimit + 8
+        },
         getTempComments(){
             let comments = []
             this.allComments.forEach((cmmt)=>{
