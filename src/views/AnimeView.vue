@@ -1,12 +1,12 @@
 <template>
     <header class="h-[30vh] sm:h-[50vh]  bg-cover bg-no-repeat bg-center overflow-hidden bg-gradient-to-b from-white to-header" ref="banner"></header>
     <section class="px-5 container mx-auto mt-4 -translate-y-20">
-        <infosView :anime="anime"/>
+        <infosView :anime="anime" :finalnote="notes"/>
         <div class="container h-full mx-auto flex items-start justify-start mt-4" v-show="seasons.length">
             <div class="mb-4 flex items-center justify-center gap-4 w-full flex-col sm:flex-row">
                 <div class="flex items-start justify-start w-full sm:w-[215px]">
                     
-                    <select v-model="temporada" class="h-10 rounded px-4 outline-none cursor-pointer min-w-full text-graytext" @change="()=>{setVideos,type=temporada}">
+                    <select v-model="temporada" class="h-10 rounded px-4 outline-none cursor-pointer min-w-full text-graytext" @change="()=>{setVideos,type=temporada}" ref="selectemp">
                         <optgroup label="Temporadas" class="font-bold" v-show="seasons.some((item)=>{return item.type=='Temporada'})">
                             <option v-for="(season,index) in seasons" :key="index" :value="season.order" v-show="season.type=='Temporada'" >{{season.name}}</option>
                         </optgroup>
@@ -19,7 +19,7 @@
                     </select>
                 </div>
                 <transition-group name="fade">
-                    <notesView v-for="(season,index) in seasons" :key="index" v-show="temporada == season.order" />
+                    <notesView v-for="(season,index) in seasons" :key="index" v-show="temporada == season.order" :notes="notes" />
                  </transition-group>
                 <div class="flex-1 rounded h-full w-full flex items-center justify-center sm:items-end sm:justify-end" >
                     <play fillColor="#E7711B" :size="40" title="aba de videos" class="cursor-pointer bg-white" v-show="videos!=undefined" @click="modalMusic=true"/>
@@ -77,7 +77,7 @@
                         </h2>
                         <!-- {{ comments }} -->
                         <transition-group name="fade">
-                            <commentaryView v-for="(comment,index) in comments" :key="index" v-show="index < commentaryLimit" :comment="comment.comment" :photo="comment.photo" :data="formatted(comment.date)" :name="comment.user" />
+                            <commentaryView v-for="(comment,index) in comments.slice().reverse()" :key="index" v-show="index < commentaryLimit" :comment="comment.comment" :photo="comment.photo" :data="formatted(comment.date)" :name="comment.user" />
                         </transition-group>
                         <button class="btn disabled:bg-gray" @click="showMoreComments" v-show="commentaryLimit < comments.length">
                             Ver mais comentários
@@ -105,7 +105,7 @@ import {  useDateFormat } from '@vueuse/core';
 export default {
     setup(){
         const formatted = (data) =>{
-            return useDateFormat(data, 'DD/MM/YYYY');
+            return useDateFormat(data, 'YYYY');
         } 
         return {formatted}
     },
@@ -143,14 +143,23 @@ export default {
             sendOrUpdateEvaluation:'',
             data:'',
             checkCommentTemp:true,
+            selectText:'',
             grade:{
                 animation:0,
                 sound:0,
                 characters:0,
                 history:0
+            },
+            notes:{
+                animation:'0.00',
+                sound:'0.00',
+                characters:'0.00',
+                history:'0.00',
+                finalNote: '0.00'
             }
         }
     },
+    
     watch:{
         modalMusic(newer){
             if(newer){
@@ -164,10 +173,41 @@ export default {
             this.getTempComments()
             this.$router.replace({ path: this.$route.fullPath, query: { temp: this.temporada }})
             this.setEvaluation()
+            this.setnotes()
             this.commentaryLimit = 4
+            // this.setTemp()
         }
     },
+    
     methods:{
+        setTemp(){
+            this.selectText = this.$refs.selectemp.options[this.$refs.selectemp.options.selectedIndex].text
+        },
+        setnotes(){
+            
+            let sound=0,characters=0,animation=0,history=0;
+            let notesSeason = []
+            notesSeason= this.evaluations.filter((item)=>{ 
+                return item.season == this.temporada
+            })
+
+            notesSeason.forEach((item)=>{
+                sound = sound + item.sound
+                characters = characters + item.characters
+                animation = animation + item.animation
+                history = history + item.history
+            })
+            sound = sound == 0 ? parseFloat(0).toFixed(2) : parseFloat(sound / notesSeason.length).toFixed(2)
+            characters = characters == 0 ? parseFloat(0).toFixed(2) : parseFloat(characters / notesSeason.length).toFixed(2)
+            animation = animation == 0 ? parseFloat(0).toFixed(2) : parseFloat(animation / notesSeason.length).toFixed(2)
+            history = history == 0 ? parseFloat(0).toFixed(2) : parseFloat(history / notesSeason.length).toFixed(2)
+            this.notes.sound = sound
+            this.notes.characters = characters
+            this.notes.animation = animation
+            this.notes.history = history
+
+            this.notes.finalNote = parseFloat(parseFloat(this.notes.sound) + parseFloat(this.notes.characters) + parseFloat(this.notes.animation) + parseFloat(this.notes.history)).toFixed(2) / 4
+        },
         showMoreComments(){
             this.commentaryLimit = this.commentaryLimit + 8
         },
@@ -189,8 +229,6 @@ export default {
             ref.orderByChild('slug').equalTo(this.$route.params.slug).limitToFirst(1).on("value", (snapshot) => {
                 this.anime =  []
                 this.idAnime = ''
-                this.evaluations =  []
-                this.idEvaluations = []
                 snapshot.forEach((ss) => {
                     this.anime = ss.val();
                     this.idAnime = ss.key
@@ -268,24 +306,31 @@ export default {
                 if(this.$route.query.temp){
                     this.temporada=this.$route.query.temp
                 }
+            
             });
         },
         getEvaluations(id){
             let ref = firebase.database().ref('evaluations');
             ref.orderByChild('idAnime').equalTo(id).on("value", (snapshot) => {
+                this.evaluations = []
+                this.idEvaluations = []
                 snapshot.forEach((ss) => {
                     this.evaluations.push(ss.val());
                     this.idEvaluations.push(ss.key);
                 });
                 this.evaluationsUser = []
                 this.idEvaluationsUser = []
+
                 this.evaluations.forEach((ev,index)=>{
                     if(ev.idUser == this.$cookies.get("idUser")){
                         this.evaluationsUser.push(ev)
                         this.idEvaluationsUser.push(this.idEvaluations[index])
                     }
                 })
+
+
                 this.setEvaluation()
+                this.setnotes()
             });
             
         },
@@ -293,7 +338,7 @@ export default {
             let verify = false
             this.evaluationsUser.forEach((el,ind)=>{
                 if(el.season == this.temporada){
-                    this.idActiveEvaluation = this.idEvaluations[ind]
+                    this.idActiveEvaluation = this.idEvaluationsUser[ind]
                     this.grade.sound = el.sound
                     this.grade.characters = el.characters
                     this.grade.history = el.history

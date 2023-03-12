@@ -69,14 +69,7 @@ export default {
   },
   methods: {
     background() {
-      //   let index = Math.floor(Math.random() * this.bgs.length - 1);
       this.$refs.logsection.style.backgroundImage = `url(${this.bgs[0]})`;
-      console.log(this.bgs[0]);
-      //   this.$refs.logsection.style.backgroundImage = `url(${this.bgs[index]})`;
-      //   setInterval(() => {
-      //     let index = Math.floor(Math.random() * this.bgs.length - 1);
-      //     this.$refs.logsection.style.backgroundImage = `url(${this.bgs[index]})`;
-      //   }, 10000);
     },
     signup() {
       firebase
@@ -145,6 +138,12 @@ export default {
         })
         .catch((err) => {
           console.log(err.message);
+          this.$store.commit(
+            "SET_MESSAGE",
+            `Erro ao fazer login. Por favor tente mais tarde.`
+          );
+          this.$store.commit("SET_IMAGE_MESSAGE", "error");
+  
         });
     },
   },

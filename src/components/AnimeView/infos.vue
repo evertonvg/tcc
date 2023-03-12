@@ -6,12 +6,12 @@
         <div class="flex-1 bg-white rounded p-4 flex flex-col" v-if="anime!=null">
             <h1 class="font-semibold text-3xl text-graytext mb-2 flex items-center justify-between">
                 {{anime.name}} 
-                <span class="flex text-star text-3xl">
-                    7.7
+                <!-- <span class="flex text-star text-3xl">
+                    {{ parseFloat(finalnote.finalNote).toFixed(2) }}
                     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="40px" height="40px" viewBox="0 0 32 32">
                         <defs>
                         <linearGradient id="grad">
-                            <stop offset="75%" stop-color="#E7711B"/>
+                            <stop :offset="seasonnote+'%'" stop-color="#E7711B"/>
                             <stop offset="50%" stop-color="grey"/>
                         </linearGradient>
                         </defs>
@@ -19,7 +19,7 @@
                         l11.547-1.2L16.026,0.6L20.388,10.918z"/>
                     </svg>
 
-                </span>
+                </span> -->
             </h1>
             <p class="text-left text-graytext relative">
                 {{anime.description}}
@@ -35,7 +35,12 @@
 </template>
 <script>
 export default {
-    props:['anime'],
+    props:['anime','finalnote'],
     name:'animeView',
+    computed:{
+        seasonnote(){
+            return parseInt((this.finalnote.finalNote * 100) / 10)
+        }
+    }
 }
 </script>
