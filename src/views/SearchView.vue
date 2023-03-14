@@ -77,13 +77,21 @@
                     this.mostComments.push(ss.val());  
                 });
 
+                this.filterDestaques.forEach((destaque,ind)=>{
+
+                    let totalcomments = this.mostComments.filter((item)=>{
+                        return item.idAnime == this.idDestaques[ind]
+                    }).length;
+                    destaque.comments = totalcomments
+                })
+                
                 this.destaques.forEach((destaque,ind)=>{
 
                     let totalcomments = this.mostComments.filter((item)=>{
                         return item.idAnime == this.idDestaques[ind]
                     }).length;
                     destaque.comments = totalcomments
-                })      
+                })
             });
 
         },
@@ -94,9 +102,16 @@
                 snapshot.forEach((ss) => {
                     this.mostEvaluations.push(ss.val());
                 });
+                this.filterDestaques.forEach((destaque,ind)=>{
+
+                    let totalvotes = this.mostEvaluations.filter((item)=>{
+                        return item.idAnime == this.idDestaques[ind]
+                    }).length;
+                    destaque.evaluations = totalvotes
+                })
                 this.destaques.forEach((destaque,ind)=>{
 
-                    let totalvotes = this.evaluations.filter((item)=>{
+                    let totalvotes = this.mostEvaluations.filter((item)=>{
                         return item.idAnime == this.idDestaques[ind]
                     }).length;
                     destaque.evaluations = totalvotes
@@ -132,30 +147,25 @@
             });
         },
         getDestaques(){
-        let ref = firebase.database().ref('animes');
-        ref.orderByChild('active').equalTo(true).on("value", (snapshot) => {
-            this.destaques = []
-            this.filterDestaques = []
-            this.idDestaques = []
-            snapshot.forEach((ss) => {
-                this.destaques.push(ss.val());
-                this.filterDestaques.push(ss.val());
-                this.idDestaques.push(ss.key)
+            let ref = firebase.database().ref('animes');
+            ref.orderByChild('active').equalTo(true).on("value", (snapshot) => {
+                this.destaques = []
+                this.filterDestaques = []
+                this.idDestaques = []
+                snapshot.forEach((ss) => {
+                    this.destaques.push(ss.val());
+                    this.filterDestaques.push(ss.val());
+                    this.idDestaques.push(ss.key)
+                });
+                
+                this.getComments()
+                this.getEvaluations()
+                
+                this.setFilter()
+                this.attTotalPages()
+                this.$store.commit('SET_LOADING',false)
+                
             });
-            this.getComments()
-            this.getEvaluations()
-
-            this.destaques.sort((x,y)=>{
-                let a = x.name.toLowerCase()
-                let b = y.name.toLowerCase()
-                return  a == b ? 0 : a > b ? 1 : -1
-            })
-            
-            this.setFilter()
-            this.attTotalPages()
-            this.$store.commit('SET_LOADING',false)
-            
-        });
         },
         getCategories(){
             let ref = firebase.database().ref('categories');
@@ -198,46 +208,55 @@
                     })
                 });
             }
-            if(this.setType!=''){
-                switch(this.setType){
-                    case 'newtemps': 
-                        this.filterDestaques = this.filterDestaques.filter(item => {
-                            return item.newSeason == true
-                        });
-                    break;
-                    case 'launchs': 
-                        this.filterDestaques = this.filterDestaques.filter(item => {
-                            return item.newAnime == true
-                        });
-                    break;
-                    case 'exibition': 
-                        this.filterDestaques = this.filterDestaques.filter(item => {
-                            return item.activeSeason == true
-                        });
-                    break;
-                    case 'evaluations':                         
-                        this.filterDestaques.sort((x,y)=>{
-                            let a = x.evaluations
-                            let b = y.evaluations
-                            return b-a
-                        })
-                    break;
-                    case 'comments': 
-                    this.filterDestaques.sort((x,y)=>{
-                            let a = x.comments
-                            let b = y.comments
-                            return b-a
-                        })
-                    break;
-                    default:
-                    this.filterDestaques.sort((x,y)=>{
-                        let a = x.name.toLowerCase()
-                        let b = y.name.toLowerCase()
-                        return  a == b ? 0 : a > b ? 1 : -1
-                    })
-
+            setTimeout(()=>{
+                this.filterDestaques = this.filterDestaques.sort((x,y)=>{
+                    let a = x.name.toLowerCase()
+                    let b = y.name.toLowerCase()
+                    return  a == b ? 0 : a > b ? 1 : -1
+                })
+                if(this.setType!=''){
+                    switch(this.setType){
+                        case 'newtemps': 
+                            this.filterDestaques = this.filterDestaques.filter(item => {
+                                return item.newSeason == true
+                            });
+                        break;
+                        case 'launchs': 
+                            this.filterDestaques = this.filterDestaques.filter(item => {
+                                return item.newAnime == true
+                            });
+                        break;
+                        case 'exibition': 
+                            this.filterDestaques = this.filterDestaques.filter(item => {
+                                return item.activeSeason == true
+                            });
+                        break;
+                        case 'evaluations':                         
+                            this.filterDestaques = this.filterDestaques.sort((x,y)=>{
+                                let a = x.evaluations
+                                let b = y.evaluations
+                                return b-a
+                            })
+                            console.log(this.filterDestaques)
+                        break;
+                        case 'comments': 
+                            this.filterDestaques = this.filterDestaques.sort((x,y)=>{
+                                let a = x.comments
+                                let b = y.comments
+                                return b-a
+                            })
+                            console.log(this.filterDestaques)
+                        break;
+                        default:
+                            this.filterDestaques = this.filterDestaques.sort((x,y)=>{
+                                let a = x.name.toLowerCase()
+                                let b = y.name.toLowerCase()
+                                return  a == b ? 0 : a > b ? 1 : -1
+                            })
+    
+                    }
                 }
-            }
+            },200)
             
         }
     },
