@@ -2,7 +2,7 @@
     <div class="fixed top-0 left-0 z-50 w-screen h-screen bg-black/70 flex items-center justify-center">
         <div class="flex flex-col max-w-[90%] w-[960px] gap-5" @click.stop> 
             <select v-model="video" class="w-full p-4 cursor-pointer outline-none text-graytext">
-                <option selected disabled>Por favor, selecione uma opening ou ending para visualizar</option>
+                <option selected disabled value="">Por favor, selecione uma opening, ending ou trailer para visualizar</option>
                 <option v-for="(video,index) in videosList" :key="index" class="cursor-pointer hover:bg-star" :value="video.link">{{video.name}}</option>
                 
             </select>
