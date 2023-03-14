@@ -60,6 +60,8 @@
                     <option value="launchs">Novos animes</option>
                     <option value="newtemps">Novas temporadas</option>
                     <option value="exibition">Em exibição</option>
+                    <option value="evaluations">Mais avaliados</option>
+                    <option value="comments">Mais comentados</option>
                 </select>
                 </div>
             </div>

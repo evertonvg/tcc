@@ -11,7 +11,7 @@
     
     <p v-show="!filterDestaques.length" class="text-center text-white">Nehhum resultado encontrado</p>
 
-    <PaginateVue v-show="totalPages > 0"  :page="page" :totalpages="totalPages"  v-on:attPageEmit="attPage" />
+    <PaginateVue v-show="totalPages > 1"  :page="page" :totalpages="totalPages"  v-on:attPageEmit="attPage" />
        
   </template>
   
@@ -30,6 +30,7 @@
     data() {
         return {
             destaques:[],
+            idDestaques:[],
             filterDestaques:[],
             pesquisa:'',
             categories:[],
@@ -37,7 +38,9 @@
             limitPage:12,
             page:1,
             totalPages:0,
-            setType:'all'
+            setType:'all',
+            mostComments:[],
+            mostEvaluations:[]
             
         }
     },
@@ -66,6 +69,40 @@
       
     },
     methods: {
+        getComments(){
+            let ref = firebase.database().ref('comments');
+            ref.orderByChild('active').equalTo(true).on("value", (snapshot) => {
+                this.mostComments =  []
+                snapshot.forEach((ss) => {
+                    this.mostComments.push(ss.val());  
+                });
+
+                this.destaques.forEach((destaque,ind)=>{
+
+                    let totalcomments = this.mostComments.filter((item)=>{
+                        return item.idAnime == this.idDestaques[ind]
+                    }).length;
+                    destaque.comments = totalcomments
+                })      
+            });
+
+        },
+        getEvaluations(){
+            let ref = firebase.database().ref('evaluations');
+            ref.orderByChild('active').equalTo(true).on("value", (snapshot) => {
+                this.mostEvaluations = []
+                snapshot.forEach((ss) => {
+                    this.mostEvaluations.push(ss.val());
+                });
+                this.destaques.forEach((destaque,ind)=>{
+
+                    let totalvotes = this.evaluations.filter((item)=>{
+                        return item.idAnime == this.idDestaques[ind]
+                    }).length;
+                    destaque.evaluations = totalvotes
+                })
+            });
+        },
         attUrl(){
 
             this.$router.replace({ 
@@ -99,10 +136,15 @@
         ref.orderByChild('active').equalTo(true).on("value", (snapshot) => {
             this.destaques = []
             this.filterDestaques = []
+            this.idDestaques = []
             snapshot.forEach((ss) => {
-            this.destaques.push(ss.val());
-            this.filterDestaques.push(ss.val());
+                this.destaques.push(ss.val());
+                this.filterDestaques.push(ss.val());
+                this.idDestaques.push(ss.key)
             });
+            this.getComments()
+            this.getEvaluations()
+
             this.destaques.sort((x,y)=>{
                 let a = x.name.toLowerCase()
                 let b = y.name.toLowerCase()
@@ -173,7 +215,27 @@
                             return item.activeSeason == true
                         });
                     break;
+                    case 'evaluations':                         
+                        this.filterDestaques.sort((x,y)=>{
+                            let a = x.evaluations
+                            let b = y.evaluations
+                            return b-a
+                        })
+                    break;
+                    case 'comments': 
+                    this.filterDestaques.sort((x,y)=>{
+                            let a = x.comments
+                            let b = y.comments
+                            return b-a
+                        })
+                    break;
                     default:
+                    this.filterDestaques.sort((x,y)=>{
+                        let a = x.name.toLowerCase()
+                        let b = y.name.toLowerCase()
+                        return  a == b ? 0 : a > b ? 1 : -1
+                    })
+
                 }
             }
             

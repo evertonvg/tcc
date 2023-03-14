@@ -89,7 +89,7 @@
         </transition-group>
     </section>
     <transition name="fade">
-        <musicModal @click="modalMusic=false" v-if="modalMusic" :videos="videos" />
+        <musicModal @click="modalMusic=false"  v-if="modalMusic" :videos="videos"  />
     </transition>
 </template>
 
@@ -175,7 +175,7 @@ export default {
             this.setEvaluation()
             this.setnotes()
             this.commentaryLimit = 4
-            // this.setTemp()
+            this.setVideos()
         }
     },
     
@@ -183,6 +183,9 @@ export default {
         setTemp(){
             this.selectText = this.$refs.selectemp.options[this.$refs.selectemp.options.selectedIndex].text
         },
+        // attVideos(){
+        //     let 
+        // },
         setnotes(){
             
             let sound=0,characters=0,animation=0,history=0;
@@ -221,9 +224,7 @@ export default {
 
             this.comments  = comments
         },
-        emitStar(ev){
-            console.log(ev)
-        },
+
         getAnime(){
             let ref = firebase.database().ref('animes');
             ref.orderByChild('slug').equalTo(this.$route.params.slug).limitToFirst(1).on("value", (snapshot) => {
@@ -286,9 +287,9 @@ export default {
                   });
         },
         
-        setVideos(ev){
+        setVideos(){
             let seas = this.seasons.filter((season)=>{
-                return season.order == ev.target.value;
+                return season.order == this.temporada;
             })
             
             this.videos = seas[0].videos
