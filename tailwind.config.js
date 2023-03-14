@@ -25,7 +25,8 @@ module.exports = {
         orange2:'#F9CE7C',
         star:'#E7711B',
         header:'#060D22',
-        graytext:'#5C728A'
+        graytext:'#5C728A',
+        green:'#006600'
 
     },
     fontFamily: {

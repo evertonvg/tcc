@@ -22,8 +22,11 @@
     </transition>
 
     <div class="container mx-auto mt-4 px-5 xl:px-0">
-        <h2 class="text-left text-2xl font-bold pt-6 my-4" v-if="$route.params.category">Lista de animes da categoria {{ $route.params.category }}</h2>
-        <h2 class="text-left text-2xl font-bold pt-6 my-4" v-else>Lista de animes</h2>
+
+            <h2 class="text-left text-2xl font-bold pt-6 my-4" v-if="$route.params.category">Lista de animes da categoria {{ $route.params.category }}</h2>
+            <h2 class="text-left text-2xl font-bold pt-6 my-4" v-else>Lista de animes</h2>
+            
+        
         <div class="flex justify-center">
             <div class="mb-3 w-full">
                 <div class="relative mb-4 flex w-full flex-wrap items-stretch">
@@ -52,6 +55,12 @@
                         clip-rule="evenodd" />
                     </svg>
                 </button>
+                <select v-model="selectFilter" class="h-10 rounded px-4 outline-none cursor-pointer w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4 text-graytext">
+                    <option value="all">Todos</option>
+                    <option value="launchs">Novos animes</option>
+                    <option value="newtemps">Novas temporadas</option>
+                    <option value="exibition">Em exibição</option>
+                </select>
                 </div>
             </div>
         </div>
@@ -65,7 +74,8 @@
             return {
                 datapesquisa:'',
                 filtercategories:[],
-                enableCats:true
+                enableCats:true,
+                selectFilter:'all',
             }
         },
         
@@ -76,10 +86,14 @@
             filtercategories(){
                 this.$emit('attFilterEmit',this.filtercategories)
             },
+            selectFilter(){
+                this.$emit('attFilterTypes',this.selectFilter)
+            },
         },
  
         mounted(){
             this.datapesquisa = this.pesquisa
+            console.log(this.selectFilter)
             if(window.innerWidth <600){
                 this.enableCats = false
             }

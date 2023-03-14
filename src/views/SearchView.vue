@@ -1,5 +1,5 @@
 <template>    
-    <SearchVue :pesquisa="pesquisa" :categories="categories" v-on:attSearchEmit="attSearch" v-on:attFilterEmit="attSFilterCategory"  />
+    <SearchVue :pesquisa="pesquisa" :categories="categories" :settype="setType" v-on:attSearchEmit="attSearch" v-on:attFilterEmit="attSFilterCategory" v-on:attFilterTypes="attSFilterTypes"  />
     
     <div class="container mx-auto pb-20 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 px-5 xl:px-0">
         <transition-group name="fade">
@@ -37,6 +37,7 @@
             limitPage:12,
             page:1,
             totalPages:0,
+            setType:'all'
             
         }
     },
@@ -53,6 +54,12 @@
             this.attTotalPages()
             this.attUrl()
         },
+        setType(){
+            this.setFilter()
+            this.page = 1
+            this.attTotalPages()
+            this.attUrl()
+        },
         page(){
             this.attUrl()
         }
@@ -60,11 +67,12 @@
     },
     methods: {
         attUrl(){
-            console.log(this.setCategories)
+
             this.$router.replace({ 
                 path: this.$route.fullPath, query: { 
                     page: this.page,
                     name: this.pesquisa,
+                    type:this.setType,
                     categories: this.setCategories.map((item)=>{
                         return item
                     }).toString()
@@ -75,6 +83,9 @@
         },
         attSFilterCategory(value){
             this.setCategories = value
+        },
+        attSFilterTypes(value){
+            this.setType = value
         },
         attPage(atP){
             this.page = atP
@@ -134,7 +145,7 @@
         setFilter(){
             this.filterDestaques = this.destaques
             
-            if(this.pesquisa.length>=3){
+            if(this.pesquisa!=''){
                 this.filterDestaques = this.filterDestaques.filter(item => item.name.toLowerCase().includes(this.pesquisa.toLowerCase()));
             }
 
@@ -144,6 +155,26 @@
                         return item.categories.includes(i)
                     })
                 });
+            }
+            if(this.setType!=''){
+                switch(this.setType){
+                    case 'newtemps': 
+                        this.filterDestaques = this.filterDestaques.filter(item => {
+                            return item.newSeason == true
+                        });
+                    break;
+                    case 'launchs': 
+                        this.filterDestaques = this.filterDestaques.filter(item => {
+                            return item.newAnime == true
+                        });
+                    break;
+                    case 'exibition': 
+                        this.filterDestaques = this.filterDestaques.filter(item => {
+                            return item.activeSeason == true
+                        });
+                    break;
+                    default:
+                }
             }
             
         }
@@ -159,6 +190,9 @@
         if(this.$route.query.name){
             this.pesquisa=this.$route.query.name
             this.attSearch(this.$route.query.name)
+        }
+        if(this.$route.query.type){
+            this.setType = this.$route.query.type
         }
         
         

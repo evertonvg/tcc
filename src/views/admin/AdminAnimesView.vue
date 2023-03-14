@@ -114,6 +114,18 @@
                   scope="col"
                   class="text-sm font-medium text-gray-900 px-6 py-4 text-center"
                 >
+                  active new season
+                </th>
+                <th
+                  scope="col"
+                  class="text-sm font-medium text-gray-900 px-6 py-4 text-center"
+                >
+                  active new anime
+                </th>
+                <th
+                  scope="col"
+                  class="text-sm font-medium text-gray-900 px-6 py-4 text-center"
+                >
                   operations
                 </th>
               </tr>
@@ -169,13 +181,20 @@
                 <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                   {{ ani.activeSeason }}
                 </td>
+                <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                  {{ ani.newSeason }}
+                </td>
+                <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                  {{ ani.newAnime }}
+                </td>
+                
                 <td
                   class="text-sm text-gray-900 font-light px-6 h-full py-4 whitespace-nowrap gap-2 flex items-center justify-center"
                 >
                   <router-link
                     class="btn"
                     :data-id="ids[index]"
-                    :to="`/anime/${ani.slug}`"
+                    :to="`/animes/${ani.slug}`"
                   >Visit
                   </router-link>
                   <button
@@ -188,6 +207,8 @@
                     :data-imageb="ani.imageBanner"
                     :data-active="ani.active"
                     :data-acseason="ani.activeSeason"
+                    :data-newseason="ani.newSeason"
+                    :data-newanime="ani.newAnime"
                     :data-release="ani.release"
                     :data-closure="ani.closure"
                     :data-seasons="ani.seasons"
@@ -428,6 +449,7 @@
                 v-model="anime.active"
               />
             </div>
+            
             <div class="relative mb-4" v-show="updateModal">
               <label
                 for="activeseason"
@@ -440,6 +462,35 @@
                 id="activeseason"
                 name="activeseason"
                 v-model="anime.activeSeason"
+              />
+            </div>
+            
+            <div class="relative mb-4" v-show="updateModal">
+              <label
+                for="activeseason"
+                class="leading-7 text-sm text-gray-600 block text-left"
+                >new anime</label
+              >
+              <input
+                type="checkbox"
+                class="block"
+                id="activeseason"
+                name="activeseason"
+                v-model="anime.newAnime"
+              />
+            </div>
+            <div class="relative mb-4" v-show="updateModal">
+              <label
+                for="activeseason"
+                class="leading-7 text-sm text-gray-600 block text-left"
+                >new season</label
+              >
+              <input
+                type="checkbox"
+                class="block"
+                id="activeseason"
+                name="activeseason"
+                v-model="anime.newSeason"
               />
             </div>
           </div>
@@ -498,6 +549,8 @@ export default {
         imageBanner:"",
         active: false,
         activeSeason: false,
+        newSeason:false,
+        newAnime:false,
         release:"",
         closure:"",
         movies:"",
@@ -534,6 +587,8 @@ export default {
       this.imageBanner = "";
       this.anime.active = false;
       this.anime.activeSeason = false;
+      this.anime.newSeason = false,
+      this.anime.newAnime = false,
       this.anime.release = "";
       this.anime.closure = "";
       this.anime.movies = "";
@@ -549,6 +604,8 @@ export default {
       this.anime.imageBanner = ev.target.dataset.imageb;
       this.anime.active = ev.target.dataset.active == 'true' ? true : ev.target.dataset.active == true? true : false;
       this.anime.activeSeason = ev.target.dataset.acseason == 'true' ? true : ev.target.dataset.acseason == true? true : false;
+      this.anime.newSeason = ev.target.dataset.newseason == 'true' ? true : ev.target.dataset.newseason == true? true : false;
+      this.anime.newAnime = ev.target.dataset.newanime == 'true' ? true : ev.target.dataset.newanime == true? true : false;
       this.anime.release = ev.target.dataset.release;
       this.anime.closure = ev.target.dataset.closure;
       this.anime.movies = parseInt(ev.target.dataset.movies);
@@ -606,6 +663,8 @@ export default {
                   imageBanner: this.anime.imageBanner,
                   active: this.anime.active,
                   activeSeason: false,
+                  newSeason:false,
+                  newAnime:false,
                   release: this.anime.release,
                   closure:this.anime.closure,
                   movies:this.anime.movies,
@@ -688,6 +747,8 @@ export default {
             // imageBanner: this.anime.imageBanner,
             active: this.anime.active,
             activeSeason: this.anime.activeSeason,
+            newSeason:this.anime.newSeason,
+            newAnime:this.anime.newAnime,
             release: this.anime.release,
             closure:this.anime.closure,
             movies:this.anime.movies,
