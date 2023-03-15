@@ -36,6 +36,7 @@
 export default {
     mounted(){
         this.$refs.banner.style.backgroundImage = `url(https://i.pinimg.com/originals/48/b0/08/48b00863d2110db05118c6b4eb9b2180.jpg)`
+        document.title = "Otaku Stars - Sobre";
     }
 }
 </script>

@@ -18,9 +18,7 @@
                         </optgroup>
                     </select>
                 </div>
-                <transition-group name="fade">
-                    <notesView v-for="(season,index) in seasons" :key="index" v-show="temporada == season.order" :notes="notes" />
-                 </transition-group>
+                <notesView  :notes="notes" />
                 <div class="flex-1 rounded h-full w-full flex items-center justify-center sm:items-end sm:justify-end" >
                     <play fillColor="#E7711B" :size="40" title="aba de videos" class="cursor-pointer bg-white" v-show="videos!=undefined" @click="modalMusic=true"/>
                 </div>
@@ -415,7 +413,8 @@ export default {
     },
     
     mounted() {
-        document.title = "Otaku Stars - Inicio";
+        let slug = this.$route.params.slug.replaceAll('-',' ').charAt(0).toUpperCase() + this.$route.params.slug.replaceAll('-',' ').slice(1); 
+        document.title = `${slug} - Otaku Stars `;
         this.getAnime()
         window.addEventListener('keydown',(ev)=>{
             switch(ev.key){
