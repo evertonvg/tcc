@@ -1,12 +1,17 @@
 <template>    
     <SearchVue :pesquisa="pesquisa" :categories="categories" :settype="setType" v-on:attSearchEmit="attSearch" v-on:attFilterEmit="attSFilterCategory" v-on:attFilterTypes="attSFilterTypes"  />
     
-    <div class="container mx-auto pb-20 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 px-5 xl:px-0">
-        <transition-group name="fade">
+    <div class="container mx-auto pb-20 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 px-5 xl:px-0 relative before:flex before:items-center before:justify-center  before:absolute  before:w-full before:h-full before:top-0 before:left-0">
+        <transition name="fade">
+            <span class="absolute w-full h-full top-0 left-0 bg-blue z-10 flex items-center justify-center" v-show="load==true">
+                <img src="@/assets/img/icon.png" class="animate-pulse" />
+            </span>
+        </transition>
+        
             <router-link  v-for="(destaque,index) in filterDestaques" :key="index" :to="`/animes/${destaque.slug}`" v-show="index < page*limitPage && index >= limitPage*(page -1)" class="sm:h-full relative w-full bg-gradient-to-b from-white to-header h-64">
                 <cardVue :item="destaque" class="bg-gradient-to-b from-white to-header" />
             </router-link>
-        </transition-group>
+        
     </div>
     
     <p v-show="!filterDestaques.length" class="text-center text-white">Nehhum resultado encontrado</p>
@@ -40,7 +45,8 @@
             totalPages:0,
             setType:'all',
             mostComments:[],
-            mostEvaluations:[]
+            mostEvaluations:[],
+            load:true
             
         }
     },
@@ -50,25 +56,41 @@
             this.page = 1
             this.attTotalPages()
             this.attUrl()
+            this.setLoad()
+            this.removeLoad()
         },
         setCategories(){
             this.setFilter()
             this.page = 1
             this.attTotalPages()
             this.attUrl()
+            this.setLoad()
+            this.removeLoad()
         },
         setType(){
             this.setFilter()
             this.page = 1
             this.attTotalPages()
             this.attUrl()
+            this.setLoad()
+            this.removeLoad()
         },
         page(){
             this.attUrl()
+            this.setLoad()
+            this.removeLoad()
         }
       
     },
     methods: {
+        removeLoad(){
+            setTimeout(()=>{
+                this.load = false
+            },200)
+        },
+        setLoad(){
+            this.load = true
+        },
         getComments(){
             let ref = firebase.database().ref('comments');
             ref.orderByChild('active').equalTo(true).on("value", (snapshot) => {
@@ -148,7 +170,7 @@
         },
         getDestaques(){
             let ref = firebase.database().ref('animes');
-            ref.orderByChild('active').equalTo(true).on("value", (snapshot) => {
+            ref.orderByChild('active').equalTo(true).on("value",async (snapshot) => {
                 this.destaques = []
                 this.filterDestaques = []
                 this.idDestaques = []
@@ -158,12 +180,13 @@
                     this.idDestaques.push(ss.key)
                 });
                 
-                this.getComments()
-                this.getEvaluations()
+                await this.getComments()
+                await this.getEvaluations()
                 
-                this.setFilter()
+                await this.setFilter()
                 this.attTotalPages()
                 this.$store.commit('SET_LOADING',false)
+                this.removeLoad()
                 
             });
         },
@@ -195,20 +218,21 @@
             this.totalPages = this.filterDestaques.length/this.limitPage < 1 ? 0 : this.filterDestaques.length % this.limitPage == 0 ? this.filterDestaques.length / this.limitPage : parseInt(this.filterDestaques.length / this.limitPage) + 1;
         },
         setFilter(){
-            this.filterDestaques = this.destaques
             
-            if(this.pesquisa!=''){
-                this.filterDestaques = this.filterDestaques.filter(item => item.name.toLowerCase().includes(this.pesquisa.toLowerCase()));
-            }
-
-            if(this.setCategories.length >= 1){
-                this.filterDestaques = this.filterDestaques.filter(item => {
-                    return this.setCategories.some((i)=>{
-                        return item.categories.includes(i)
-                    })
-                });
-            }
             setTimeout(()=>{
+                this.filterDestaques = this.destaques
+            
+                if(this.pesquisa!=''){
+                    this.filterDestaques = this.filterDestaques.filter(item => item.name.toLowerCase().includes(this.pesquisa.toLowerCase()));
+                }
+
+                if(this.setCategories.length >= 1){
+                    this.filterDestaques = this.filterDestaques.filter(item => {
+                        return this.setCategories.some((i)=>{
+                            return item.categories.includes(i)
+                        })
+                    });
+                }
                 this.filterDestaques = this.filterDestaques.sort((x,y)=>{
                     let a = x.name.toLowerCase()
                     let b = y.name.toLowerCase()
