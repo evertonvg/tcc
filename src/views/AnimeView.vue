@@ -35,7 +35,7 @@
                 <!-- avaliações e comentarios  -->
                 <div class="flex-1 bg-white p-4">
                     <div class="mb-12">
-                        <h2 class="text-left mb-8 text-xl font-bold">Descrição da temporada/filme/OVA</h2>
+                        <h2 class="text-left mb-8 text-xl font-bold" v-show="season.description">Descrição da temporada/filme/OVA</h2>
                         <p class="text-left">
                             {{season.description  }}
                         </p>
