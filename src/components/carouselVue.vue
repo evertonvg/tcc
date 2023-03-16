@@ -3,7 +3,7 @@
     <carousel :settings="settings" :breakpoints="breakpoints" v-if="items.length">
         <slide v-for="(item,index) in items.slice(0, 10)" :key="index">
             <div class="w-full h-80 px-2">
-                <router-link :to="`/animes/${item.slug}`" class="h-full relative w-full bg-gradient-to-b from-white to-header">
+                <router-link :to="`/animes/${item.slug}`"  class="h-full relative w-full bg-gradient-to-b from-white to-header" :data-link="`/animes/${item.slug}`" @click="reload">
                     <cardVue :item="item" class="bg-gradient-to-b from-white to-header" />
                 </router-link>
             </div>
@@ -14,7 +14,7 @@
             <pagination />
         </template>
     </carousel>
-    <router-link :to="link" class="float-right block btn">
+    <router-link :to="link" class="float-right block btn" v-show="link">
         Ver todos
     </router-link>
 </template>
@@ -57,6 +57,18 @@ export default {
             },
         }
     },
+    methods:{
+            gopage(ev){
+                window.location.href = ev.target.dataset.link
+            },
+            reload(){
+                if(this.$route.fullPath.includes('animes')){
+                    setTimeout(()=>{
+                        window.location.reload()
+                    },100)
+                }
+            }
+        }
 }
 </script>
 <style lang="postcss">

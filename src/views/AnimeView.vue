@@ -88,6 +88,11 @@
                 </div>
             </div>
         </transition-group>
+        <div>
+            <carousel :items="recomended" title="Animes semelhantes" link="" v-show="recomended.length" />
+        </div>
+       
+
     </section>
     <transition name="fade">
         <musicModal @click="modalMusic=false"  v-if="modalMusic" :videos="videos"  />
@@ -101,6 +106,7 @@ import notesView from '@/components/AnimeView/notes.vue';
 import seasoninfoView from '@/components/AnimeView/seasoninfos.vue';
 import commentaryView from '@/components/AnimeView/commentary.vue';
 import evaluatestarView from '@/components/AnimeView/evaluatestar.vue';
+import carousel from '@/components/carouselVue.vue'
 import firebase from "firebase";
 import {  useDateFormat } from '@vueuse/core';
 export default {
@@ -116,12 +122,14 @@ export default {
         notesView,
         seasoninfoView,
         commentaryView,
-        evaluatestarView
+        evaluatestarView,
+        carousel
     },
     
     data() {
         return {
             type:"",
+            recomended:[],
             idEvaluation:'',
             commentaryLimit:4,
             modalMusic:false,
@@ -184,9 +192,37 @@ export default {
         setTemp(){
             this.selectText = this.$refs.selectemp.options[this.$refs.selectemp.options.selectedIndex].text
         },
-        // attVideos(){
-        //     let 
-        // },
+        getRecomended(){
+            let ref = firebase.database().ref('animes');
+            ref.orderByChild('active').equalTo(true).on("value", (snapshot) => {
+                this.recomended = []
+                snapshot.forEach((ss) => {
+                    this.recomended.push(ss.val());
+                });
+                this.recomended = [...this.recomended].filter((item)=>{
+                    return this.anime.categories.some((cat)=>{
+                        return item.categories.includes(cat)
+                    })
+                });
+                this.recomended = [...this.recomended].filter((item)=>{
+                    return !this.$route.fullPath.includes(item.slug)
+                })
+                this.shuffleArray()
+                });
+            
+            
+
+        },
+        shuffleArray() {
+        // Loop em todos os elementos
+            for (let i = this.recomended.length - 1; i > 0; i--) {
+                    // Escolhendo elemento aleatório
+                const j = Math.floor(Math.random() * (i + 1));
+                // Reposicionando elemento
+                [this.recomended[i], this.recomended[j]] = [this.recomended[j], this.recomended[i]];
+            }
+
+        },
         setnotes(){
             
             let sound=0,characters=0,animation=0,history=0;
@@ -243,6 +279,7 @@ export default {
                 this.getSeasons(this.idAnime)
                 this.getComments(this.idAnime)
                 this.getEvaluations(this.idAnime)
+                this.getRecomended()
                 this.$store.commit('SET_LOADING',false)
             });
         },
