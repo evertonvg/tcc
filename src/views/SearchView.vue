@@ -54,7 +54,7 @@
         pesquisa(){
             this.setFilter()
             this.page = 1
-            this.attTotalPages()
+      
             this.attUrl()
             this.setLoad()
             this.removeLoad()
@@ -62,7 +62,7 @@
         setCategories(){
             this.setFilter()
             this.page = 1
-            this.attTotalPages()
+
             this.attUrl()
             this.setLoad()
             this.removeLoad()
@@ -70,7 +70,6 @@
         setType(){
             this.setFilter()
             this.page = 1
-            this.attTotalPages()
             this.attUrl()
             this.setLoad()
             this.removeLoad()
@@ -90,6 +89,7 @@
         },
         setLoad(){
             this.load = true
+            
         },
         getComments(){
             let ref = firebase.database().ref('comments');
@@ -221,7 +221,7 @@
             
             setTimeout(()=>{
                 this.filterDestaques = this.destaques
-            
+                
                 if(this.pesquisa!=''){
                     this.filterDestaques = this.filterDestaques.filter(item => item.name.toLowerCase().includes(this.pesquisa.toLowerCase()));
                 }
@@ -280,6 +280,7 @@
     
                     }
                 }
+                this.attTotalPages()
             },200)
             
         }
