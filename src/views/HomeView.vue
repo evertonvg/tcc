@@ -1,8 +1,12 @@
 <template>
   <header class="h-[500px] w-full relative">
-    <img alt="banner" :src="banner" class="w-full h-full object-cover absolute top-2/4 left-0 -translate-y-2/4" />
+    <picture>
+      <source media="(max-width:650px)" :srcset="bannermobile">
+      <img  alt="banner" :src="banner" class="w-full h-full object-cover absolute top-2/4 left-0 -translate-y-2/4">
+    </picture>
+
     <div class="container mx-auto relative h-full px-4">
-      <h1 class="absolute top-2/4 right-4  font-bold max-w-lg text-left text-3xl">Bem vindo ao Otaku Stars. Aqui você poderá avaliar e conferir diversos animes.</h1>
+      <h1 class="absolute top-2/4 right-4  font-bold max-w-sm md:max-w-lg text-left text-3xl text-black shadow-blue drop-shadow-lg">Bem vindo ao Otaku Stars. Aqui você poderá avaliar e conferir diversos animes.</h1>
     </div>
   </header>
   <section class="mt-20">
@@ -25,6 +29,7 @@
 import firebase from "firebase";
 import carousel from '@/components/carouselVue.vue'
 import banner from '@/assets/img/banner.png'
+import bannermobile from '@/assets/img/mobilebanner.jpg'
 export default {
   name: "HomeView",
   components:{
@@ -35,6 +40,7 @@ export default {
       destaques:[],
       idDestaques:[],
       banner: banner,
+      bannermobile:bannermobile,
       launchs:[],
       newtemps:[],
       exibition:[],

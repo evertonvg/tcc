@@ -6,7 +6,7 @@
   >
     <div class="container items-center justify-center h-full flex mx-auto">
       <div class="flex items-center justify-center">
-        <router-link to="/" class="h-full">
+        <router-link to="/" class="h-full" @click="open=!open">
           <img src="@/assets/img/icon.png" class="h-16" />
         </router-link>
       </div>
