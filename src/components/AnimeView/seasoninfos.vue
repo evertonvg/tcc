@@ -11,7 +11,7 @@
             </li>
             <li class="flex flex-col items-start justify-start" v-show="timeFormat">
                 <span class="font-semibold">
-                    lançamento
+                    Lançamento
                 </span>
                 <span>
                     {{timeFormat}}

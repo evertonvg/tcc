@@ -1,45 +1,37 @@
 <template>
     
-    <div class="flex items-center justify-center gap-5 sm:gap-1 lg:gap-5 bg-white rounded px-4">
-        <div class="flex flex-col-reverse sm:flex-row h-full items-center justify-center font-bold">
+    <div class="grid grid-cols-5 grid-rows-1 gap-5 sm:gap-1 lg:gap-5 bg-white rounded px-4">
+        <div class="flex flex-col-reverse lg:flex-row h-full items-center justify-center font-bold">
             
             <graphic title="animação" fillColor="#E7711B" :size="40"></graphic>
             <span class="text-star text-3xl ml-2
             ">{{ notes.animation }}</span>
         </div>
-        <span class="text-star">
-            |
-        </span>
-        <div class="flex flex-col-reverse sm:flex-row h-full items-center justify-center font-bold">
+   
+        <div class="flex flex-col-reverse lg:flex-row h-full items-center justify-center font-bold">
             
             <history title="historia" fillColor="#E7711B" :size="40"></history>
             <span class="text-star text-3xl ml-2
             ">{{ notes.history }}</span>
         </div>
-        <span class="text-star">
-            |
-        </span>
-        <div class="flex flex-col-reverse sm:flex-row h-full items-center justify-center font-bold">
+
+        <div class="flex flex-col-reverse lg:flex-row h-full items-center justify-center font-bold">
             <person title="Personagens" fillColor="#E7711B" :size="40"></person>
             <span class="text-star text-3xl ml-2
             ">{{ notes.characters }}</span>
         </div>
-        <span class="text-star">
-            |
-        </span>
-        <div class="flex flex-col-reverse sm:flex-row h-full items-center justify-center font-bold">
+
+        <div class="flex flex-col-reverse lg:flex-row h-full items-center justify-center font-bold">
             <music title="trilha sonora" fillColor="#E7711B" :size="40"></music>
             <span class="text-star text-3xl ml-2
             ">{{ notes.sound }}</span>
         </div>
-        <div></div>
-        <span class="text-star">
-            -
-        </span>
+ 
+
         
-        <div class="flex flex-col-reverse sm:flex-row h-full items-center justify-center font-bold">
-            <span class="flex text-star text-3xl">
-                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="40px" height="30px" viewBox="0 0 32 32">
+        <div class="flex flex-col-reverse lg:flex-row h-full items-center justify-end font-bold">
+            <span class="flex flex-col-reverse lg:flex-row items-center justify-center text-star text-3xl mt-2 md:mt-0">
+                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="44px" height="34px" viewBox="0 0 32 32">
                     <defs>
                         <linearGradient id="grad">
                             <stop :offset="seasonnote+'%'" stop-color="#E7711B"/>
@@ -52,7 +44,7 @@
                 <span class="ml-2">
                     {{ parseFloat(notes.finalNote).toFixed(2) }}
                 </span>
-
+                
             </span>
         </div>
     </div>

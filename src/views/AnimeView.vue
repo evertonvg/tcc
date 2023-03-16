@@ -18,7 +18,7 @@
                         </optgroup>
                     </select>
                 </div>
-                <notesView  :notes="notes" />
+                <notesView  :notes="notes"  />
                 <div class="flex-1 rounded h-full w-full flex items-center justify-center sm:items-end sm:justify-end" >
                     <play fillColor="#E7711B" :size="40" title="aba de videos" class="cursor-pointer bg-white" v-show="videos!=undefined" @click="modalMusic=true"/>
                 </div>
@@ -30,7 +30,7 @@
         <transition-group tag="div" name="fade">
             <div class="rounded flex flex-col sm:flex-row justify-center gap-4" v-for="(season,index) in seasons" :key="index" v-show="temporada == season.order">
                 <!-- informações da temporada  -->
-                <seasoninfoView :season="season" :timeFormat="formatted(season.launch)" />
+                <seasoninfoView :season="season" :timeFormat="formatted(season.launch)"  />
 
                 <!-- avaliações e comentarios  -->
                 <div class="flex-1 bg-white p-4">
@@ -43,7 +43,7 @@
                     <div v-show="$cookies.get('loginIdAnime') == null" class="font-bold">
                         Para Fazer avaliações e comentários você deve fazer <router-link to="/login" :class="[`bg-red rounded-sm p-2 text-white`]">Login</router-link>
                     </div>
-                    <div v-show="$cookies.get('loginIdAnime') != null">
+                    <div v-show="$cookies.get('loginIdAnime') != null" v-if="season.status!='Lançamento'">
                         <h2 class="text-left mb-8 text-xl font-bold">
                             Faça suas avaliações
                         </h2>
@@ -57,6 +57,9 @@
                                 {{sendOrUpdateEvaluation}}
                             </button>
                         </div>
+                    </div>
+                    <div v-else>
+                        <p class="text-black text-center">Avaliações indisponiveis para temporadas em lançamento</p>
                     </div>
                     <div class="mt-12" v-show="$cookies.get('loginIdAnime') != null">
                         <h2 class="text-left mb-8 text-xl font-bold">
@@ -134,9 +137,9 @@ export default {
             idEvaluations:[],
             idEvaluationsUser:[],
             idActiveEvaluation:"",
+            seasonVotes:0,
             allComments:[],
             comments:[],
-            commentsSeason:[],
             commentary:'',
             sendOrUpdateEvaluation:'',
             data:'',
@@ -191,6 +194,8 @@ export default {
             notesSeason= this.evaluations.filter((item)=>{ 
                 return item.season == this.temporada
             })
+            this.seasonVotes = notesSeason.length
+            
 
             notesSeason.forEach((item)=>{
                 sound = sound + item.sound
