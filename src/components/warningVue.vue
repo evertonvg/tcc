@@ -25,6 +25,7 @@ export default {
         goodbye: "goodbye.png",
         error: "error.png",
         logout: "logout.png",
+        vigilant:"vigilant.png"
       },
     };
   },

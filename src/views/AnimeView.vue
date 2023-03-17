@@ -267,7 +267,7 @@ export default {
                     "SET_MESSAGE",
                     `Seu report foi enviado e em breve ele será avaliado.`   
                 );
-                this.$store.commit("SET_IMAGE_MESSAGE", "welcome");
+                this.$store.commit("SET_IMAGE_MESSAGE", "logout");
                 this.commentary = ''
             })
                 .catch((err) => {
@@ -405,7 +405,7 @@ export default {
                     "SET_MESSAGE",
                     `Mensagem imprópria no comentário, por favor tente novamente.`   
                 );
-                this.$store.commit("SET_IMAGE_MESSAGE", "welcome");
+                this.$store.commit("SET_IMAGE_MESSAGE", "vigilant");
                 return;
             }
             let date = new Date().toString()
