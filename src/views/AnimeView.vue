@@ -78,11 +78,13 @@
                         </h2>
                         <!-- {{ comments }} -->
                         <transition-group name="fade">
-                            <commentaryView v-for="(comment,index) in comments.slice().reverse()" :key="index" v-show="index < commentaryLimit" :comment="comment.comment" :photo="comment.photo" :data="commentedformatted(comment.date)" :name="comment.user" />
+                            <commentaryView v-for="(comment,index) in comments.slice().reverse()" :key="index" :id="comment.id" v-model:idReport="idReport" v-model:report="report" v-show="index < commentaryLimit && comment.active==true" :comment="comment.comment" :photo="comment.photo" :data="commentedformatted(comment.date)" :name="comment.user" />
                         </transition-group>
+
                         <button class="btn disabled:bg-gray" @click="showMoreComments" v-show="commentaryLimit < comments.length">
                             Ver mais comentários
                         </button>
+
                         <p v-show="!comments.length" class="text-black text-center">Sem comentários disponiveis</p>
                     </div>
                 </div>
@@ -96,6 +98,49 @@
     </section>
     <transition name="fade">
         <musicModal @click="modalMusic=false"  v-if="modalMusic" :videos="videos"  />
+    </transition>
+
+
+
+    <transition name="fade">
+            <!-- Main modal -->
+            <div v-show="report" id="defaultModal" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 w-screen p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-screen bg-lightblue flex items-center justify-center" >
+                <div class="relative w-full h-full max-w-2xl md:h-auto">
+                    <!-- Modal content -->
+                    <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                        <!-- Modal header -->
+                        <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                            <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                                Reportar Comentário {{ idReport }}
+                            </h3>
+                            <button @click="report=!report" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="defaultModal">
+                                <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                                <span class="sr-only" >Close modal</span>
+                            </button>
+                        </div>
+                        <!-- Modal body -->
+                        <div class="p-6 space-y-6">
+                            <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                                Conte-nos o que o comentário possui de errado:
+                            </p>
+                            <textarea
+                                id="report"
+                                name="report"
+                                v-model="textreport"
+                                :class="[
+                                `w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out`,
+                                ]"
+                            ></textarea>
+                        </div>
+                        <!-- Modal footer -->
+                        <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                            <button class="btn disabled:bg-gray" @click="sendreport">
+                                Enviar report
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
     </transition>
 </template>
 
@@ -126,12 +171,17 @@ export default {
         seasoninfoView,
         commentaryView,
         evaluatestarView,
-        carousel
+        carousel,
+        
     },
-    
+
     data() {
         return {
             type:"",
+            words:['puta','viado','merda','caralho','buceta','pau','chupa','cacete','esperma','gozo','gozar','gozada','sexo','trepar','transar','fuder','foda','foda-se'],
+            textreport:'',
+            report:false,
+            idAllComments:[],
             recomended:[],
             idEvaluation:'',
             commentaryLimit:4,
@@ -156,6 +206,7 @@ export default {
             data:'',
             checkCommentTemp:true,
             selectText:'',
+            idReport:'',
             grade:{
                 animation:0,
                 sound:0,
@@ -188,10 +239,46 @@ export default {
             this.setnotes()
             this.commentaryLimit = 4
             this.setVideos()
+        },
+        report(){
+            if(this.report){
+                document.body.style.overflow = 'hidden'
+            }else{
+                document.body.style.overflow = 'auto'
+            }
         }
     },
     
     methods:{
+        sendreport(){
+            let date = new Date().toString()
+            this.$store.commit('SET_LOADING',true)
+            let ref = firebase.database().ref('reports');
+            ref.push({
+                idComment: this.idReport,
+                textreport:this.textreport,
+                date:date,
+            })
+                .then(() => {
+                this.report = false
+                this.textreport = ''
+                this.$store.commit('SET_LOADING',false)
+                this.$store.commit(
+                    "SET_MESSAGE",
+                    `Seu report foi enviado e em breve ele será avaliado.`   
+                );
+                this.$store.commit("SET_IMAGE_MESSAGE", "welcome");
+                this.commentary = ''
+            })
+                .catch((err) => {
+                console.log(err);
+                this.$store.commit(
+                    "SET_MESSAGE",
+                    `Erro ao fazer o report, tente mais tarde..`   
+                );
+                this.$store.commit("SET_IMAGE_MESSAGE", "error");
+            });
+        },
         setTemp(){
             this.selectText = this.$refs.selectemp.options[this.$refs.selectemp.options.selectedIndex].text
         },
@@ -291,18 +378,37 @@ export default {
             let ref = firebase.database().ref('comments');
             ref.orderByChild('idAnime').equalTo(id).on("value", (snapshot) => {
                 this.allComments =  []
+                this.idAllComments =  []
 
                 snapshot.forEach((ss) => {
-                    this.allComments.push(ss.val()); 
+                    this.allComments.push(ss.val());
+                    this.idAllComments.push(ss.key);
+                    
                 });
+                this.allComments.forEach((el,ind)=>{
+                    el.id = this.idAllComments[ind]
+                })
+                console.log(this.allComments)
                 
                 this.getTempComments()
            
             });
         },
         saveComment(){
-            let date = new Date().toString()
             this.$store.commit('SET_LOADING',true)
+            let words = this.commentary.split(' ')
+            if(words.some((item)=>{
+                return this.words.includes(item)
+            })){
+                this.$store.commit('SET_LOADING',false)
+                this.$store.commit(
+                    "SET_MESSAGE",
+                    `Mensagem imprópria no comentário, por favor tente novamente.`   
+                );
+                this.$store.commit("SET_IMAGE_MESSAGE", "welcome");
+                return;
+            }
+            let date = new Date().toString()
             let ref = firebase.database().ref('comments');
                   ref.push({
                         idAnime: this.idAnime,

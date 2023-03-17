@@ -15,6 +15,7 @@ import Music from 'vue-material-design-icons/MusicNote.vue';
 import Star from 'vue-material-design-icons/StarHalfFull.vue';
 import Play from 'vue-material-design-icons/PlaySpeed.vue'
 import ArrowDown from 'vue-material-design-icons/ChevronDoubleDown.vue'
+import Alert from 'vue-material-design-icons/Alert.vue'
 
 
 createApp(App)
@@ -30,4 +31,5 @@ createApp(App)
 .component('ArrowDown', ArrowDown)
 .component('star', Star)
 .component('play', Play)
+.component('alert', Alert)
 .mount('#app')
