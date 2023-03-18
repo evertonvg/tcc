@@ -45,6 +45,11 @@
                     Comentários
                 </router-link>
             </li>
+            <li class="p-3">
+                <router-link to="/admin/characters">
+                    personagens
+                </router-link>
+            </li>
         </ul>
     </div>
 </div>
