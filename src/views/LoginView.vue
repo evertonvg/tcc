@@ -101,7 +101,36 @@ export default {
         .auth()
         .signInWithPopup(provider)
         .then((res) => {
-          console.log(res)
+          
+          // let ref = firebase.database().ref('users'); 
+          // if(res.additionalUserInfo.isNewUser == true){
+          //   ref.push({
+          //       idFirebaset: res.user.uid,
+          //       idUser: res.additionalUserInfo.profile.id,
+          //       name: res.additionalUserInfo.profile.name,
+          //       image: link == 'google' ? res.additionalUserInfo.profile.picture : link == 'facebook' ? res.additionalUserInfo.profile.picture.data.url : res.additionalUserInfo.profile.profile_image_url_https
+          //   })
+          // }else{
+          //   let idUser = []
+          //   let refupdate;
+          //   ref.orderByChild('idFirebaset').equalTo(res.user.uid).on("value", (snapshot) => {
+          //     snapshot.forEach((ss) => {
+          //         idUser.push(ss.key);
+          //     });
+          //     setTimeout(()=>{
+          //       refupdate = firebase.database().ref("users").child(idUser[0]);
+          //       refupdate.update({
+          //         idFirebaset: res.user.uid,
+          //         idUser: res.additionalUserInfo.profile.id,
+          //         name: res.additionalUserInfo.profile.name,
+          //         image: link == 'google' ? res.additionalUserInfo.profile.picture : link == 'facebook' ? res.additionalUserInfo.profile.picture.data.url : res.additionalUserInfo.profile.profile_image_url_https
+          //       })
+          //     },10000)
+              
+              
+          //   })
+          // }
+          
           this.$cookies.set("loginIdAnime", res.credential.accessToken);
           
           switch (link) {
@@ -127,6 +156,7 @@ export default {
           
 
           this.$cookies.set("nameAnime", res.additionalUserInfo.profile.name);
+
 
           this.$store.commit(
             "SET_MESSAGE",

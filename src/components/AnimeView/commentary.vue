@@ -8,12 +8,18 @@
                 <span>
                     {{name}}
                 </span>
-                <span class="text-white bg-red h-6 p-1 pb-6 ml-4 hidden">
+                <span class="text-white bg-red h-6 p-1 pb-6 ml-4">
                     {{data}}
                 </span>
                 <button @click="event" :data-id="id" :data-text="comment" class="cursor-pointer ml-3 block lg:hidden group-hover:block">
                     <alert size="24" title="reportar comentário" :data-id="id" :data-text="comment"  fillColor="#AC3D54"  />
                 </button>
+                <!-- <button   @click="eventDelete" :data-id="id" :data-text="comment" class="cursor-pointer ml-3 block lg:hidden group-hover:block">
+                    {{$cookies.get('loginIdAnime')}} <br>
+                    {{ iduser }}
+                    
+                    <delete size="24" title="reportar comentário" :data-user="iduser" :data-id="id" :data-text="comment"  fillColor="#1CD9B8"  />
+                </button> -->
             </div>
             <div class="text-left rounded border border-black p-4 mt-2 ">
                 {{comment}}
@@ -26,7 +32,7 @@
 <script>
 import imgDefault from '@/assets/img/default.jpg';
 export default {
-    props:['comment','photo','data','name','id','report','idReport','reportComent'],
+    props:['comment','photo','data','name','id','report','idReport','reportComent','iduser'],
     name:'comentarysView',
     emits: ['update:report','update:idReport','update:reportComent'],
     methods:{
@@ -37,6 +43,9 @@ export default {
             this.$emit('update:report', !this.report); 
             this.$emit('update:idReport', ev.currentTarget.dataset.id)
             this.$emit('update:reportComent', ev.currentTarget.dataset.text)
+        },
+        eventDelete(ev){
+            console.log(ev.currentTarget.dataset.user)
         }
     },
 

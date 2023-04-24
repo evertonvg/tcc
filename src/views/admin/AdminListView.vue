@@ -46,8 +46,16 @@
                 </router-link>
             </li>
             <li class="p-3">
-                <router-link to="/admin/characters">
-                    personagens
+                <router-link to="/admin/news">
+                    Noticias
+                </router-link>
+            </li>
+            <li class="p-3">
+                <router-link to="/admin/reports">
+                    Reports 
+                    <span class="font-bold text-red2" >
+                       ( {{ reports.length  -  parseInt(this.$cookies.get("newreports")) }}  novos reports )
+                    </span>
                 </router-link>
             </li>
         </ul>
@@ -62,6 +70,11 @@ import { mapGetters } from "vuex";
 
 export default {
   name: 'HomeView',
+  data() {
+      return {
+        reports:[]
+      }
+    },
   computed: {
     // map `this.user` to `this.$store.getters.user`
     ...mapGetters({
@@ -78,6 +91,15 @@ export default {
             console.log(err)
         })
         
+    },
+    getReports(){
+        let ref = firebase.database().ref('reports');
+        ref.orderByValue().on("value", (snapshot) => {
+          this.reports = []
+          snapshot.forEach((ss) => {
+              this.reports.push(ss.val());
+          });
+        });
     }
   },
     mounted(){
@@ -85,6 +107,7 @@ export default {
             this.$router.push('/admin')
         }
         this.$store.commit('SET_LOADING',false)
+        this.getReports()
     }
  
 }

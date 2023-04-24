@@ -16,6 +16,7 @@ import Star from 'vue-material-design-icons/StarHalfFull.vue';
 import Play from 'vue-material-design-icons/PlaySpeed.vue'
 import ArrowDown from 'vue-material-design-icons/ChevronDoubleDown.vue'
 import Alert from 'vue-material-design-icons/Alert.vue'
+import Delete from 'vue-material-design-icons/Delete.vue'
 
 
 createApp(App)
@@ -23,6 +24,7 @@ createApp(App)
 .use(vueCookies)
 .use(router)
 .component('logout', Logout)
+.component('delete', Delete)
 .component('close', Close)
 .component('person', Person)
 .component('history', History)

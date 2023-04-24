@@ -78,7 +78,8 @@
                         </h2>
                         <!-- {{ comments }} -->
                         <transition-group name="fade">
-                            <commentaryView v-for="(comment,index) in comments.slice().reverse()" :key="index" :id="comment.id" v-model:idReport="idReport" v-model:reportComent="reportComent" v-model:report="report" v-show="index < commentaryLimit && comment.active==true" :comment="comment.comment" :photo="comment.photo" :data="commentedformatted(comment.date)" :name="comment.user" />
+                            <commentaryView v-for="(comment,index) in comments.slice().reverse()" :key="index" :id="comment.id" v-model:idReport="idReport" v-model:reportComent="reportComent" v-model:report="report" v-show="index < commentaryLimit && comment.active==true" 
+                            :iduser="comment.idUser" :comment="comment.comment" :photo="comment.photo" :data="commentedformatted(comment.date)" :name="comment.user" />
                         </transition-group>
 
                         <button class="btn disabled:bg-gray" @click="showMoreComments" v-show="commentaryLimit < comments.length">
@@ -143,7 +144,7 @@ export default {
         return {
             reportComent:'',
             type:"",
-            words:['puta','viado','merda','caralho','buceta','pau','chupa','cacete','esperma','gozo','gozar','gozada','sexo','trepar','transar','fuder','foda','foda-se'],
+            words:['puta','viado','merda','caralho','buceta','pau','chupa','cacete','esperma','gozo','gozar','gozada','sexo','trepar','transar','fuder','foda','foda-se','retardado'],
             textreport:'',
             report:false,
             idAllComments:[],
@@ -362,8 +363,11 @@ export default {
         saveComment(){
             this.$store.commit('SET_LOADING',true)
             let words = this.commentary.split(' ')
+            words = words.map((item)=>{
+                return item.toLowerCase()
+            })
             if(words.some((item)=>{
-                return this.words.includes(item)
+                return this.words.includes(item.toLowerCase())
             })){
                 this.$store.commit('SET_LOADING',false)
                 this.$store.commit(
