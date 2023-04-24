@@ -9,6 +9,11 @@
       <h1 class="absolute top-2/4 right-4  font-bold max-w-sm md:max-w-lg text-left text-3xl text-black shadow-blue drop-shadow-lg">Bem vindo ao Otaku Stars. Aqui você poderá avaliar e conferir diversos animes.</h1>
     </div>
   </header>
+
+  <!-- <div v-for="(n,index) in news" :key="index" v-html="n.description">
+
+  </div> -->
+
   <section class="mt-20">
       <div class="mx-auto container  px-5">
         
@@ -38,6 +43,7 @@ export default {
   data() {
     return {
       destaques:[],
+      news:[],
       idDestaques:[],
       banner: banner,
       bannermobile:bannermobile,
@@ -51,6 +57,15 @@ export default {
     }
   },
   methods: {
+    getNews(){
+      let ref = firebase.database().ref('news');
+      ref.orderByChild('active').equalTo(true).on("value", (snapshot) => {
+          this.news =  []
+          snapshot.forEach((ss) => {
+              this.news.push(ss.val());  
+          });     
+      });
+    },
     getComments(){
       let ref = firebase.database().ref('comments');
       ref.orderByChild('active').equalTo(true).on("value", (snapshot) => {
@@ -130,6 +145,7 @@ export default {
   mounted() {
     document.title = "Otaku Stars - Inicio";
     this.getDestaques()
+    this.getNews()
   },
 };
 </script>

@@ -7,8 +7,8 @@
                     <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
                 </a>
             </li>
-            <li>
-                <a :disabled="tp==page" v-for="tp in totalpages" :key="tp" @click="setpage(tp)" href="javascript:void(0);" :class="['px-3 py-2 leading-tight border transition-all', tp==page ? 'bg-blue text-white border-blue pointer-events-none':'bg-white text-gray-500 border-gray-300 hover:bg-gray']">
+            <li v-for="tp in totalpages" :key="tp" class="h-9 flex">
+                <a :disabled="tp==page"  @click="setpage(tp)" href="javascript:void(0);" :class="['px-3 py-2 leading-tight border transition-all', tp==page ? 'bg-blue text-white border-blue pointer-events-none':'bg-white text-gray-500 border-gray-300 hover:bg-gray',tp == 1 ? '':tp == totalpages ? '': tp==page ? '':'hidden md:flex']">
                     {{ tp }}
                 </a>
             </li>

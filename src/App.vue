@@ -26,6 +26,15 @@ import LoadingVue from "./components/loadingVue.vue";
 import FooterVue from "./components/footerVue.vue";
 
 export default {
+  methods:{
+    closeWarnings(){
+      window.addEventListener('keydown', (ev)=>{
+        if(ev.key=='Escape'){
+          this.$store.commit("SET_MESSAGE", null);
+        }
+      })
+    }
+  },
 
   components: {
     MenuVue,
@@ -33,6 +42,9 @@ export default {
     LoadingVue,
     FooterVue
 },
+mounted(){
+  this.closeWarnings()
+}
 };
 </script>
 
