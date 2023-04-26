@@ -17,6 +17,7 @@ import Play from 'vue-material-design-icons/PlaySpeed.vue'
 import ArrowDown from 'vue-material-design-icons/ChevronDoubleDown.vue'
 import Alert from 'vue-material-design-icons/Alert.vue'
 import Delete from 'vue-material-design-icons/Delete.vue'
+import West from 'vue-material-design-icons/KeyboardReturn.vue'
 
 
 createApp(App)
@@ -34,4 +35,5 @@ createApp(App)
 .component('star', Star)
 .component('play', Play)
 .component('alert', Alert)
+.component('west', West)
 .mount('#app')
