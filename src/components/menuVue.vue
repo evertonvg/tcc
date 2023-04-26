@@ -44,8 +44,13 @@
             >
           </li> -->
           <li>
+            <router-link to="/news" class="hover:text-darkblue transition-colors"
+              >Noticias</router-link
+            >
+          </li>
+          <li>
             <router-link to="/search" class="hover:text-darkblue transition-colors"
-              >Pesquisar</router-link
+              >Animes</router-link
             >
           </li>
           <li>

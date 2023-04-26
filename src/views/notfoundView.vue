@@ -17,6 +17,7 @@
 export default {
   mounted() {
     document.title = "Otaku Stars - pagina não encontrada";
+    this.$store.commit('SET_LOADING',false)
   },
 };
 </script>

@@ -332,6 +332,12 @@ export default {
                 if(this.anime.imageBanner){
                     this.$refs.banner.style.backgroundImage = `url(${this.anime.imageBanner})`
                 }
+                if(this.anime.length == 0){
+                    history.back();
+                    setTimeout(()=>{
+                        window.location.reload()
+                    },100)
+                }
                 this.getSeasons(this.idAnime)
                 this.getComments(this.idAnime)
                 this.getEvaluations(this.idAnime)

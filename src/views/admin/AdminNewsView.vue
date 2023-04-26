@@ -475,7 +475,8 @@ import '@vueup/vue-quill/dist/vue-quill.snow.css';
                         active: this.season.active,
                         tags: this.season.tags,
                         updated:'',
-                        image:''
+                        image:'',
+                        slug:this.season.title.toString().toLowerCase().replaceAll(' ','-').replaceAll(':','-').normalize('NFD').replaceAll(/[\u0300-\u036f]/g, ""),
                   })
                       .then((res) => {
                       this.closeModals();
@@ -521,7 +522,8 @@ import '@vueup/vue-quill/dist/vue-quill.snow.css';
           updated:data,
           active: this.season.active,
           image:this.season.image,
-          tags:this.season.tags
+          tags:this.season.tags,
+          slug:this.season.title.toString().toLowerCase().replaceAll(' ','-').replaceAll(':','-').normalize('NFD').replaceAll(/[\u0300-\u036f]/g, ""),
         }).then(() => {
             this.closeModals();
             this.showLoad = false

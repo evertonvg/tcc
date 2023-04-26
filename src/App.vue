@@ -93,6 +93,23 @@ mounted(){
 .fade-leave-active {
   transition: opacity 0.5s ease, transform 0.5s ease;
 }
+.translate-enter-active{
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.translate-leave-active {
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.fade-leave-active {
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.translate-enter-from{
+  opacity:0;
+  transform: translateY(-25px);
+}
+.translate-leave-to{
+  opacity:1;
+  transform: translateY(0);
+}
 
 .fade-enter-from,
 .fade-leave-to {
