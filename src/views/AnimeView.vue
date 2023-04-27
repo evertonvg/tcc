@@ -427,7 +427,9 @@ export default {
                     this.idSeasons.push(ss.key)
                     this.seasons.push(ss.val())
                 });
-                this.videos  = this.seasons[0].videos;
+                if(this.seasons.length){
+                    this.videos  = this.seasons[0].videos;
+                }
                 if(this.$route.query.temp){
                     this.temporada=this.$route.query.temp
                 }
