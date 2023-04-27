@@ -31,6 +31,7 @@
         </div>
     </div>
         <h2 class="text-left text-2xl font-bold pt-6 my-4 mx-5">Noticias</h2>
+        <img src="@/assets/img/loading-gif.gif" class="mx-auto mt-8 w-36" alt="git loading" v-show="loading"/>
         <div class="mx-5 xl:mx-0  grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 bg-white p-4" ref="newsitens" v-show="news.length">
             <transition-group name="translate">
             <router-link :to="`news/${n.slug}`" v-for="(n,index) in news.slice().reverse()" :key="index" v-show="index  < pageLimit">
@@ -73,6 +74,7 @@
     },
     data() {
     return {
+        loading:true,
       news:[],
       newsFilter:[],
       newsTotal:[],
@@ -106,6 +108,7 @@
                     this.newsTotal.push(ss.val());
                 });
                 this.loaddone = true
+                this.loading = false
                 this.moreNews()
             });
         },

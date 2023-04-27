@@ -11,8 +11,9 @@
         </router-link>
       </div>
       <div :class="[`flex-1 flex justify-end items-center pr-5`]">
+        <router-link :to="`/profile/${$cookies.get('slugName')}`" v-if="$cookies.get('loginIdAnime') != null">
         <div
-          v-if="$cookies.get('loginIdAnime') != null"
+          
           :class="[`bg-darkblue rounded-sm p-2 flex items-center justify-center gap-2`]"
         >
           <img
@@ -20,11 +21,14 @@
             referrerpolicy="no-referrer"
             class="rounded-full h-10"
           />
-          <span class="hidden sm:block"
-            >conectado como {{ $cookies.get("nameAnime") }}
-          </span>
+          
+            <span class="hidden sm:block"
+              >conectado como {{ $cookies.get("nameAnime") }}
+            </span>
         </div>
+      </router-link>
         <div
+          
           v-else
           :class="[`bg-red rounded-sm p-2 flex items-center justify-center gap-2`]"
         >

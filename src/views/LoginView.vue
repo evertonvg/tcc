@@ -65,6 +65,8 @@ export default {
   data() {
     return {
       bgs: ["https://images6.alphacoders.com/844/844900.png"],
+      idUser:'',
+      user:''
     };
   },
   methods: {
@@ -81,6 +83,28 @@ export default {
         .catch((err) => {
           console.log(err);
         });
+    },
+    putData(res){
+      let ref = firebase.database().ref('users');
+      ref.orderByChild('idFirebaset').equalTo(res.user.uid).limitToFirst(1).on("value", (snapshot) => {
+            snapshot.forEach((ss) => {
+                this.idUser = ss.key;
+                this.user = ss.val();
+            });
+            this.$cookies.set("imageAnime", this.user.image);
+            this.$cookies.set("idUser", this.user.idUser);
+            this.$cookies.set("nameAnime", this.user.name);
+            this.$cookies.set("slugName", this.user.slug);
+
+            this.$cookies.set("loginIdAnime", res.credential.accessToken);
+            this.$store.commit(
+              "SET_MESSAGE",
+              `Bem vindo(a) ${this.$cookies.get("nameAnime")} ^^`
+            );
+            this.$store.commit("SET_IMAGE_MESSAGE", "welcome");
+            this.$store.commit('SET_LOADING',true);
+            this.$router.push("/");
+          })
     },
     login(link) {
       let provider;
@@ -102,69 +126,21 @@ export default {
         .signInWithPopup(provider)
         .then((res) => {
           
-          // let ref = firebase.database().ref('users'); 
-          // if(res.additionalUserInfo.isNewUser == true){
-          //   ref.push({
-          //       idFirebaset: res.user.uid,
-          //       idUser: res.additionalUserInfo.profile.id,
-          //       name: res.additionalUserInfo.profile.name,
-          //       image: link == 'google' ? res.additionalUserInfo.profile.picture : link == 'facebook' ? res.additionalUserInfo.profile.picture.data.url : res.additionalUserInfo.profile.profile_image_url_https
-          //   })
-          // }else{
-          //   let idUser = []
-          //   let refupdate;
-          //   ref.orderByChild('idFirebaset').equalTo(res.user.uid).on("value", (snapshot) => {
-          //     snapshot.forEach((ss) => {
-          //         idUser.push(ss.key);
-          //     });
-          //     setTimeout(()=>{
-          //       refupdate = firebase.database().ref("users").child(idUser[0]);
-          //       refupdate.update({
-          //         idFirebaset: res.user.uid,
-          //         idUser: res.additionalUserInfo.profile.id,
-          //         name: res.additionalUserInfo.profile.name,
-          //         image: link == 'google' ? res.additionalUserInfo.profile.picture : link == 'facebook' ? res.additionalUserInfo.profile.picture.data.url : res.additionalUserInfo.profile.profile_image_url_https
-          //       })
-          //     },10000)
-              
-              
-          //   })
-          // }
-          
-          this.$cookies.set("loginIdAnime", res.credential.accessToken);
-          
-          switch (link) {
-            case "google":
-              this.$cookies.set("imageAnime", res.additionalUserInfo.profile.picture);
-              this.$cookies.set("idUser", res.additionalUserInfo.profile.id);
-              break;
-            case "facebook":
-              this.$cookies.set(
-                "imageAnime",
-                res.additionalUserInfo.profile.picture.data.url
-              );
-              this.$cookies.set("idUser", res.additionalUserInfo.profile.id);
-              break;
-            case "twitter":
-              this.$cookies.set(
-                "imageAnime",
-                res.additionalUserInfo.profile.profile_image_url_https
-              );
-              this.$cookies.set("idUser", res.additionalUserInfo.profile.id);
-              break;
+          let ref = firebase.database().ref('users'); 
+          if(res.additionalUserInfo.isNewUser == true){
+            ref.push({
+                slug:res.additionalUserInfo.profile.name.toLowerCase().replaceAll(' ','-').replaceAll(':','-').normalize('NFD').replaceAll(/[\u0300-\u036f]/g, ""),
+                idFirebaset: res.user.uid,
+                idUser: res.additionalUserInfo.profile.id,
+                name: res.additionalUserInfo.profile.name,
+                image: link == 'google' ? res.additionalUserInfo.profile.picture : link == 'facebook' ? res.additionalUserInfo.profile.picture.data.url : res.additionalUserInfo.profile.profile_image_url_https
+            })
+            this.putData(res)
+          }else{
+            this.putData(res)
           }
           
-
-          this.$cookies.set("nameAnime", res.additionalUserInfo.profile.name);
-
-
-          this.$store.commit(
-            "SET_MESSAGE",
-            `Bem vindo(a) ${this.$cookies.get("nameAnime")} ^^`
-          );
-          this.$store.commit("SET_IMAGE_MESSAGE", "welcome");
-          this.$store.commit('SET_LOADING',true);
-          this.$router.push("/");
+          
         })
         .catch((err) => {
           console.log(err.message);
