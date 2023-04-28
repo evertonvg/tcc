@@ -67,8 +67,8 @@
                         </h2>
                         <textarea v-model="commentary" class="border border-black rounded w-full h-40 p-4" placeholder="escreva seu comentário..."></textarea>
                         <div class="text-left">
-                            <button class="btn disabled:bg-gray" @click="saveComment" :disabled="commentary.length <= 10">
-                                Postar Comentário
+                            <button class="btn disabled:bg-gray" @click="saveComment" :disabled="commentary.length < 10">
+                               {{ commentary.length  < 10 ? `${10 - commentary.length} caracteres restantes`   : ' Postar Comentário' }}
                             </button>
                         </div>
                     </div>
@@ -79,7 +79,7 @@
                         <!-- {{ comments }} -->
                         <transition-group name="fade">
                             <commentaryView v-for="(comment,index) in comments.slice().reverse()" :key="index" :id="comment.id" v-model:idReport="idReport" v-model:reportComent="reportComent" v-model:report="report" v-show="index < commentaryLimit && comment.active==true" 
-                            :iduser="comment.idUser" :comment="comment.comment" :photo="comment.photo" :data="commentedformatted(comment.date)" :name="comment.user" />
+                            :iduser="comment.idUser" :comment="comment.comment" :photo="comment.photo" :data="commentedformatted(comment.date)" :name="comment.user" :users="users" :idsocial="comment.idSocial" />
                         </transition-group>
 
                         <button class="btn disabled:bg-gray" @click="showMoreComments" v-show="commentaryLimit < comments.length">
@@ -142,6 +142,7 @@ export default {
 
     data() {
         return {
+            users:[],
             reportComent:'',
             type:"",
             words:['puta','viado','merda','caralho','buceta','pau','chupa','cacete','esperma','gozo','gozar','gozada','sexo','trepar','transar','fuder','foda','foda-se','retardado'],
@@ -214,8 +215,23 @@ export default {
             }
         }
     },
-    
+   
     methods:{
+        getUsers(){
+            let ref = firebase.database().ref('users');
+           
+            ref.orderByChild('name').on("value", (snapshot) => {
+                let index = 0
+                this.users =  []
+                snapshot.forEach((ss) => {
+                    this.users.push(ss.val())
+                    this.users[index].id = ss.key
+                    index++
+                });
+                console.log(this.users)
+
+            });
+        },
         sendreport(){
             let date = new Date().toString()
             this.$store.commit('SET_LOADING',true)
@@ -360,7 +376,6 @@ export default {
                 this.allComments.forEach((el,ind)=>{
                     el.id = this.idAllComments[ind]
                 })
-                console.log(this.allComments)
                 
                 this.getTempComments()
            
@@ -392,6 +407,7 @@ export default {
                         photo:this.$cookies.get('imageAnime'),
                         user:this.$cookies.get("nameAnime"),
                         idUser:this.$cookies.get("loginIdAnime"),
+                        idSocial:this.$cookies.get("idUser"),
                         date:date,
                         comment:this.commentary,
                         active:true
@@ -489,7 +505,7 @@ export default {
         saveEvaluation(){
             let date = new Date().toString()
             this.$store.commit('SET_LOADING',true)
-            // console.log(this.idActiveEvaluation)
+
             if(this.idActiveEvaluation==''){
                 let ref = firebase.database().ref('evaluations');
                 ref.push({
@@ -544,6 +560,7 @@ export default {
         let slug = this.$route.params.slug.replaceAll('-',' ').charAt(0).toUpperCase() + this.$route.params.slug.replaceAll('-',' ').slice(1); 
         document.title = `${slug} - Otaku Stars `;
         this.getAnime()
+        this.getUsers()
         window.addEventListener('keydown',(ev)=>{
             switch(ev.key){
                 case 'Escape': this.modalMusic = false

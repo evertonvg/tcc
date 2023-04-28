@@ -11,7 +11,7 @@
         </router-link>
       </div>
       <div :class="[`flex-1 flex justify-end items-center pr-5`]">
-        <router-link :to="`/profile/${$cookies.get('slugName')}`" v-if="$cookies.get('loginIdAnime') != null">
+        <router-link :to="`/profile/${$cookies.get('slugName')}ososlklk${$cookies.get('idUser')}`" v-if="$cookies.get('loginIdAnime') != null">
         <div
           
           :class="[`bg-darkblue rounded-sm p-2 flex items-center justify-center gap-2`]"
@@ -154,6 +154,10 @@ export default {
           this.$store.commit("SET_MESSAGE", `Sayonara, sentiremos saudades :(`);
           this.$store.commit("SET_IMAGE_MESSAGE", "goodbye");
           this.$cookies.remove("loginIdAnime");
+          this.$cookies.remove("imageAnime");
+            this.$cookies.remove("idUser");
+            this.$cookies.remove("nameAnime");
+            this.$cookies.remove("slugName");
           this.$store.commit('SET_LOADING',true);
           this.$router.push("/login");
         })

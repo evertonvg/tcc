@@ -18,6 +18,10 @@ import ArrowDown from 'vue-material-design-icons/ChevronDoubleDown.vue'
 import Alert from 'vue-material-design-icons/Alert.vue'
 import Delete from 'vue-material-design-icons/Delete.vue'
 import West from 'vue-material-design-icons/KeyboardReturn.vue'
+import Edit from 'vue-material-design-icons/NoteEdit.vue'
+import CloseBox from 'vue-material-design-icons/CloseBox.vue'
+import Upload from 'vue-material-design-icons/Upload.vue'
+import Save from 'vue-material-design-icons/ContentSaveAll.vue'
 
 
 createApp(App)
@@ -36,4 +40,8 @@ createApp(App)
 .component('play', Play)
 .component('alert', Alert)
 .component('west', West)
+.component('edit', Edit)
+.component('closebox', CloseBox)
+.component('upload', Upload)
+.component('save', Save)
 .mount('#app')
