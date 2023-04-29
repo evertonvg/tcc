@@ -22,6 +22,7 @@ import Edit from 'vue-material-design-icons/NoteEdit.vue'
 import CloseBox from 'vue-material-design-icons/CloseBox.vue'
 import Upload from 'vue-material-design-icons/Upload.vue'
 import Save from 'vue-material-design-icons/ContentSaveAll.vue'
+import Island from 'vue-material-design-icons/Home.vue'
 
 
 createApp(App)
@@ -29,6 +30,7 @@ createApp(App)
 .use(vueCookies)
 .use(router)
 .component('logout', Logout)
+.component('island', Island)
 .component('delete', Delete)
 .component('close', Close)
 .component('person', Person)

@@ -131,7 +131,7 @@ export default {
             ref.push({
                 slug:res.additionalUserInfo.profile.name.toLowerCase().replaceAll(' ','-').replaceAll(':','-').normalize('NFD').replaceAll(/[\u0300-\u036f]/g, ""),
                 idFirebaset: res.user.uid,
-                idUser: res.additionalUserInfo.profile.id,
+                idUser: res.additionalUserInfo.profile.id.toString(),
                 name: res.additionalUserInfo.profile.name,
                 image: link == 'google' ? res.additionalUserInfo.profile.picture : link == 'facebook' ? res.additionalUserInfo.profile.picture.data.url : res.additionalUserInfo.profile.profile_image_url_https
             })

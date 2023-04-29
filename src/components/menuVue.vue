@@ -16,11 +16,13 @@
           
           :class="[`bg-darkblue rounded-sm p-2 flex items-center justify-center gap-2`]"
         >
-          <img
-            :src="$cookies.get('imageAnime')"
-            referrerpolicy="no-referrer"
-            class="rounded-full h-10"
-          />
+          <div class="rounded-full h-10 w-10 overflow-hidden">
+            <img
+              :src="$cookies.get('imageAnime')"
+              referrerpolicy="no-referrer"
+              class="w-full h-full object-cover homephoto"
+            />
+          </div>
           
             <span class="hidden sm:block"
               >conectado como {{ $cookies.get("nameAnime") }}

@@ -1,23 +1,26 @@
 <template>
-  <transition name="fade" >
-    <LoadingVue />
-  </transition>
-
-  <MenuVue />
-  
-
-  <transition name="fade">
-    <WarningVue v-if="$store.state.message != null" />
-  </transition>
-  <router-view v-slot="{ Component }">
-    <transition name="fade">
-      <component :is="Component" />
+  <main>
+    <transition name="fade" >
+      <LoadingVue />
     </transition>
-  </router-view>
-  {{x}},{{y}}
-  <transition name="fade">
-    <FooterVue/>
-  </transition>
+
+    <MenuVue />
+  
+    <transition name="fade">
+      <WarningVue v-if="$store.state.message != null" />
+    </transition>
+
+    <router-view v-slot="{ Component }">
+
+        <component :is="Component" />
+
+    </router-view>
+
+    <transition name="fade">
+      <FooterVue/>
+    </transition>
+
+  </main>
 </template>
 <script>
 import MenuVue from "./components/menuVue.vue";
