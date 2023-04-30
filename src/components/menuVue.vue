@@ -11,7 +11,7 @@
         </router-link>
       </div>
       <div :class="[`flex-1 flex justify-end items-center pr-5`]">
-        <router-link :to="`/profile/${$cookies.get('slugName')}ososlklk${$cookies.get('idUser')}`" v-if="$cookies.get('loginIdAnime') != null">
+        <router-link :to="`/profile/${$cookies.get('slugName')}ososlklk${$cookies.get('idUser')}`" v-if="$cookies.get('loginIdAnime') != null" >
         <div
           
           :class="[`bg-darkblue rounded-sm p-2 flex items-center justify-center gap-2`]"
@@ -25,7 +25,7 @@
           </div>
           
             <span class="hidden sm:block"
-              >conectado como {{ $cookies.get("nameAnime") }}
+              >{{ $cookies.get("nameAnime") }}
             </span>
         </div>
       </router-link>
@@ -40,7 +40,7 @@
       <div class="hidden lg:block font-roboto text-lg">
         <ul class="h-full flex items-center justify-end gap-2">
           <li>
-            <router-link to="/" class="hover:text-darkblue transition-colors"
+            <router-link to="/" :class="['hover:text-darkblue transition-colors']"
               >Inicio</router-link
             >
           </li>
@@ -148,6 +148,10 @@ export default {
     };
   },
   methods: {
+    windowReload(){
+      window.location.href = `/profile/${this.$cookies.get('slugName')}ososlklk${this.$cookies.get('idUser')}`
+      
+    },
     logout() {
       firebase
         .auth()
@@ -188,6 +192,7 @@ export default {
     window.addEventListener("scroll", () => {
       this.scrollMenuEffect(window.pageYOffset);
     });
+    console.log(this.$route)
 
   },
 };

@@ -6,7 +6,7 @@
             <div class="mb-4 flex items-center justify-center gap-4 w-full flex-col sm:flex-row">
                 <div class="flex items-start justify-start w-full sm:w-[215px]">
                     
-                    <select v-model="temporada" class="h-10 rounded px-4 outline-none cursor-pointer min-w-full text-graytext" @change="()=>{setVideos,type=temporada}" ref="selectemp">
+                    <select v-model="temporada" class="h-10 rounded px-4 outline-none cursor-pointer min-w-full text-graytext" @change="(ev)=>{setVideos,type=temporada,getSelectedSeason(ev)}" ref="selectemp">
                         <optgroup label="Temporadas" class="font-bold" v-show="seasons.some((item)=>{return item.type=='Temporada'})">
                             <option v-for="(season,index) in seasons" :key="index" :value="season.order" v-show="season.type=='Temporada'" >{{season.name}}</option>
                         </optgroup>
@@ -146,6 +146,7 @@ export default {
     data() {
         return {
             favorite:false,
+            textSeason:'',
             showfavorite:false,
             favorites:[],
             firstTimeFavorite:true,
@@ -540,6 +541,9 @@ export default {
                 if(this.$route.query.temp){
                     this.temporada=this.$route.query.temp
                 }
+                setTimeout(() =>{
+                    this.getSelectedSeason()
+                },500)
             
             });
         },
@@ -593,6 +597,9 @@ export default {
             
             
         },
+        getSelectedSeason(){
+            this.textSeason = this.$refs.selectemp.options[this.$refs.selectemp.selectedIndex].text
+        },
         saveEvaluation(){
             let date = new Date().toString()
             this.$store.commit('SET_LOADING',true)
@@ -601,7 +608,11 @@ export default {
                 let ref = firebase.database().ref('evaluations');
                 ref.push({
                     idAnime: this.idAnime,
+                    type: this.temporada <=99 ? 'temporada' : this.temporada <=999 ? 'Filme' : 'OVA',
                     animeName:this.anime.name,
+                    animeImage:this.anime.image,
+                    animeLink:this.anime.slug,
+                    animeSeasonName:this.textSeason,
                     season:this.temporada,
                     user:this.$cookies.get("nameAnime"),
                     idUser:this.$cookies.get("idUser"),

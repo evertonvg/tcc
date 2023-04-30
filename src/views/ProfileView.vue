@@ -81,7 +81,7 @@
           Progresso
         </button>
         <button class="btn" v-show="notes.length" @click="activetab='notes'">
-          Notas
+          Avaliações
         </button>
       </div>
 
@@ -102,14 +102,64 @@
             </div>
           </div>
         </section>
+
+        
         <section v-show="progress.length && activetab=='progress'  && editActive==false" class="mx-5">
           <div class="container mx-auto p-5 bg-white mt-4 ">
-            <h2 class="text-left text-2xl font-bold pb-6">Favoritos de {{userData.name}}</h2>
+            <h2 class="text-left text-2xl font-bold pb-6">Progresso de {{userData.name}}</h2>
           </div>
         </section>
+
+
         <section v-show="notes.length && activetab=='notes'  && editActive==false" class="mx-5">
-          <div class="container mx-auto p-5 bg-white mt-4 ">
-            <h2 class="text-left text-2xl font-bold pb-6">Favoritos de {{userData.name}}</h2>
+
+          <div class="container mx-auto p-5 bg-white mt-4 overflow-x-scroll sm:overflow-x-hidden">
+            <h2 class="text-left text-2xl font-bold pb-6">Notas de {{userData.name}}</h2>
+            <div class="flex items-center justify-center mb-3 h-12  bg-gray gap-2 w-[160%] sm:w-full">
+              <div class="w-12"></div>
+              <div class="text-black text-center flex-1">Anime</div>
+              <div class="text-black text-left w-28 ">Tipo</div>
+              <div class="text-black text-left flex-1">Título</div>
+              <div class="text-black w-10 flex items-center justify-center"><graphic title="animação" fillColor="#E7711B" :size="20"></graphic></div>
+              <div class="text-black w-6 sm:w-10 flex items-center justify-center"> <history title="historia" fillColor="#E7711B" :size="20"></history></div>
+              <div class="text-black w-6 sm:w-10 flex items-center justify-center"><person title="Personagens" fillColor="#E7711B" :size="20"></person></div>
+              <div class="text-black w-6 sm:w-10 flex items-center justify-center"> <music title="trilha sonora" fillColor="#E7711B" :size="20"></music></div>
+            </div>
+            <div class="grid grid-cols-1 gap-1 w-[160%] sm:w-full">
+              <router-link v-for="(note,index) in notes" :key="index" :to="`/animes/${note.animeLink}`" class="h-12 bg-gray flex items-center justify-start gap-2">
+                <div class="h-full">
+                  <img :src="note.animeImage" :alt="note.animeName" class="w-full h-full object-cover"/>
+                </div>
+                <span class="text-black text-left flex-1 pl-1 hidden sm:block">
+                  {{ note.animeName }}
+                </span>
+                <span class="text-black text-left flex-1 pl-1 block sm:hidden">
+                  {{ note.animeName.substr(0, 10) }}
+                </span>
+                <span class="text-black text-left w-28">
+                  {{ note.type }}
+                </span>
+                <span class="text-black text-left flex-1 pl-1 hidden sm:block">
+                  {{ note.animeSeasonName }}
+                </span>
+                <span class="text-black text-left flex-1 pl-1 block sm:hidden">
+                  {{ note.animeSeasonName.substr(0, 10) }}
+                </span>
+                <span class="text-black text-center w-6 sm:w-10">
+                  {{ note.animation }}
+                </span>
+                <span class="text-black text-center w-6 sm:w-10">
+                  {{ note.history }}
+                </span>
+                <span class="text-black text-center w-6 sm:w-10">
+                  {{ note.characters }}
+                </span>
+                <span class="text-black text-center w-6 sm:w-10">
+                  {{ note.sound }}
+                </span>
+                
+              </router-link>
+            </div>
           </div>
         </section>
     </transition-group>
@@ -208,7 +258,25 @@
         
       },
       async getNotesFromUser(){
-        
+        let refrr = firebase.database().ref('evaluations');
+        refrr.orderByChild('idUser').equalTo(this.$route.params.slug.split('ososlklk')[1].toString()).once("value", (snapshot) => {
+            let index = 0
+
+            snapshot.forEach((ss) => {
+                this.notes.push(ss.val())
+                if(this.notes[index]){
+                    this.notes[index].id = ss.key
+                    index++
+                }
+            });
+            this.notes = this.notes.sort((x,y)=>{
+                let a = x.animeName.toLowerCase()
+                let b = y.animeName.toLowerCase()
+                return  a == b ? 0 : a > b ? 1 : -1
+            })
+            console.log(this.notes)
+
+        });
       },
       async tabStatus(){
         this.activetab = this.favorites.length ? 'favorites' : this.progress.length ? 'progress' : this.notes ? 'notes' : ''
@@ -288,7 +356,6 @@
         if(bannerinput)
           bannerinput.value = ''
 
-        // console.log(profileinput.files,bannerinput.files)
       },
 
       closeEditOnSave(){
@@ -490,9 +557,5 @@
   };
   </script>
   
-  <style lang="postcss">
-  svg{
-    @apply pointer-events-none;
-  }
-</style>
+
   
