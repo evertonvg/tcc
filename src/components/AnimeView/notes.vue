@@ -29,8 +29,8 @@
  
 
         
-        <div class="flex flex-col-reverse lg:flex-row h-full items-center justify-end font-bold">
-            <span class="flex flex-col-reverse lg:flex-row items-center justify-center text-star text-3xl mt-2 md:mt-0">
+        <div class="flex flex-col-reverse lg:flex-row h-full items-center justify-center font-bold">
+            <span class="flex flex-col-reverse lg:flex-row items-center justify-end md:justify-center text-star text-3xl h-full mt-0">
                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="44px" height="34px" viewBox="0 0 32 32">
                     <defs>
                         <linearGradient id="grad">

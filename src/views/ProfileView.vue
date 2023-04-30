@@ -36,7 +36,7 @@
             <label for="nome" v-show="editActive" class="text-xs text-lightblue mb-1 mt-6">
               NOME:
             </label>
-            <input :placeholder="`Digite seu nome aqui (máximo de ${limitName} caracteres)`" :maxlength="limitName" id="nome" type="text" v-model="newData.name" v-show="editActive" class="text-lg w-full rounded-sm border border-black p-2" />
+            <input autocomplete="off" :placeholder="`Digite seu nome aqui (máximo de ${limitName} caracteres)`" :maxlength="limitName" id="nome" type="text" v-model="newData.name" v-show="editActive" class="text-lg w-full rounded-sm border border-black p-2" />
             <span v-show="editActive" :class="['text-xs  pl-2', newData.name.length == limitName ? 'text-red' : 'text-lightblue']">
               {{ newData.name.length }} / {{ limitName }}
             </span>
@@ -49,7 +49,7 @@
             <label for="location" v-show="editActive" class="text-xs text-lightblue mb-1">
               LOCALIZAÇÃO:
             </label>
-            <input :maxlength="limitplace" :placeholder="`Digite sua localização aqui. Maximo de ${limitplace} caracteres`" id="location" type="text" v-model="newData.location" v-show="editActive" class="text-lg w-full rounded-sm border border-black p-2" />
+            <input autocomplete="off" :maxlength="limitplace" :placeholder="`Digite sua localização aqui. Maximo de ${limitplace} caracteres`" id="location" type="text" v-model="newData.location" v-show="editActive" class="text-lg w-full rounded-sm border border-black p-2" />
             <span v-show="editActive" :class="['text-xs  pl-2', newData.location.length == limitplace ? 'text-red' : 'text-lightblue']">
               {{ newData.location.length }} / {{ limitplace }}
             </span>
@@ -62,7 +62,7 @@
             <label for="bio" v-show="editActive" class="text-xs text-lightblue mb-1">
                 BIO:
               </label>
-            <textarea  id="bio" :maxlength="limitBio" :placeholder="`Digite sua bio aqui. Maximo de ${ limitBio } caracteres.`" class="w-full rounded-sm border border-black p-2 flex-1 min-h-[120px]" v-model="newData.bio" v-show="editActive">
+            <textarea autocomplete="off"  id="bio" :maxlength="limitBio" :placeholder="`Digite sua bio aqui. Maximo de ${ limitBio } caracteres.`" class="w-full rounded-sm border border-black p-2 flex-1 min-h-[120px]" v-model="newData.bio" v-show="editActive">
 
             </textarea>
             <span v-show="editActive" :class="['text-xs  pl-2', newData.bio.length == limitBio ? 'text-red' : 'text-lightblue']">
@@ -253,23 +253,24 @@
         })
       },
 
-      attData(){
-        let ref = firebase.database().ref('users');
-        ref.orderByChild('idUser').equalTo(this.$route.params.slug.split('ososlklk')[1].toString()).limitToFirst(1).on("child_changed", (snapshot) => {
-          snapshot.forEach((ss) => {
-              this.user = ss.val();
-              this.user.id = ss.key;
-          });
-          
-        })
+      async save(slug){
+        this.closeEditOnSave()
+          this.$cookies.set("nameAnime", this.newData.name);
+          this.$cookies.set("slugName", slug);
+          this.$store.commit('SET_LOADING',false)
+          this.$store.commit("SET_MESSAGE",`Seu perfil foi atualizado com sucesso ^^`);
+          this.$store.commit("SET_IMAGE_MESSAGE", "welcome");
+          this.$router.push(`/profile/${this.newData.name}ososlklk${this.userData.idUser}`)
       },
-      updateProfile(){
+
+      async updateProfile(){
+        let profileinput,bannerinput
         // let id = this.user.idUser
         let slug = this.newData.name.toString().toLowerCase().replaceAll(' ','-').replaceAll(/'/g, '').replaceAll(/"/g, '').replaceAll(':','-').normalize('NFD').replaceAll(/[\u0300-\u036f]/g, "")
         this.$store.commit('SET_LOADING',true);
 
         let ref = firebase.database().ref('users').child(this.user.id);
-        ref.update({
+        await ref.update({
           name: this.newData.name,
           bio: this.newData.bio,
           slug:slug,
@@ -280,52 +281,62 @@
           this.userData.bio = this.newData.bio
           this.userData.location = this.newData.location
         })
-        .then(() => {
-          let profileinput = document.querySelector('.profileinput')
-          let bannerinput = document.querySelector('.bannerinput')
+  
+        .catch((err) => {
+          console.log(err);
+          this.$store.commit('SET_LOADING',false)
+          this.$store.commit("SET_MESSAGE",`Erro ao atualizar o perfil, tente mais tarde`);
+          this.$store.commit("SET_IMAGE_MESSAGE", "error");
+        });
 
-          if(bannerinput.files[0]) {
-            this.$store.commit('SET_LOADING',true);               
 
-            this.setPreviewimages('bannertop','bannerinput','banner')
+        bannerinput = document.querySelector('.bannerinput')
 
-            firebase.storage()
-                  .ref("users")
-                  .child(bannerinput.files[0].name)
-                  .put(bannerinput.files[0])
-                  .then((res) => {
-                    res.ref.getDownloadURL()
-                    .then((imageb) => {
-                      let img = imageb;
-                      let ref = firebase.database().ref("users").child(this.user.id);
-                      ref.update({
-                        banner: img,
-                      })
+        if(bannerinput.files[0]) {
+          this.$store.commit('SET_LOADING',true);               
+
+          this.setPreviewimages('bannertop','bannerinput','banner')
+
+          await firebase.storage()
+                .ref("users")
+                .child(bannerinput.files[0].name)
+                .put(bannerinput.files[0])
+                .then((res) => {
+                  res.ref.getDownloadURL()
+                  .then((imageb) => {
+                    let img = imageb;
+                    let ref = firebase.database().ref("users").child(this.user.id);
+                    ref.update({
+                      banner: img,
                     })
-                    .then(()=>{
-                      this.$store.commit('SET_LOADING',false)
-                    })
-                    .catch((err) => {
-                      this.$store.commit('SET_LOADING',false)
-                      this.$store.commit("SET_MESSAGE",`Erro ao atualizar a imagem do banner. Tente novamente mais tarde.`);
-                      this.$store.commit("SET_IMAGE_MESSAGE", "error");
-                      console.log(err);
-                    });
-              })
-              .catch((err) => {
-                  console.log(err);
-                  this.$store.commit('SET_LOADING',false)
-                  this.$store.commit("SET_MESSAGE",`Erro ao inserir a imagem de banner no sistema. Tente novamente mais tarde.`);
-                  this.$store.commit("SET_IMAGE_MESSAGE", "error");
-              });
-          }
+                  })
+                  .then(()=>{
+                    this.$store.commit('SET_LOADING',false)
+                  })
+                  .catch((err) => {
+                    this.$store.commit('SET_LOADING',false)
+                    this.$store.commit("SET_MESSAGE",`Erro ao atualizar a imagem do banner. Tente novamente mais tarde.`);
+                    this.$store.commit("SET_IMAGE_MESSAGE", "error");
+                    console.log(err);
+                  });
+            })
+            .catch((err) => {
+                console.log(err);
+                this.$store.commit('SET_LOADING',false)
+                this.$store.commit("SET_MESSAGE",`Erro ao inserir a imagem de banner no sistema. Tente novamente mais tarde.`);
+                this.$store.commit("SET_IMAGE_MESSAGE", "error");
+            });
+        }
 
-          
+
+
+          profileinput = document.querySelector('.profileinput')
+
           if(profileinput.files[0]) {
             this.$store.commit('SET_LOADING',true);
             this.setPreviewimages('profiletop','profileinput','image')
             
-            firebase.storage()
+            await firebase.storage()
                   .ref("users")
                   .child(profileinput.files[0].name)
                   .put(profileinput.files[0])
@@ -358,24 +369,12 @@
                   this.$store.commit("SET_IMAGE_MESSAGE", "error");
               });
           }
-          
-        })
-        .then(()=>{
-          this.closeEditOnSave()
-          this.$cookies.set("nameAnime", this.newData.name);
-          this.$cookies.set("slugName", slug);
-          this.$store.commit('SET_LOADING',false)
-          this.$store.commit("SET_MESSAGE",`Seu perfil foi atualizado com sucesso ^^`);
-          this.$store.commit("SET_IMAGE_MESSAGE", "welcome");
-          this.$router.push(`/profile/${this.newData.name}ososlklk${this.userData.idUser}`)
-        })
-        .catch((err) => {
-          console.log(err);
-          this.$store.commit('SET_LOADING',false)
-          this.$store.commit("SET_MESSAGE",`Erro ao atualizar o perfil, tente mais tarde`);
-          this.$store.commit("SET_IMAGE_MESSAGE", "error");
-        });
+
+          await this.save(slug)
       },
+
+
+      
        
     },
     mounted() {
@@ -390,5 +389,9 @@
   };
   </script>
   
-  <style></style>
+  <style lang="postcss">
+  svg{
+    @apply pointer-events-none;
+  }
+</style>
   

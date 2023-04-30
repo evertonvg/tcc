@@ -23,6 +23,9 @@ import CloseBox from 'vue-material-design-icons/CloseBox.vue'
 import Upload from 'vue-material-design-icons/Upload.vue'
 import Save from 'vue-material-design-icons/ContentSaveAll.vue'
 import Island from 'vue-material-design-icons/Home.vue'
+import Heart from 'vue-material-design-icons/Heart.vue'
+import HeartPlus from 'vue-material-design-icons/HeartPlus.vue'
+import HeartMinus from 'vue-material-design-icons/HeartMinus.vue'
 
 
 createApp(App)
@@ -46,4 +49,7 @@ createApp(App)
 .component('closebox', CloseBox)
 .component('upload', Upload)
 .component('save', Save)
+.component('heart', Heart)
+.component('heart-plus', HeartPlus)
+.component('heart-minus', HeartMinus)
 .mount('#app')

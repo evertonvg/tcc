@@ -161,10 +161,13 @@ export default {
             this.$cookies.remove("nameAnime");
             this.$cookies.remove("slugName");
           this.$store.commit('SET_LOADING',true);
-          this.$router.push("/login");
+          window.location.href=`${window.location.origin}/login`
+          // this.$router.push("/login");
         })
         .catch((err) => {
           console.log(err);
+          this.$store.commit("SET_MESSAGE", `Erro ao fazer logout. Tente novamente.`);
+          this.$store.commit("SET_IMAGE_MESSAGE", "error");
         });
     },
     scrollMenuEffect(value) {

@@ -20,6 +20,9 @@
                 </div>
                 <notesView  :notes="notes"  />
                 <div class="flex-1 rounded h-full w-full flex items-center justify-center sm:items-end sm:justify-end" >
+                    <span class="text-orange1 block sm:hidden xl:block bg-white p-2 cursor-pointer font-bold" @click="modalMusic=true" v-show="videos!=undefined">
+                        Visualizar vídeos
+                    </span>
                     <play fillColor="#E7711B" :size="40" title="aba de videos" class="cursor-pointer bg-white" v-show="videos!=undefined" @click="modalMusic=true"/>
                 </div>
                 
@@ -217,6 +220,19 @@ export default {
     },
    
     methods:{
+        getFavories(){
+            let ref = firebase.database().ref('favorites');
+            ref.orderByChild('name').on("value", (snapshot) => {
+                let index = 0
+                this.users =  []
+                snapshot.forEach((ss) => {
+                    this.users.push(ss.val())
+                    this.users[index].id = ss.key
+                    index++
+                });
+
+            });
+        },
         getUsers(){
             let ref = firebase.database().ref('users');
            
