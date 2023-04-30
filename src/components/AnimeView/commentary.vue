@@ -101,7 +101,6 @@ export default {
         this.getImage()
         this.getName()
     }
-
     
 }
 </script>

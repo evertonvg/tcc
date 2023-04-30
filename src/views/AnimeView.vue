@@ -1,7 +1,7 @@
 <template>
     <header class="h-[30vh] sm:h-[50vh]  bg-cover bg-no-repeat bg-center overflow-hidden bg-gradient-to-b from-white to-header" ref="banner"></header>
     <section class="px-5 container mx-auto mt-4 -translate-y-20">
-        <infosView :anime="anime" :finalnote="notes"/>
+        <infosView :anime="anime" :finalnote="notes" v-model:favorite="favorite" :showfavorite="showfavorite" v-model:changeFavorite = "changeFavorite" />
         <div class="container h-full mx-auto flex items-start justify-start mt-4" v-show="seasons.length">
             <div class="mb-4 flex items-center justify-center gap-4 w-full flex-col sm:flex-row">
                 <div class="flex items-start justify-start w-full sm:w-[215px]">
@@ -145,6 +145,10 @@ export default {
 
     data() {
         return {
+            favorite:false,
+            showfavorite:false,
+            favorites:[],
+            firstTimeFavorite:true,
             users:[],
             reportComent:'',
             type:"",
@@ -177,6 +181,7 @@ export default {
             checkCommentTemp:true,
             selectText:'',
             idReport:'',
+            favId:'',
             grade:{
                 animation:0,
                 sound:0,
@@ -202,6 +207,7 @@ export default {
             }
             
         },
+        
         temporada(){
             this.getTempComments()
             this.$router.replace({ path: this.$route.fullPath, query: { temp: this.temporada }})
@@ -216,22 +222,85 @@ export default {
             }else{
                 document.body.style.overflow = 'auto'
             }
-        }
+        },
     },
    
     methods:{
-        getFavories(){
-            let ref = firebase.database().ref('favorites');
-            ref.orderByChild('name').on("value", (snapshot) => {
-                let index = 0
-                this.users =  []
-                snapshot.forEach((ss) => {
-                    this.users.push(ss.val())
-                    this.users[index].id = ss.key
-                    index++
-                });
+        getFavorites(){
+            if(this.$cookies.get("idUser")!=null){
+                let refrr = firebase.database().ref('favorites');
+                refrr.orderByChild('userId').equalTo(this.$cookies.get("idUser")).once("value", (snapshot) => {
+                    let index = 0
 
-            });
+                    snapshot.forEach((ss) => {
+                        this.favorites.push(ss.val())
+                        if(this.favorites[index]){
+                            this.favorites[index].id = ss.key
+                            index++
+                        }
+                    });
+                    let favorites = this.favorites.filter((item)=>{
+                        return item.animeId == this.idAnime
+                    })
+
+                    if(favorites[0])
+                        this.favorite = favorites[0].value
+                        this.favId = favorites[0].id
+
+                    if(favorites.length==0){
+                        
+                        refrr.push({
+                            animeId: this.idAnime,
+                            userId:this.$cookies.get("idUser"),
+                            value:false
+                        }).then(() => {
+                            this.firstTimeFavorite = false
+                        }).catch((err) => {
+                            console.log(err);
+                        });
+
+                    }else{
+                        this.firstTimeFavorite = false
+                    }
+                    this.showfavorite = true
+                }); 
+            }
+        },
+        changeFavorite(){
+            this.$store.commit('SET_LOADING',true)
+            let ref = firebase.database().ref("favorites").child(this.favId);
+            
+            
+                ref.update({
+                    value:this.favorite,
+                }).
+                then(()=>{
+                    this.$store.commit('SET_LOADING',false)
+                    if(!this.firstTimeFavorite){
+                        if(this.favorite){
+                            this.$store.commit(
+                                "SET_MESSAGE",
+                                `Anime adicionado aos favoritos.`   
+                            );
+                            this.$store.commit("SET_IMAGE_MESSAGE", "welcome");
+                        }else{
+                            this.$store.commit(
+                                "SET_MESSAGE",
+                                `Anime removido dos favoritos.`   
+                            );
+                            this.$store.commit("SET_IMAGE_MESSAGE", "goodbye");
+                        }
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                    this.$store.commit('SET_LOADING',false)
+                    this.$store.commit(
+                        "SET_MESSAGE",
+                        `Erro ao atualizar os favoritos. Tente novamente mais tarde`   
+                    );
+                    this.$store.commit("SET_IMAGE_MESSAGE", "error");
+                });
         },
         getUsers(){
             let ref = firebase.database().ref('users');
@@ -244,7 +313,6 @@ export default {
                     this.users[index].id = ss.key
                     index++
                 });
-                console.log(this.users)
 
             });
         },
@@ -374,6 +442,7 @@ export default {
                 this.getComments(this.idAnime)
                 this.getEvaluations(this.idAnime)
                 this.getRecomended()
+                this.getFavorites()
                 this.$store.commit('SET_LOADING',false)
             });
         },
