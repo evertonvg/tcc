@@ -243,18 +243,24 @@ export default {
                         return item.animeId == this.idAnime
                     })
 
-                    if(favorites[0])
+                    if(favorites[0]){
                         this.favorite = favorites[0].value
                         this.favId = favorites[0].id
+                    }
+                        
 
                     if(favorites.length==0){
                         
                         refrr.push({
                             animeId: this.idAnime,
                             userId:this.$cookies.get("idUser"),
+                            animeLink:this.anime.slug,
+                            animeImage:this.anime.image,
+                            animeName:this.anime.name,
                             value:false
-                        }).then(() => {
+                        }).then((resp) => {
                             this.firstTimeFavorite = false
+                            this.favId = resp.key
                         }).catch((err) => {
                             console.log(err);
                         });

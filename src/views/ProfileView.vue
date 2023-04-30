@@ -72,6 +72,48 @@
           
         </div>
       </section>
+
+      <div  class="mx-5 pt-4 flex gap-3 items-center justify-start" v-show="editActive==false">
+        <button class="btn" v-show="favorites.length" @click="activetab='favorites'">
+          Favoritos
+        </button>
+        <button class="btn" v-show="progress.length" @click="activetab='progress'">
+          Progresso
+        </button>
+        <button class="btn" v-show="notes.length" @click="activetab='notes'">
+          Notas
+        </button>
+      </div>
+
+      <transition-group name="fade">
+        <section v-show="favorites.length && activetab=='favorites' && editActive==false" class="mx-5">
+          <div class="container mx-auto p-5 bg-white mt-4 ">
+            <h2 class="text-left text-2xl font-bold pb-6">Favoritos de {{userData.name}}</h2>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 lg:grid-cols-4 gap-4">
+              <router-link v-for="(fav,index) in favorites" :key="index" :to="`/animes/${fav.animeLink}`" class="h-12 bg-gray flex items-center justify-start gap-2">
+                <div class="h-full w-12">
+                  <img :src="fav.animeImage" :alt="fav.animeName" class="w-full h-full object-cover"/>
+                </div>
+                <span class="text-black text-left flex-1">
+                  {{ fav.animeName }}
+                </span>
+              </router-link>
+            </div>
+          </div>
+        </section>
+        <section v-show="progress.length && activetab=='progress'  && editActive==false" class="mx-5">
+          <div class="container mx-auto p-5 bg-white mt-4 ">
+            <h2 class="text-left text-2xl font-bold pb-6">Favoritos de {{userData.name}}</h2>
+          </div>
+        </section>
+        <section v-show="notes.length && activetab=='notes'  && editActive==false" class="mx-5">
+          <div class="container mx-auto p-5 bg-white mt-4 ">
+            <h2 class="text-left text-2xl font-bold pb-6">Favoritos de {{userData.name}}</h2>
+          </div>
+        </section>
+    </transition-group>
+
     </div>
   </template>
   
@@ -92,6 +134,10 @@
               idUser:''
             },
             user:'',
+            favorites:[],
+            progress:[],
+            notes:[],
+            activetab:'favorites',
             loadCountries:false,
             loadStates:false,
             loadCities:false,
@@ -122,6 +168,58 @@
         };
     },
     methods:{
+      async getFavoritesFromUser(){
+        
+        let refrr = firebase.database().ref('favorites');
+        refrr.orderByChild('userId').equalTo(this.$route.params.slug.split('ososlklk')[1].toString()).once("value", (snapshot) => {
+            let index = 0
+
+            snapshot.forEach((ss) => {
+                this.favorites.push(ss.val())
+                if(this.favorites[index]){
+                    this.favorites[index].id = ss.key
+                    index++
+                }
+            });
+            this.favorites = this.favorites.sort((x,y)=>{
+                let a = x.animeName.toLowerCase()
+                let b = y.animeName.toLowerCase()
+                return  a == b ? 0 : a > b ? 1 : -1
+            })
+
+        }); 
+        
+      },
+      async getprogressFromUser(){
+        
+        // let refrr = firebase.database().ref('favorites');
+        // refrr.orderByChild('userId').equalTo(this.$route.params.slug.split('ososlklk')[1].toString()).once("value", (snapshot) => {
+        //     let index = 0
+
+        //     snapshot.forEach((ss) => {
+        //         this.favorites.push(ss.val())
+        //         if(this.favorites[index]){
+        //             this.favorites[index].id = ss.key
+        //             index++
+        //         }
+        //     });
+
+        // }); 
+        
+      },
+      async getNotesFromUser(){
+        
+      },
+      async tabStatus(){
+        this.activetab = this.favorites.length ? 'favorites' : this.progress.length ? 'progress' : this.notes ? 'notes' : ''
+      },
+      async getAllDatas(){
+        await this.getFavoritesFromUser()
+        await this.getprogressFromUser()
+        await this.getprogressFromUser()
+        await this.getNotesFromUser()
+      },
+
       setPreviewimages(el,input,type){
         let element = document.querySelector(`.${el}`)
         let file = document.querySelector(`.${input}`).files[0]
@@ -233,7 +331,7 @@
         this.newData.location = this.oldData.location
       },
 
-      getData(){
+      async getData(){
 
         let ref = firebase.database().ref('users');
         ref.orderByChild('idUser').equalTo(this.$route.params.slug.split('ososlklk')[1].toString()).limitToFirst(1).once("value", (snapshot) => {
@@ -243,6 +341,9 @@
           });
           this.userData = this.user          
           document.title = `Perfil de ${this.user.name} Otaku Stars`;
+
+          this.getAllDatas()
+          
           this.$store.commit('SET_LOADING',false)
           if(this.user.length == 0){
               history.back();
