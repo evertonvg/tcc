@@ -73,14 +73,14 @@
         </div>
       </section>
 
-      <div  class="mx-5 pt-4 flex gap-3 items-center justify-start" v-show="editActive==false">
-        <button class="btn" v-show="favorites.length" @click="activetab='favorites'">
+      <div  :class="['mx-5 pt-4 flex gap-3 items-center justify-start']" v-show="editActive==false">
+        <button class="btn" :class="activetab=='favorites' ? 'bg-blue hover:bg-darkblue' : ''" v-show="favorites.length" @click="activetab='favorites'">
           Favoritos
         </button>
-        <button class="btn" v-show="progress.length" @click="activetab='progress'">
+        <button class="btn" :class="activetab=='progress' ? 'bg-blue hover:bg-darkblue' : ''" v-show="progress.length" @click="activetab='progress'">
           Progresso
         </button>
-        <button class="btn" v-show="notes.length" @click="activetab='notes'">
+        <button class="btn" :class="activetab=='notes' ? 'bg-blue hover:bg-darkblue' : ''" v-show="notes.length" @click="activetab='notes'">
           Avaliações
         </button>
       </div>
@@ -126,7 +126,7 @@
               <div class="text-black w-6 sm:w-10 flex items-center justify-center"> <music title="trilha sonora" fillColor="#E7711B" :size="20"></music></div>
             </div>
             <div class="grid grid-cols-1 gap-1 w-[160%] sm:w-full">
-              <router-link v-for="(note,index) in notes" :key="index" :to="`/animes/${note.animeLink}`" class="h-12 bg-gray flex items-center justify-start gap-2">
+              <router-link v-for="(note,index) in notes" :key="index" :to="`/animes/${note.animeLink}?temp=${note.season}`" class="h-12 bg-gray flex items-center justify-start gap-2">
                 <div class="h-full">
                   <img :src="note.animeImage" :alt="note.animeName" class="w-full h-full object-cover"/>
                 </div>

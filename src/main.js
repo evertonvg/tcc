@@ -26,6 +26,8 @@ import Island from 'vue-material-design-icons/Home.vue'
 import Heart from 'vue-material-design-icons/Heart.vue'
 import HeartPlus from 'vue-material-design-icons/HeartPlus.vue'
 import HeartMinus from 'vue-material-design-icons/HeartMinus.vue'
+import ThumbUp from 'vue-material-design-icons/ThumbUp.vue'
+import ThumbDown from 'vue-material-design-icons/ThumbDown.vue'
 
 
 createApp(App)
@@ -33,6 +35,8 @@ createApp(App)
 .use(vueCookies)
 .use(router)
 .component('logout', Logout)
+.component('thumb-up', ThumbUp)
+.component('thumb-down', ThumbDown)
 .component('island', Island)
 .component('delete', Delete)
 .component('close', Close)

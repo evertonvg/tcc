@@ -68,7 +68,12 @@
                         <h2 class="text-left mb-8 text-xl font-bold">
                             Deixe seu comentário
                         </h2>
-                        <textarea v-model="commentary" class="border border-black rounded w-full h-40 p-4" placeholder="escreva seu comentário..."></textarea>
+                        <div class="relative">
+                            <textarea :maxlength="maxcomment" v-model="commentary" class="border border-black rounded w-full h-40 p-4" :placeholder="`escreva seu comentário... máximo de ${maxcomment}`"></textarea>
+                            <span  :class="['text-xs  pl-2 absolute -bottom-4 right-2', commentary.length == maxcomment ? 'text-red' : 'text-lightblue']">
+                            {{  commentary.length }} / {{ maxcomment }}
+                            </span>
+                        </div>
                         <div class="text-left">
                             <button class="btn disabled:bg-gray" @click="saveComment" :disabled="commentary.length < 10">
                                {{ commentary.length  < 10 ? `${10 - commentary.length} caracteres restantes`   : ' Postar Comentário' }}
@@ -82,7 +87,9 @@
                         <!-- {{ comments }} -->
                         <transition-group name="fade">
                             <commentaryView v-for="(comment,index) in comments.slice().reverse()" :key="index" :id="comment.id" v-model:idReport="idReport" v-model:reportComent="reportComent" v-model:report="report" v-show="index < commentaryLimit && comment.active==true" 
-                            :iduser="comment.idUser" :comment="comment.comment" :photo="comment.photo" :data="commentedformatted(comment.date)" :name="comment.user" :users="users" :idsocial="comment.idSocial" />
+                            :iduser="comment.idUser" :comment="comment.comment" :photo="comment.photo" :data="commentedformatted(comment.date)" :name="comment.user" :users="users" :idsocial="comment.idSocial" 
+                               :likes="likes" v-model:setlike="setlike" :idcomment = "comment.id" 
+                            />
                         </transition-group>
 
                         <button class="btn disabled:bg-gray" @click="showMoreComments" v-show="commentaryLimit < comments.length">
@@ -145,7 +152,9 @@ export default {
 
     data() {
         return {
+            maxcomment:360,
             favorite:false,
+            likes:[],
             textSeason:'',
             showfavorite:false,
             favorites:[],
@@ -225,8 +234,49 @@ export default {
             }
         },
     },
+    
    
     methods:{
+        getlikes(){
+            let ref = firebase.database().ref('likes');
+
+            ref.orderByChild('animeId').equalTo(this.idAnime).on("value", (snapshot) => {
+                let index = 0
+                this.likes = []
+                snapshot.forEach((ss) => {
+                    this.likes.push(ss.val())
+                    if(this.likes[index]){
+                        this.likes[index].id = ss.key   
+                    }
+                    index++
+                });
+            });   
+        },
+        setlike(ev){
+            let ref = firebase.database().ref('likes');
+
+            let checkLike = [] 
+            
+            checkLike = this.likes.filter((item)=>{
+                return item.commentId == ev.currentTarget.dataset.idcomment
+            })
+
+            checkLike = checkLike.filter((item)=>{
+                return item.userId == this.$cookies.get("idUser")
+            })
+
+
+            if(checkLike.length){
+                ref.child(checkLike[0].id).remove()
+            }else{
+                ref.push({
+                    animeId:this.idAnime,
+                    commentId:ev.currentTarget.dataset.idcomment,
+                    userId:this.$cookies.get("idUser"),
+                    status:true,
+                })
+            }
+        },
         getFavorites(){
             if(this.$cookies.get("idUser")!=null){
                 let refrr = firebase.database().ref('favorites');
@@ -450,6 +500,8 @@ export default {
                 this.getEvaluations(this.idAnime)
                 this.getRecomended()
                 this.getFavorites()
+                this.getlikes()
+
                 this.$store.commit('SET_LOADING',false)
             });
         },
@@ -459,11 +511,15 @@ export default {
             ref.orderByChild('idAnime').equalTo(id).on("value", (snapshot) => {
                 this.allComments =  []
                 this.idAllComments =  []
+                let index = 0
 
                 snapshot.forEach((ss) => {
                     this.allComments.push(ss.val());
                     this.idAllComments.push(ss.key);
-                    
+                    if(this.allComments[index]){
+                        this.allComments[index].id = ss.key
+                    }
+                    index++
                 });
                 this.allComments.forEach((el,ind)=>{
                     el.id = this.idAllComments[ind]
