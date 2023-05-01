@@ -7,10 +7,10 @@
         </div>
         <div class="ml-4 flex-1 flex flex-col align-start justify-start group">
             <div class="text-left flex items-center justify-start">
-                <span>
+                <span class="font-bold text-sm text-header">
                     {{ getNamec }} 
                 </span>
-                <span class="text-white bg-red h-6 p-1 pb-6 ml-4">
+                <span class="text-white text-xs bg-red h-4 px-1  ml-4 flex items-center justify-center">
                     {{data}}
                 </span>
                 <button @click="event" :data-id="id" :data-text="comment" class="cursor-pointer ml-3 block lg:hidden group-hover:block">
