@@ -19,9 +19,32 @@
                     <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
                         Conte-nos o que o comentário abaixo possui de errado:
                     </p>
+                    
                     <p  class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
                         <cite class="font-bold">"{{ reportComent }}"</cite>
                     </p>
+                    <div>
+                        <label for="selectreport" class="w-full text-left">
+                            selecione uma categoria
+                        </label>
+                        <select v-model="categoryreport" id="selectreport" class="w-full border rounded-sm h-12">
+                            <option value="Racismo/Xenofobia/Transfobia/Homofobia">
+                                Racismo/Xenofobia/Transfobia/Homofobia
+                            </option>
+                            <option value="Ódio direcionado a alguém especififo">
+                                Ódio direcionado a alguém especififo
+                            </option>
+                            <option value="Ofensas e xingametos">
+                                Ofensas e xingametos / palavras de baixo calão
+                            </option>
+                            <option value="Apologia as drogas ou automutilação">
+                                Apologia as drogas ou automutilação
+                            </option>
+                            <option value="Outro">
+                                Outro
+                            </option>
+                        </select>
+                    </div>
                     <textarea
                         id="report"
                         name="report"
@@ -44,16 +67,20 @@
 <script>
     export default {
         name:'reports-vue',
-        props:['report','sendreport','textreport','reportComent'],
-        emits: ['update:report','sendreportemit','update:textreport'],
+        props:['report','sendreport','textreport','reportComent','categoryreportprop'],
+        emits: ['update:report','sendreportemit','update:textreport','update:categoryreportprop'],
         data(){
             return {
-                textreportComp:''
+                textreportComp:'',
+                categoryreport:''
             }
         },
         watch:{
             textreportComp(){
                 this.$emit('update:textreport', this.textreportComp)
+            },
+            categoryreport(){
+                this.$emit('update:categoryreportprop', this.categoryreport)
             }
         },
         methods:{

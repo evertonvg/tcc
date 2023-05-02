@@ -14,7 +14,7 @@
                     {{data}}
                 </span>
                 <button @click="event" :data-id="id" :data-text="comment" class="cursor-pointer ml-3 block lg:hidden group-hover:block">
-                    <alert size="24" title="reportar comentário" :data-id="id" :data-text="comment"  fillColor="#AC3D54"  />
+                    <alert size="20" title="reportar comentário" :data-id="id" :data-text="comment"  fillColor="#AC3D54"  />
                 </button>
                 
                 <!-- <button   @click="eventDelete" :data-id="id" :data-text="comment" class="cursor-pointer ml-3 block lg:hidden group-hover:block">
@@ -28,7 +28,7 @@
                 <p>
                     {{comment}} 
                 </p>
-                <div class="absolute -bottom-10 left-0 flex items-start justify-start gap-4">
+                <div :class="['absolute  left-0 flex items-start justify-start gap-4', this.$cookies.get('idUser') ? '-bottom-10' : '-bottom-5']">
                     <button v-if="this.$cookies.get('idUser')" :data-idcomment="idcomment" :data-iduser="iduser" @click="setlike " :class="['flex items-center border rounded-sm justify-center gap-1 p-1  transition-all',checkifLike ? 'bg-red hover:bg-red2 text-white border-red hover:border-red2' : 'bg-white hover:bg-gray text-black']">
                         <thumb-up></thumb-up> {{ checkifLike ? 'Curtiu' : 'Curtir' }} 
                     </button>

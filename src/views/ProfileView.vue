@@ -105,8 +105,45 @@
 
         
         <section v-show="progress.length && activetab=='progress'  && editActive==false" class="mx-5">
-          <div class="container mx-auto p-5 bg-white mt-4 ">
+          <div class="container mx-auto p-5 bg-white mt-4 overflow-x-scroll sm:overflow-x-hidden">
             <h2 class="text-left text-2xl font-bold pb-6">Progresso de {{userData.name}}</h2>
+            <div class="flex items-center justify-center mb-3 h-12  bg-gray gap-2 w-[160%] sm:w-full">
+              <div class="w-12"></div>
+              <div class="text-black text-center flex-1">Anime</div>
+              <div class="text-black text-left w-28 ">Tipo</div>
+              <div class="text-black text-left flex-1">Título</div>
+              <div class="text-black w-24 flex items-center justify-center">Progresso</div>
+              <div class="text-black w-32  flex items-center justify-center">Status</div>
+            </div>
+            <div class="grid grid-cols-1 gap-1 w-[160%] sm:w-full">
+              <router-link v-for="(prog,index) in progress" :key="index" :to="`/animes/${prog.slugName}?temp=${prog.temporada}`" class="h-12 bg-gray flex items-center justify-start gap-2">
+                <div class="h-full">
+                  <img :src="prog.imageAnime" :alt="prog.nameAnime" class="w-full h-full object-cover"/>
+                </div>
+                <span class="text-black text-left flex-1 pl-1 hidden sm:block">
+                  {{ prog.nameAnime }}
+                </span>
+                <span class="text-black text-left flex-1 pl-1 block sm:hidden">
+                  {{ prog.nameAnime.substr(0, 10) }}
+                </span>
+                <span class="text-black text-left w-28">
+                  {{ prog.type }}
+                </span>
+                <span class="text-black text-left flex-1 pl-1 hidden sm:block">
+                  {{ prog.nameTemporada }}
+                </span>
+                <span class="text-black text-left flex-1 pl-1 block sm:hidden">
+                  {{ prog.nameTemporada.substr(0, 10) }}
+                </span>
+                <span class="text-black text-center w-24">
+                  {{ prog.progressEpisode}}
+                </span>
+                <span class="text-black text-center w-32">
+                  {{ prog.statustemp }}
+                </span>
+                
+              </router-link>
+            </div>
           </div>
         </section>
 
@@ -242,19 +279,25 @@
       },
       async getprogressFromUser(){
         
-        // let refrr = firebase.database().ref('favorites');
-        // refrr.orderByChild('userId').equalTo(this.$route.params.slug.split('ososlklk')[1].toString()).once("value", (snapshot) => {
-        //     let index = 0
+        let refrr = firebase.database().ref('progress');
+        refrr.orderByChild('idUser').equalTo(this.$route.params.slug.split('ososlklk')[1].toString()).once("value", (snapshot) => {
+            let index = 0
+            this.progress = []
 
-        //     snapshot.forEach((ss) => {
-        //         this.favorites.push(ss.val())
-        //         if(this.favorites[index]){
-        //             this.favorites[index].id = ss.key
-        //             index++
-        //         }
-        //     });
+            snapshot.forEach((ss) => {
+                this.progress.push(ss.val())
+                if(this.progress[index]){
+                    this.progress[index].id = ss.key
+                    index++
+                }
+            });
+            this.progress = this.progress.sort((x,y)=>{
+                let a = x.nameAnime.toLowerCase()
+                let b = y.nameAnime.toLowerCase()
+                return  a == b ? 0 : a > b ? 1 : -1
+            })
 
-        // }); 
+        }); 
         
       },
       async getNotesFromUser(){

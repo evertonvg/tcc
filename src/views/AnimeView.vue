@@ -6,7 +6,7 @@
             <div class="mb-4 flex items-center justify-center gap-4 w-full flex-col sm:flex-row">
                 <div class="flex items-start justify-start w-full sm:w-[215px]">
                     
-                    <select v-model="temporada" class="h-10 rounded px-4 outline-none cursor-pointer min-w-full text-graytext" @change="(ev)=>{setVideos,type=temporada,getSelectedSeason(ev)}" ref="selectemp">
+                    <select v-model="temporada" class="h-10 rounded px-4 outline-none cursor-pointer min-w-full text-graytext" @change="(ev)=>{setVideos;type=temporada;getSelectedSeason(ev);setProgress();}" ref="selectemp">
                         <optgroup label="Temporadas" class="font-bold" v-show="seasons.some((item)=>{return item.type=='Temporada'})">
                             <option v-for="(season,index) in seasons" :key="index" :value="season.order" v-show="season.type=='Temporada'" >{{season.name}}</option>
                         </optgroup>
@@ -40,11 +40,52 @@
                     <div class="mb-12">
                         <h2 class="text-left mb-8 text-xl font-bold" v-show="season.description">Descrição da temporada/filme/OVA</h2>
                         <p class="text-left">
-                            {{season.description  }}
+                            {{season.description}}
                         </p>
                     </div>
                     <div v-show="$cookies.get('loginIdAnime') == null" class="font-bold">
-                        Para Fazer avaliações e comentários você deve fazer <router-link to="/login" :class="[`bg-red rounded-sm p-2 text-white`]">Login</router-link>
+                        Para Fazer avaliações, comentários e salvar seu progresso, você deve fazer <router-link to="/login" :class="[`bg-red rounded-sm p-2 text-white`]">Login</router-link>
+                    </div>
+                    <div v-show="$cookies.get('loginIdAnime') != null" class="mb-8">
+                        <h2 class="text-left mb-8 text-xl font-bold">
+                            Seu progresso na temporada
+                        </h2>
+                        <div class="flex items-start justify-start gap-2">
+                            <div class="text-left flex flex-col justify-start">
+                                <label for="progressEpisode" class="max-w-[200px] font-bold text-xs mb-2 h-10 text-blue">Numero de episódios assistidos até o momento</label>
+                                <div>
+                                    <input  id="progressEpisode" type="number" min="0" :max="season.numberEpisodes" v-model="progressEpisode" class="rounded-sm text-center border w-20 p-2 h-10" /> / {{season.numberEpisodes}}
+                                </div>
+                            </div>
+                            <div class="text-left flex flex-col justify-start">
+                                <label for="progressEpisode" class="max-w-[200px] font-bold text-xs mb-2 h-10 text-blue">Seu status atual:</label>
+                                <div>
+                                    <select v-model="statustemp" class="border p-2 h-10 rounded-sm">
+                                        <option value="" disabled>
+                                            Selecione um status
+                                        </option>
+                                        <option value="Finalizado">
+                                            Finalizado
+                                        </option>
+                                        <option value="Assistindo">
+                                            Assistindo
+                                        </option>
+                                        <option value="Pausado">
+                                            Pausado
+                                        </option>
+                                        <option value="Na Lista">
+                                            Em planejamento
+                                        </option>
+                                        <option value="Abandonado">
+                                            Abandonado
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-left mt-4">
+                            <button :disabled="statustemp==''" @click="saveProgress" :data-totalepisodes="season.numberEpisodes" class="btn disabled:bg-gray">Salvar progresso</button>
+                        </div>
                     </div>
                     <div v-show="$cookies.get('loginIdAnime') != null" v-if="season.status!='Lançamento'">
                         <h2 class="text-left mb-8 text-xl font-bold">
@@ -69,7 +110,7 @@
                             Deixe seu comentário
                         </h2>
                         <div class="relative">
-                            <textarea :maxlength="maxcomment" v-model="commentary" class="border border-black rounded w-full h-40 p-4" :placeholder="`escreva seu comentário... máximo de ${maxcomment}`"></textarea>
+                            <textarea :maxlength="maxcomment" v-model="commentary" class="border border-black rounded w-full h-40 p-4" :placeholder="`escreva seu comentário... máximo de ${maxcomment} caracteres`"></textarea>
                             <span  :class="['text-xs  pl-2 absolute -bottom-4 right-2', commentary.length == maxcomment ? 'text-red' : 'text-lightblue']">
                             {{  commentary.length }} / {{ maxcomment }}
                             </span>
@@ -112,7 +153,7 @@
     </transition>
 
     <transition name="fade">
-        <reports v-model:report="report" v-model:textreport="textreport" v-model:reportComent="reportComent" v-model:sendreport="sendreport" v-show="report" />
+        <reports v-model:report="report" v-model:categoryreportprop="categoryreportprop" v-model:textreport="textreport" v-model:reportComent="reportComent" v-model:sendreport="sendreport" v-show="report" />
     </transition>
 
 </template>
@@ -152,7 +193,10 @@ export default {
 
     data() {
         return {
+            progressEpisode:0,
+            statustemp:'',
             maxcomment:360,
+            progress:[],
             favorite:false,
             likes:[],
             textSeason:'',
@@ -161,6 +205,7 @@ export default {
             firstTimeFavorite:true,
             users:[],
             reportComent:'',
+            categoryreportprop:'Racismo/Xenofobia/Transfobia/Homofobia',
             type:"",
             words:['puta','viado','merda','caralho','buceta','pau','chupa','cacete','esperma','gozo','gozar','gozada','sexo','trepar','transar','fuder','foda','foda-se','retardado'],
             textreport:'',
@@ -192,6 +237,7 @@ export default {
             selectText:'',
             idReport:'',
             favId:'',
+            firstTimeProgress:true,
             grade:{
                 animation:0,
                 sound:0,
@@ -237,6 +283,114 @@ export default {
     
    
     methods:{
+        getProgress(){
+
+            let ref = firebase.database().ref('progress');
+            if(this.$cookies.get("idUser")){
+                ref.orderByChild('animeId').equalTo(this.idAnime).on("value", (snapshot) => {
+                    let index = 0
+                    this.progress = []
+                    snapshot.forEach((ss) => {
+                        this.progress.push(ss.val())
+                        if(this.progress[index]){
+                            this.progress[index].id = ss.key   
+                        }
+                        index++
+                    });
+                    this.progress = this.progress.filter((item)=>{
+                        return item.idUser == this.$cookies.get("idUser")
+                    })
+                    console.log(this.progress)
+                    if(this.firstTimeProgress){
+                        this.setProgress();
+                        this.firstTimeProgress = false
+                    }
+                });
+                
+            }
+        },
+        setProgress(){
+            let progress; 
+
+            progress = this.progress.filter((item)=>{
+                return item.temporada == this.temporada.toString()
+            })
+            
+
+            if(progress.length){
+                this.progressEpisode = parseInt(progress[0].progressEpisode)
+                this.statustemp = progress[0].statustemp
+            }else{
+                this.progressEpisode = 0
+                this.statustemp = ''
+            }
+        },
+        saveProgress(ev){
+            let ref,progress;
+            this.$store.commit('SET_LOADING',true)
+            progress = this.progress.filter((item)=>{
+                return item.temporada == this.temporada.toString()
+            })
+
+            
+            if(progress.length){
+                let ref = firebase.database().ref('progress').child(progress[0].id);
+                ref.update({
+                    progressEpisode:`${this.progressEpisode} / ${ev.currentTarget.dataset.totalepisodes}`,
+                    statustemp:this.statustemp,
+                    episodes:this.progressEpisode,
+   
+                }).then(() => {
+                    this.$store.commit('SET_LOADING',false)
+                    this.$store.commit(
+                        "SET_MESSAGE",
+                        `Seu progresso foi atualizado com sucesso ^.^`   
+                    );
+                    this.$store.commit("SET_IMAGE_MESSAGE", "logout");
+                }).catch((err) => {
+                    console.log(err);
+                    this.$store.commit('SET_LOADING',false)
+                    this.$store.commit(
+                        "SET_MESSAGE",
+                        `Erro ao atualizar seu progresso, tente mais tarde.`   
+                    );
+                    this.$store.commit("SET_IMAGE_MESSAGE", "error");
+                });
+            }else{
+                ref = firebase.database().ref('progress');
+                ref.push({
+                    idUser:this.$cookies.get("idUser"),
+                    nameTemporada:this.textSeason,
+                    temporada:this.temporada,
+                    type: this.temporada <=99 ? 'temporada' : this.temporada <=999 ? 'Filme' : 'OVA',
+                    animeId:this.idAnime,
+                    slugName:this.anime.slug,
+                    imageAnime:this.anime.image,
+                    nameAnime:this.anime.name,
+                    episodes:this.progressEpisode,
+                    progressEpisode:`${this.progressEpisode} / ${ev.currentTarget.dataset.totalepisodes}`,
+                    statustemp:this.statustemp
+
+                }).then(() => {
+                    this.$store.commit('SET_LOADING',false)
+                    this.$store.commit(
+                        "SET_MESSAGE",
+                        `Seu progresso foi enviado com sucesso ^.^`   
+                    );
+                    this.$store.commit("SET_IMAGE_MESSAGE", "logout");
+  
+                }).catch((err) => {
+                    console.log(err);
+                    this.$store.commit('SET_LOADING',false)
+                    this.$store.commit(
+                        "SET_MESSAGE",
+                        `Erro ao enviar seu progresso, tente mais tarde.`   
+                    );
+                    this.$store.commit("SET_IMAGE_MESSAGE", "error");
+                });
+            }
+    
+        },
         getlikes(){
             let ref = firebase.database().ref('likes');
 
@@ -380,6 +534,7 @@ export default {
             ref.push({
                 idComment: this.idReport,
                 textreport:this.textreport,
+                categoryreportprop:this.categoryreportprop,
                 date:date,
             })
                 .then(() => {
@@ -422,9 +577,6 @@ export default {
                 })
                 this.shuffleArray()
                 });
-            
-            
-
         },
         shuffleArray() {
         // Loop em todos os elementos
@@ -501,6 +653,7 @@ export default {
                 this.getRecomended()
                 this.getFavorites()
                 this.getlikes()
+                this.getProgress()
 
                 this.$store.commit('SET_LOADING',false)
             });
