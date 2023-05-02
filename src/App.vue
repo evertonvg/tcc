@@ -10,7 +10,7 @@
       <WarningVue v-if="$store.state.message != null" />
     </transition>
 
-    <router-view v-slot="{ Component }">
+    <router-view v-slot="{ Component }" :key="$route.fullPath">
 
         <component :is="Component" />
 

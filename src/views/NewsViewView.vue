@@ -12,6 +12,8 @@
         <h1 class="font-bold text-4xl text-left text-header mt-2">
           {{ news.title }}
         </h1>
+        
+        <img src="@/assets/img/loading-gif.gif" class="mx-auto mt-8 w-36" alt="gif loading" v-show="loading"/>
 
         <span class="text-left text-xs text-lightblue block mt-4">
           {{ commentedformattedHour(news.data) }} / por Admin
@@ -85,7 +87,8 @@
         return {
           news:'',
           allNews:[],
-          route:''
+          route:'',
+          loading:true
       }
     },
     methods:{
@@ -120,6 +123,7 @@
                     },100)
                 }
                 this.getallnews()
+                this.loading = false
 
                 
 
