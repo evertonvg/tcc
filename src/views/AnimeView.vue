@@ -6,15 +6,15 @@
             <div class="mb-4 flex items-center justify-center gap-4 w-full flex-col sm:flex-row">
                 <div class="flex items-start justify-start w-full sm:w-[215px]">
                     
-                    <select v-model="temporada" class="h-10 rounded px-4 outline-none cursor-pointer min-w-full text-graytext" @change="(ev)=>{setVideos;type=temporada;getSelectedSeason(ev);setProgress();}" ref="selectemp">
-                        <optgroup label="Temporadas" class="font-bold" v-show="seasons.some((item)=>{return item.type=='Temporada'})">
-                            <option v-for="(season,index) in seasons" :key="index" :value="season.order" v-show="season.type=='Temporada'" >{{season.name}}</option>
+                    <select v-model="temporada" class="h-10 rounded px-4 outline-none cursor-pointer min-w-full text-graytext selectemp" @change="(ev)=>{setVideos;type=temporada;getSelectedSeason(ev);setProgress();}" ref="selectemp">
+                        <optgroup label="Temporadas" class="font-bold" v-if="seasons.some((item)=>{return item.type=='Temporada'})">
+                            <option class="options" v-for="(season,index) in getSelectTemp" :key="index" :value="season.order" >{{season.name}}</option>
                         </optgroup>
-                        <optgroup label="Filmes" class="font-bold" v-show="seasons.some((item)=>{return item.type=='Filme'})">
-                            <option v-for="(season,index) in seasons" :key="index" :value="season.order" v-show="season.type=='Filme'" >{{season.name}}</option>
+                        <optgroup label="Filmes" class="font-bold" v-if="seasons.some((item)=>{return item.type=='Filme'})">
+                            <option class="options" v-for="(season,index) in getSelectMovie" :key="index" :value="season.order" >{{season.name}}</option>
                         </optgroup>
-                        <optgroup label="OVAS" class="font-bold" v-show="seasons.some((item)=>{return item.type=='OVA'})">
-                            <option v-for="(season,index) in seasons" :key="index" :value="season.order" v-show="season.type=='OVA'" >{{season.name}}</option>
+                        <optgroup label="OVAS" class="font-bold" v-if="seasons.some((item)=>{return item.type=='OVA'})">
+                            <option class="options" v-for="(season,index) in getSelectOVA" :key="index" :value="season.order">{{season.name}}</option>
                         </optgroup>
                     </select>
                 </div>
@@ -280,7 +280,24 @@ export default {
             }
         },
     },
-    
+    computed:{
+        getSelectTemp(){
+            return this.seasons.filter((item)=>{
+                return item.type == 'Temporada'
+            });
+        },
+        getSelectMovie(){
+            return this.seasons.filter((item)=>{
+                return item.type == 'Filme'
+            });
+        },
+        getSelectOVA(){
+            return this.seasons.filter((item)=>{
+                return item.type == 'OVA'
+            });
+        }
+
+    },
    
     methods:{
         getProgress(){
@@ -300,7 +317,7 @@ export default {
                     this.progress = this.progress.filter((item)=>{
                         return item.idUser == this.$cookies.get("idUser")
                     })
-                    console.log(this.progress)
+   
                     if(this.firstTimeProgress){
                         this.setProgress();
                         this.firstTimeProgress = false
@@ -764,6 +781,13 @@ export default {
                 }
                 if(this.$route.query.temp){
                     this.temporada=this.$route.query.temp
+                }else{
+                    let select = document.querySelector('.selectemp')
+                    setTimeout(()=>{
+                        this.temporada = select.querySelectorAll('.options')[0].value
+                     
+                    },400)
+                    
                 }
                 setTimeout(() =>{
                     this.getSelectedSeason()

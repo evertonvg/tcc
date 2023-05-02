@@ -251,7 +251,9 @@
               bio:'',
               banner:'',
               location:''
-            }
+            },
+            animes:[],
+            seasons:[]
         };
     },
     methods:{
@@ -268,6 +270,16 @@
                     index++
                 }
             });
+            this.favorites = this.favorites.filter((item)=>{
+                  let anime = this.animes.filter((us)=>{
+                      return us.id == item.animeId
+                  })
+
+                  if(anime[0].active == true){
+                      return item
+                  }
+              })
+
             this.favorites = this.favorites.sort((x,y)=>{
                 let a = x.animeName.toLowerCase()
                 let b = y.animeName.toLowerCase()
@@ -291,12 +303,64 @@
                     index++
                 }
             });
+            let anime,seasons
+            this.progress = this.progress.filter((item)=>{
+                  anime = this.animes.filter((us)=>{
+                      return us.id == item.animeId
+                  })
+
+                  if(anime[0].active == true){
+                      return item
+                  }
+            })
+            this.progress = this.progress.filter((item)=>{
+                  seasons = this.seasons.filter((us)=>{
+                    if(us.idAnime.toString() == item.animeId.toString() && us.order.toString() == item.temporada.toString()){
+                      return item
+                    }    
+                  })
+                  
+                  console.log(seasons)
+                  if(seasons[0].active==true)
+                  return item
+
+            })
             this.progress = this.progress.sort((x,y)=>{
               return  (x.nameAnime.localeCompare(y.nameAnime) || x.temporada - y.temporada   )
             })
 
         }); 
         
+      },
+      getAnimes(){
+            let ref = firebase.database().ref('animes');
+            ref.orderByChild('slug').once("value", (snapshot) => {
+                this.animes =  []
+                let index = 0
+                snapshot.forEach((ss) => {
+                    this.animes.push(ss.val())
+                    if(this.animes[index]){
+                      this.animes[index].id = ss.key
+                      index++
+                    }
+                    
+                });
+            });
+      },
+      getSeasons(){
+        let ref = firebase.database().ref('seasons');
+            ref.orderByChild('name').once("value", (snapshot) => {
+                this.seasons =  []
+                let index = 0
+                snapshot.forEach((ss) => {
+                    this.seasons.push(ss.val())
+                    if(this.seasons[index]){
+                      this.seasons[index].id = ss.key
+                      index++
+                    }
+                    
+                });
+            });
       },
       async getNotesFromUser(){
         let refrr = firebase.database().ref('evaluations');
@@ -310,6 +374,28 @@
                     index++
                 }
             });
+            let anime,seasons
+            this.notes = this.notes.filter((item)=>{
+                  anime = this.animes.filter((us)=>{
+                      return us.id == item.idAnime
+                  })
+
+                  if(anime[0].active == true){
+                      return item
+                  }
+            })
+            this.notes = this.notes.filter((item)=>{
+                  seasons = this.seasons.filter((us)=>{
+                    if(us.idAnime.toString() == item.idAnime.toString() && us.order.toString() == item.season.toString()){
+                      return item
+                    }    
+                  })
+                  
+                  console.log(seasons)
+                  if(seasons[0].active==true)
+                  return item
+
+            })
             this.notes = this.notes.sort((x,y)=>{
               return  (x.animeName.localeCompare(y.animeName) || x.season - y.season   )
             })
@@ -590,6 +676,8 @@
        
     },
     mounted() {
+        this.getAnimes()
+        this.getSeasons()
         this.getData()
         this.resetInputImage()
         window.addEventListener('keydown',(ev)=>{
