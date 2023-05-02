@@ -292,9 +292,7 @@
                 }
             });
             this.progress = this.progress.sort((x,y)=>{
-                let a = x.nameAnime.toLowerCase()
-                let b = y.nameAnime.toLowerCase()
-                return  a == b ? 0 : a > b ? 1 : -1
+              return  (x.nameAnime.localeCompare(y.nameAnime) || x.temporada - y.temporada   )
             })
 
         }); 
@@ -313,11 +311,8 @@
                 }
             });
             this.notes = this.notes.sort((x,y)=>{
-                let a = x.animeName.toLowerCase()
-                let b = y.animeName.toLowerCase()
-                return  a == b ? 0 : a > b ? 1 : -1
+              return  (x.animeName.localeCompare(y.animeName) || x.season - y.season   )
             })
-            console.log(this.notes)
 
         });
       },

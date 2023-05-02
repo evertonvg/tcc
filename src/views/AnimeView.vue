@@ -50,7 +50,7 @@
                         <h2 class="text-left mb-8 text-xl font-bold">
                             Seu progresso na temporada
                         </h2>
-                        <div class="flex items-start justify-start gap-2">
+                        <div class="flex flex-col sm:flex-row items-start justify-start gap-2">
                             <div class="text-left flex flex-col justify-start">
                                 <label for="progressEpisode" class="max-w-[200px] font-bold text-xs mb-2 h-10 text-blue">Numero de episódios assistidos até o momento</label>
                                 <div>
@@ -58,7 +58,7 @@
                                 </div>
                             </div>
                             <div class="text-left flex flex-col justify-start">
-                                <label for="progressEpisode" class="max-w-[200px] font-bold text-xs mb-2 h-10 text-blue">Seu status atual:</label>
+                                <label for="progressEpisode" class="max-w-[200px] font-bold text-xs mb-2 sm:h-10 text-blue mt-4 sm:mt-0">Seu status atual:</label>
                                 <div>
                                     <select v-model="statustemp" class="border p-2 h-10 rounded-sm">
                                         <option value="" disabled>
@@ -336,9 +336,9 @@ export default {
             if(progress.length){
                 let ref = firebase.database().ref('progress').child(progress[0].id);
                 ref.update({
-                    progressEpisode:`${this.progressEpisode} / ${ev.currentTarget.dataset.totalepisodes}`,
+                    progressEpisode:`${this.progressEpisode > ev.currentTarget.dataset.totalepisodes ? ev.currentTarget.dataset.totalepisodes : this.progressEpisode} / ${ev.currentTarget.dataset.totalepisodes}`,
                     statustemp:this.statustemp,
-                    episodes:this.progressEpisode,
+                    episodes:this.progressEpisode > ev.currentTarget.dataset.totalepisodes ? ev.currentTarget.dataset.totalepisodes : this.progressEpisode,
    
                 }).then(() => {
                     this.$store.commit('SET_LOADING',false)
@@ -367,9 +367,9 @@ export default {
                     slugName:this.anime.slug,
                     imageAnime:this.anime.image,
                     nameAnime:this.anime.name,
-                    episodes:this.progressEpisode,
-                    progressEpisode:`${this.progressEpisode} / ${ev.currentTarget.dataset.totalepisodes}`,
-                    statustemp:this.statustemp
+                    progressEpisode:`${this.progressEpisode > ev.currentTarget.dataset.totalepisodes ? ev.currentTarget.dataset.totalepisodes : this.progressEpisode} / ${ev.currentTarget.dataset.totalepisodes}`,
+                    statustemp:this.statustemp,
+                    episodes:this.progressEpisode > ev.currentTarget.dataset.totalepisodes ? ev.currentTarget.dataset.totalepisodes : this.progressEpisode,
 
                 }).then(() => {
                     this.$store.commit('SET_LOADING',false)
