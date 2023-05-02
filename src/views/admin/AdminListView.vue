@@ -51,11 +51,16 @@
                 </router-link>
             </li>
             <li class="p-3">
+                <router-link to="/admin/users">
+                    Usuários
+                </router-link>
+            </li>
+            <li class="p-3">
                 <router-link to="/admin/reports">
                     Reports 
-                    <span class="font-bold text-red2" >
-                       ( {{ reports.length  -  parseInt(this.$cookies.get("newreports")) }}  novos reports )
-                    </span>
+                    <!-- <span class="font-bold text-red2" >
+                        {{ local ? reports.length  -  local  : '0' }} novos reports
+                    </span> -->
                 </router-link>
             </li>
         </ul>
@@ -73,7 +78,8 @@ export default {
   name: 'HomeView',
   data() {
       return {
-        reports:[]
+        reports:[],
+        local:''
       }
     },
   computed: {
@@ -109,6 +115,7 @@ export default {
         }
         this.$store.commit('SET_LOADING',false)
         this.getReports()
+        this.local = localStorage.getItem('newreports')
     }
  
 }

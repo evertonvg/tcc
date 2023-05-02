@@ -41,8 +41,7 @@
             </div>
         </div>
         
-    </div>
-    
+    </div> 
 
 </template>
 <script>
@@ -96,6 +95,14 @@ export default {
             
 
         
+        },
+        checkIfBan(){
+
+            let ban = this.users.filter((item)=>{
+                return item.idUser == this.idsocial
+            })
+            return ban[0].active == true ? true : false
+
         },
         checkTotalComments(){
             let checkLike = []

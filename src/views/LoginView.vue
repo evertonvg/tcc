@@ -66,7 +66,8 @@ export default {
     return {
       bgs: ["https://images6.alphacoders.com/844/844900.png"],
       idUser:'',
-      user:''
+      user:'',
+      users:[]
     };
   },
   methods: {
@@ -91,6 +92,15 @@ export default {
                 this.idUser = ss.key;
                 this.user = ss.val();
             });
+
+            if(this.user.active==false){
+              this.$store.commit(
+              "SET_MESSAGE",
+              `Sua conta foi temporariamente suspensa. Motivo:${this.user.banText}. Entre em contato com os administradores`
+            );
+            this.$store.commit("SET_IMAGE_MESSAGE", "error");
+              return false;
+            }
             this.$cookies.set("imageAnime", this.user.image);
             this.$cookies.set("idUser", this.user.idUser);
             this.$cookies.set("nameAnime", this.user.name);
@@ -105,6 +115,16 @@ export default {
             this.$store.commit('SET_LOADING',true);
             this.$router.push("/");
           })
+    },
+    getUser(){
+      let ref = firebase.database().ref('users');
+        ref.orderByChild('idUser').equalTo(this.$cookies.get("idUser")).limitToFirst(1).once("value", (snapshot) => {
+          this.users = []
+          snapshot.forEach((ss) => {
+              this.users = ss.val();
+              this.users.id = ss.key;
+          });
+        })
     },
     login(link) {
       let provider;
@@ -129,6 +149,8 @@ export default {
           let ref = firebase.database().ref('users'); 
           if(res.additionalUserInfo.isNewUser == true){
             ref.push({
+                active:true,
+                banText:'',
                 slug:res.additionalUserInfo.profile.name.toLowerCase().replaceAll(' ','-').replaceAll(':','-').normalize('NFD').replaceAll(/[\u0300-\u036f]/g, ""),
                 idFirebaset: res.user.uid,
                 idUser: res.additionalUserInfo.profile.id.toString(),

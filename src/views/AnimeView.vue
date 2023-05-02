@@ -48,7 +48,7 @@
                     </div>
                     <div v-show="$cookies.get('loginIdAnime') != null" class="mb-8">
                         <h2 class="text-left mb-8 text-xl font-bold">
-                            Seu progresso na temporada
+                            Seu progresso na temporada 
                         </h2>
                         <div class="flex flex-col sm:flex-row items-start justify-start gap-2">
                             <div class="text-left flex flex-col justify-start">
@@ -513,7 +513,7 @@ export default {
                     this.$store.commit("SET_IMAGE_MESSAGE", "error");
                 });
         },
-        getUsers(){
+        async getUsers(){
             let ref = firebase.database().ref('users');
            
             ref.orderByChild('name').on("value", (snapshot) => {
@@ -674,6 +674,21 @@ export default {
                     }
                     index++
                 });
+
+                
+                this.allComments = this.allComments.filter((item)=>{
+                    let userFromComment = this.users.filter((us)=>{
+                        return item.idSocial == us.idUser
+                    })
+                    // console.log(userFromComment)
+                    if(userFromComment[0].active == true){
+                        return item
+                    }
+                })
+
+                
+
+
                 this.allComments.forEach((el,ind)=>{
                     el.id = this.idAllComments[ind]
                 })
@@ -868,10 +883,11 @@ export default {
     },
     
     mounted() {
+        this.getUsers()
         let slug = this.$route.params.slug.replaceAll('-',' ').charAt(0).toUpperCase() + this.$route.params.slug.replaceAll('-',' ').slice(1); 
         document.title = `${slug} - Otaku Stars `;
         this.getAnime()
-        this.getUsers()
+        
         window.addEventListener('keydown',(ev)=>{
             switch(ev.key){
                 case 'Escape': this.modalMusic = false

@@ -430,7 +430,8 @@ export default {
         }
         this.$store.commit("SET_LOADING", false);
 
-        this.$cookies.set("newreports", this.categories.length);
+        localStorage.setItem('newreports', this.categories.length);
+        // this.$cookies.set("newreports", this.categories.length);
     },
     
 }

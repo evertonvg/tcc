@@ -6,7 +6,7 @@
   >
     <div class="container items-center justify-center h-full flex mx-auto">
       <div class="flex items-center justify-center">
-        <router-link to="/" class="h-full" @click="open=!open">
+        <router-link to="/" class="h-full" @click="open=false">
           <img src="@/assets/img/icon.png" class="h-16" />
         </router-link>
       </div>
@@ -124,7 +124,10 @@
           <router-link class="text-2xl" to="/categories">categorias</router-link>
         </li> -->
         <li @click="open=!open">
-          <router-link class="text-2xl" to="/search">Pesquisar</router-link>
+          <router-link class="text-2xl" to="/news">Noticias</router-link>
+        </li>
+        <li @click="open=!open">
+          <router-link class="text-2xl" to="/search">Animes</router-link>
         </li>
         <li @click="open=!open">
           <router-link class="text-2xl" to="/about">Sobre</router-link>

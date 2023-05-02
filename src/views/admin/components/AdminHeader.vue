@@ -1,7 +1,7 @@
 <template>
   <header class="text-gray-600 body-font bg-lightblue">
       <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
-        <a class="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0">
+        <a class="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0" v-show="verifyrouteVariable == true">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -16,11 +16,11 @@
           </svg>
           <span class="ml-3 text-xl">{{ local }}</span>
         </a>
-        <button
+        <button v-show="verifyrouteVariable == true"
           class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded ml-4"
-          @click="openModal" v-show="!$route.name.includes('comments') && !$route.name.includes('reports')"
+          @click="openModal" 
         >
-          Add
+          Add 
         </button>
         <nav
           class="md:ml-auto flex flex-wrap items-center text-base justify-center"
@@ -49,7 +49,35 @@
 <script>
 export default {
     name:'adminHeader',
-    props:['openModal','local']
+    props:['openModal','local'],
+    data() {
+        return {
+          verifyrouteVariable:true,
+    }},
+    methods:{
+      verifyroute(){
+        let routes = ['comments','reports','users']
+        let words = this.$route.path.split('/')
+        words = words.map((item)=>{
+            return item.toLowerCase()
+        })
+ 
+        if(words.some((item)=>{
+                return routes.includes(item.toLowerCase())
+            })){
+              
+              this.verifyrouteVariable =  false
+            }else{
+           
+              this.verifyrouteVariable =  true
+            }
+            console.log(this.verifyrouteVariable)
+      }
+    },
+    
+    mounted(){
+      this.verifyroute()
+    }
 
 }
 </script>

@@ -450,7 +450,13 @@
           this.getAllDatas()
           
           this.$store.commit('SET_LOADING',false)
-          if(this.user.length == 0){
+          if(this.user.length == 0 ){
+              history.back();
+              setTimeout(()=>{
+                  window.location.reload()
+              },100)
+          }
+          if(this.user.active == false ){
               history.back();
               setTimeout(()=>{
                   window.location.reload()
