@@ -1,4 +1,4 @@
-<template>
+<template :key="$route.fullPath">
     <header class="h-[30vh] sm:h-[50vh]  bg-cover bg-no-repeat bg-center overflow-hidden bg-gradient-to-b from-white to-header" ref="banner"></header>
     <section class="px-5 container mx-auto mt-4 -translate-y-20">
         <infosView :anime="anime" :finalnote="notes" v-model:favorite="favorite" :showfavorite="showfavorite" v-model:changeFavorite = "changeFavorite" />
@@ -916,7 +916,8 @@ export default {
             switch(ev.key){
                 case 'Escape': this.modalMusic = false
             }
-        })    
+        }) 
+
     },
 }
 </script>

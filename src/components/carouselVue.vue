@@ -3,7 +3,7 @@
     <carousel :settings="settings" :breakpoints="breakpoints" v-if="items.length">
         <slide v-for="(item,index) in items.slice(0, 10)" :key="index">
             <div class="w-full h-80 px-2">
-                <router-link :to="`/animes/${item.slug}`"  class="h-full relative w-full bg-gradient-to-b from-white to-header" :data-link="`/animes/${item.slug}`" >
+                <router-link :to="`/animes/${item.slug}`"  class="h-full relative w-full bg-gradient-to-b from-white to-header" :data-link="`/animes/${item.slug}`" @click="reload">
                     <cardVue :item="item" class="bg-gradient-to-b from-white to-header" />
                 </router-link>
             </div>

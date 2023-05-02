@@ -10,9 +10,13 @@
       <WarningVue v-if="$store.state.message != null" />
     </transition>
 
-    <router-view v-slot="{ Component }" :key="$route.fullPath">
 
-        <component :is="Component" />
+    <!-- pesquisa parou de funcionar  -->
+    <!-- :key="$route.fullPath" -->
+
+    <router-view v-slot="{ Component }" >
+
+        <component :is="Component"  />
 
     </router-view>
 
