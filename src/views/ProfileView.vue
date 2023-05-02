@@ -259,7 +259,6 @@
     watch:{
       activetab(){
         this.$router.push(`${this.$route.path}?session=${this.activetab}`)
-        // console.log(this.$route.path)
       }
     },
     methods:{

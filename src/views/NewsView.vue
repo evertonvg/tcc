@@ -75,12 +75,14 @@
     data() {
     return {
         loading:true,
-      news:[],
-      newsFilter:[],
-      newsTotal:[],
-      pageLimit:9,
-      search:'',
-      loaddone:false
+        news:[],
+        newsFilter:[],
+        newsTotal:[],
+        limit:9,
+        pageLimit:9,
+        search:'',
+        loaddone:false,
+        page:1
 
     }
   },
@@ -93,6 +95,9 @@
                 return item.title.toLowerCase().includes(this.search.toLowerCase())
             })
         }
+    },
+    page(){
+        this.$router.push(`${this.$route.path}?page=${this.page}`)
     }
   },
     methods:{
@@ -118,10 +123,11 @@
                 distancelimit = document.querySelector('.distancelimit')
                 if(distancelimit){
                     if((window.pageYOffset + window.innerHeight * (0.85)) > distancelimit.offsetTop){
-                    if(this.pageLimit < this.news.length){
-                        this.pageLimit = this.pageLimit + 9
+                        if(this.pageLimit < this.news.length){
+                            this.page++
+                            this.pageLimit = this.page*this.limit
+                        }
                     }
-                }
                 }
                
         })
@@ -129,9 +135,13 @@
 
     },  
     mounted() {
-      document.title = "Otaku Stars - Noticias";
-      this.$store.commit('SET_LOADING',false)
-      this.getNews()
+        if(this.$route.query.page){
+            this.page=this.$route.query.page
+            this.pageLimit = this.limit * this.page
+        }
+        document.title = "Otaku Stars - Noticias";
+        this.$store.commit('SET_LOADING',false)
+        this.getNews()
       
     },
   };
