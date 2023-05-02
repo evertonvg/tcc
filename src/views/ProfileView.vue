@@ -256,6 +256,12 @@
             seasons:[]
         };
     },
+    watch:{
+      activetab(){
+        this.$router.push(`${this.$route.path}?session=${this.activetab}`)
+        // console.log(this.$route.path)
+      }
+    },
     methods:{
       async getFavoritesFromUser(){
         
@@ -319,8 +325,7 @@
                       return item
                     }    
                   })
-                  
-                  console.log(seasons)
+                
                   if(seasons[0].active==true)
                   return item
 
@@ -390,8 +395,7 @@
                       return item
                     }    
                   })
-                  
-                  console.log(seasons)
+                
                   if(seasons[0].active==true)
                   return item
 
@@ -685,6 +689,9 @@
             this.closeEdit()
           }
         })
+        if(this.$route.query.session){
+            this.activetab=this.$route.query.session
+        }
     },
   };
   </script>
