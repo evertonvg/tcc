@@ -664,6 +664,12 @@ export default {
                         window.location.reload()
                     },100)
                 }
+                if(this.anime.active==false){
+                    history.back();
+                    setTimeout(()=>{
+                        window.location.reload()
+                    },100)
+                }
                 this.getSeasons(this.idAnime)
                 this.getComments(this.idAnime)
                 this.getEvaluations(this.idAnime)
