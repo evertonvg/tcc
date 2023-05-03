@@ -262,7 +262,8 @@
       }
     },
     methods:{
-      async getFavoritesFromUser(){
+      async getFavoritesFromUser(){ 
+
         
         let refrr = firebase.database().ref('favorites');
         refrr.orderByChild('userId').equalTo(this.$route.params.slug.split('ososlklk')[1].toString()).once("value", (snapshot) => {
@@ -275,12 +276,15 @@
                     index++
                 }
             });
+            
             this.favorites = this.favorites.filter((item)=>{
                   let anime = this.animes.filter((us)=>{
                       return us.id == item.animeId
                   })
 
                   if(anime[0].active == true){
+                      item.animeName = anime[0].name
+                      item.animeLink = anime[0].slug
                       return item
                   }
               })
@@ -315,12 +319,15 @@
                   })
 
                   if(anime[0].active == true){
+                      item.nameAnime = anime[0].name
+                      item.slugName = anime[0].slug
                       return item
                   }
             })
             this.progress = this.progress.filter((item)=>{
                   seasons = this.seasons.filter((us)=>{
                     if(us.idAnime.toString() == item.animeId.toString() && us.order.toString() == item.temporada.toString()){
+                      item.nameTemporada = us.name
                       return item
                     }    
                   })
@@ -385,12 +392,15 @@
                   })
 
                   if(anime[0].active == true){
+                      item.animeName = anime[0].name
+                      item.animeLink = anime[0].slug
                       return item
                   }
             })
             this.notes = this.notes.filter((item)=>{
                   seasons = this.seasons.filter((us)=>{
                     if(us.idAnime.toString() == item.idAnime.toString() && us.order.toString() == item.season.toString()){
+                      item.animeSeasonName = us.name
                       return item
                     }    
                   })
