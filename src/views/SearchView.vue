@@ -223,7 +223,11 @@
                 this.filterDestaques = this.destaques
                 
                 if(this.pesquisa!=''){
-                    this.filterDestaques = this.filterDestaques.filter(item => item.name.toLowerCase().includes(this.pesquisa.toLowerCase()));
+
+                    this.filterDestaques = this.filterDestaques.filter(item => {
+                            return item.name.toLowerCase().includes(this.pesquisa.toLowerCase()) || item?.englishName?.toLowerCase().includes(this.pesquisa.toLowerCase())
+                        }
+                    );
                 }
 
                 if(this.setCategories.length >= 1){

@@ -132,9 +132,9 @@
             </thead>
             
             <tbody>
-              <tr class="border-b" v-for="(ani, index) in animes" :key="index" v-show="ani.name.toLowerCase().includes(search.toLowerCase()) || search==''">
+              <tr class="border-b" v-for="(ani, index) in animes" :key="index" v-show="ani.name.toLowerCase().includes(search.toLowerCase()) || (ani.englishName ? ani.englishName.toLowerCase().includes(search.toLowerCase()) : false) || search==''">
                 <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                  {{ ani.name }} - {{ani.slug}}
+                  {{ ani.name }} - {{ani.englishName}}
                 </td>
                 <td
                   class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap text-center"
@@ -201,6 +201,7 @@
                     class="btn"
                     :data-id="ids[index]"
                     :data-name="ani.name"
+                    :data-englishname="ani.englishName"
                     :data-description="ani.description"
                     :data-categories="ani.categories"
                     :data-image="ani.image"
@@ -283,6 +284,20 @@
                 id="name"
                 name="name"
                 v-model="anime.name"
+                :class="[
+                  'w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out',
+                ]"
+              />
+            </div>
+            <div class="relative mb-4">
+              <label for="name" class="leading-7 text-sm text-gray-600 block text-left"
+                >English Nme
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                v-model="anime.englishName"
                 :class="[
                   'w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out',
                 ]"
@@ -544,6 +559,7 @@ export default {
       anime: {
         id:"",
         name: "",
+        englishName:"",
         description: "",
         image: "",
         imageBanner:"",
@@ -581,6 +597,7 @@ export default {
     },
     resetItems() {
       this.anime.id = "",
+      this.englishName = "";
       this.anime.name = "";
       this.anime.description = "";
       this.anime.image = "";
@@ -599,6 +616,7 @@ export default {
     setItems(ev){
       this.anime.id = ev.target.dataset.id.toString(),
       this.anime.name = ev.target.dataset.name.toString();
+      this.englishName = ev.target.dataset.englishname ? ev.target.dataset.englishname.toString() : '';
       this.anime.description = ev.target.dataset.description.toString();
       this.anime.image = ev.target.dataset.image;
       this.anime.imageBanner = ev.target.dataset.imageb;
@@ -657,6 +675,7 @@ export default {
                 let ref = firebase.database().ref('animes');
                 ref.push({
                   name: this.anime.name,
+                  englishName:this.anime.englishName,
                   slug:this.anime.name.toString().toLowerCase().replaceAll(' ','-').replaceAll(':','-').normalize('NFD').replaceAll(/[\u0300-\u036f]/g, ""),
                   description: this.anime.description,
                   image: this.anime.image,
@@ -743,8 +762,7 @@ export default {
             name: this.anime.name,
             slug:this.anime.name.toString().toLowerCase().replaceAll(' ','-').replaceAll(':','-').normalize('NFD').replaceAll(/[\u0300-\u036f]/g, ""),
             description: this.anime.description,
-            // image: this.anime.image,
-            // imageBanner: this.anime.imageBanner,
+            englishName:this.anime.englishName,
             active: this.anime.active,
             activeSeason: this.anime.activeSeason,
             newSeason:this.anime.newSeason,

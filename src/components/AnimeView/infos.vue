@@ -13,8 +13,9 @@
                 </span>
                 <heart :size="30" :fillColor="favorite ? '#FF0000' : '#5C728A'" />
             </div>
-            <h1 class="font-semibold text-3xl text-graytext mb-2 flex items-center justify-between">
-                {{anime.name}} 
+            <h1 class="font-semibold text-3xl text-graytext mb-2 flex flex-col items-start justify-between">
+                <span>{{anime.name}} </span>
+                <span class="text-xs text-lightblue">{{ anime.englishName }} </span>
             </h1>
             <p class="text-left text-graytext relative">
                 {{anime.description}}
