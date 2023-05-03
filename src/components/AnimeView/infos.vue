@@ -15,7 +15,8 @@
             </div>
             <h1 class="font-semibold text-3xl text-graytext mb-2 flex flex-col items-start justify-between">
                 <span>{{anime.name}} </span>
-                <span class="text-xs text-lightblue">{{ anime.englishName }} </span>
+                <span class="text-xs text-blue">{{ anime.englishName }} </span>
+                <span class="text-xs text-lightblue">{{ anime.portugueseName }} </span>
             </h1>
             <p class="text-left text-graytext relative">
                 {{anime.description}}

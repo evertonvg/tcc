@@ -225,7 +225,7 @@
                 if(this.pesquisa!=''){
 
                     this.filterDestaques = this.filterDestaques.filter(item => {
-                            return item.name.toLowerCase().includes(this.pesquisa.toLowerCase()) || item?.englishName?.toLowerCase().includes(this.pesquisa.toLowerCase())
+                            return item.name.toLowerCase().includes(this.pesquisa.toLowerCase()) || item?.englishName?.toLowerCase().includes(this.pesquisa.toLowerCase()) || item?.portugueseName?.toLowerCase().includes(this.pesquisa.toLowerCase())
                         }
                     );
                 }
