@@ -276,6 +276,9 @@
                     index++
                 }
             });
+            this.favorites.filter((item)=>{
+              return item.active == true ? item : false
+            })
             
             this.favorites = this.favorites.filter((item)=>{
                   let anime = this.animes.filter((us)=>{
