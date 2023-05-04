@@ -220,7 +220,6 @@ export default {
             temporada:1,
             idAnime:'',
             seasons:[],
-            idSeasons:[],
             videos:[],
             evaluations:[],
             evaluationsUser:[],
@@ -777,11 +776,14 @@ export default {
             let ref = firebase.database().ref('seasons');
             ref.orderByChild('idAnime').equalTo(id).on("value", (snapshot) => {
                 this.seasons =  [];
-                this.idSeasons = [];
                 snapshot.forEach((ss) => {
-                    this.idSeasons.push(ss.key)
                     this.seasons.push(ss.val())
                 });
+                this.seasons = this.seasons.filter((item)=>{
+                    if(item.active){
+                        return item
+                    }
+                })
                 if(this.seasons.length){
                     this.videos  = this.seasons[0].videos;
                 }

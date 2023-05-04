@@ -263,12 +263,10 @@
     },
     methods:{
       async getFavoritesFromUser(){ 
-
         
         let refrr = firebase.database().ref('favorites');
         refrr.orderByChild('userId').equalTo(this.$route.params.slug.split('ososlklk')[1].toString()).once("value", (snapshot) => {
             let index = 0
-
             snapshot.forEach((ss) => {
                 this.favorites.push(ss.val())
                 if(this.favorites[index]){
@@ -284,20 +282,17 @@
                   let anime = this.animes.filter((us)=>{
                       return us.id == item.animeId
                   })
-
                   if(anime[0].active == true){
                       item.animeName = anime[0].name
                       item.animeLink = anime[0].slug
                       return item
                   }
               })
-
             this.favorites = this.favorites.sort((x,y)=>{
                 let a = x.animeName.toLowerCase()
                 let b = y.animeName.toLowerCase()
                 return  a == b ? 0 : a > b ? 1 : -1
             })
-
         }); 
         
       },
@@ -307,7 +302,6 @@
         refrr.orderByChild('idUser').equalTo(this.$route.params.slug.split('ososlklk')[1].toString()).once("value", (snapshot) => {
             let index = 0
             this.progress = []
-
             snapshot.forEach((ss) => {
                 this.progress.push(ss.val())
                 if(this.progress[index]){
@@ -320,7 +314,6 @@
                   anime = this.animes.filter((us)=>{
                       return us.id == item.animeId
                   })
-
                   if(anime[0].active == true){
                       item.nameAnime = anime[0].name
                       item.slugName = anime[0].slug
@@ -337,12 +330,10 @@
                 
                   if(seasons[0].active==true)
                   return item
-
             })
             this.progress = this.progress.sort((x,y)=>{
               return  (x.nameAnime.localeCompare(y.nameAnime) || x.temporada - y.temporada   )
             })
-
         }); 
         
       },
@@ -380,7 +371,6 @@
         let refrr = firebase.database().ref('evaluations');
         refrr.orderByChild('idUser').equalTo(this.$route.params.slug.split('ososlklk')[1].toString()).once("value", (snapshot) => {
             let index = 0
-
             snapshot.forEach((ss) => {
                 this.notes.push(ss.val())
                 if(this.notes[index]){
@@ -393,7 +383,6 @@
                   anime = this.animes.filter((us)=>{
                       return us.id == item.idAnime
                   })
-
                   if(anime[0].active == true){
                       item.animeName = anime[0].name
                       item.animeLink = anime[0].slug
@@ -410,12 +399,10 @@
                 
                   if(seasons[0].active==true)
                   return item
-
             })
             this.notes = this.notes.sort((x,y)=>{
               return  (x.animeName.localeCompare(y.animeName) || x.season - y.season   )
             })
-
         });
       },
       async tabStatus(){
@@ -427,12 +414,10 @@
         await this.getprogressFromUser()
         await this.getNotesFromUser()
       },
-
       setPreviewimages(el,input,type){
         let element = document.querySelector(`.${el}`)
         let file = document.querySelector(`.${input}`).files[0]
         let url = window.URL.createObjectURL(file);
-
         if(element){
           if(type=='banner'){
               element.style.backgroundImage =`url(${url})`
@@ -444,7 +429,6 @@
           }
         }
         
-
       },
       previewFilesBanner(event){
         const file = event.target.files[0]; 
@@ -452,68 +436,53 @@
         let bannertop = document.querySelector('.bannertop')
         if(bannertop)
           bannertop.style.backgroundImage =`url(${url})`
-
         this.bannerAtt = url
       },
-
       previewFilesprofile(event){
         const file = event.target.files[0]; 
         let url = window.URL.createObjectURL(file);
         let profiletop = document.querySelector('.profiletop')
         if(profiletop)
           profiletop.src = url
-
         this.imageAtt = url
       },
-
       resetImages(){
         let bannertop = document.querySelector('.bannertop')
         let profiletop = document.querySelector('.profiletop')
         let profileinput = document.querySelector('.profileinput')
         let bannerinput = document.querySelector('.bannerinput')
-
         if(profiletop)
           profiletop.src = this.oldData.image
         
         if(bannertop)
           bannertop.style.backgroundImage =`url(${this.oldData.banner})`
-
         if(profileinput)
           profileinput.value = ''
-
         if(bannerinput)
           bannerinput.value = ''
-
       },
-
       resetInputImage(){
         
         let profileinput = document.querySelector('.profileinput')
         let bannerinput = document.querySelector('.bannerinput')
         if(profileinput)
           profileinput.value = ''
-
         if(bannerinput)
           bannerinput.value = ''
-
       },
-
       closeEditOnSave(){
         this.editActive = false
       },
-
       closeEdit(){
         this.editActive = false
         this.resetImages()
         this.resetNewData()
       },
-
       openEdit(){
         this.editActive = true
         this.setNewData()
         this.setOldData()
       },
-
       setOldData(){
         this.oldData.name = this.userData.name
         this.oldData.image = this.userData.image
@@ -521,7 +490,6 @@
         this.oldData.banner = this.userData.banner
         this.oldData.location = this.userData.location
       },
-
       setNewData(){
         this.newData.name = this.userData.name
         this.newData.image = this.userData.image
@@ -529,7 +497,6 @@
         this.newData.banner = this.userData.banner
         this.newData.location = this.userData.location
       },
-
       resetNewData(){
         this.newData.name = this.oldData.name
         this.newData.image = this.oldData.image
@@ -537,9 +504,7 @@
         this.newData.banner = this.oldData.banner
         this.newData.location = this.oldData.location
       },
-
       async getData(){
-
         let ref = firebase.database().ref('users');
         ref.orderByChild('idUser').equalTo(this.$route.params.slug.split('ososlklk')[1].toString()).limitToFirst(1).once("value", (snapshot) => {
           snapshot.forEach((ss) => {
@@ -548,7 +513,6 @@
           });
           this.userData = this.user          
           document.title = `Perfil de ${this.user.name} Otaku Stars`;
-
           this.getAllDatas()
           
           this.$store.commit('SET_LOADING',false)
@@ -566,7 +530,6 @@
           }
         })
       },
-
       async save(slug){
         this.closeEditOnSave()
           this.$cookies.set("nameAnime", this.newData.name);
@@ -576,13 +539,11 @@
           this.$store.commit("SET_IMAGE_MESSAGE", "welcome");
           this.$router.push(`/profile/${this.newData.name}ososlklk${this.userData.idUser}`)
       },
-
       async updateProfile(){
         let profileinput,bannerinput
         // let id = this.user.idUser
         let slug = this.newData.name.toString().toLowerCase().replaceAll(' ','-').replaceAll(/'/g, '').replaceAll(/"/g, '').replaceAll(':','-').normalize('NFD').replaceAll(/[\u0300-\u036f]/g, "")
         this.$store.commit('SET_LOADING',true);
-
         let ref = firebase.database().ref('users').child(this.user.id);
         await ref.update({
           name: this.newData.name,
@@ -602,15 +563,10 @@
           this.$store.commit("SET_MESSAGE",`Erro ao atualizar o perfil, tente mais tarde`);
           this.$store.commit("SET_IMAGE_MESSAGE", "error");
         });
-
-
         bannerinput = document.querySelector('.bannerinput')
-
         if(bannerinput.files[0]) {
           this.$store.commit('SET_LOADING',true);               
-
           this.setPreviewimages('bannertop','bannerinput','banner')
-
           await firebase.storage()
                 .ref("users")
                 .child(bannerinput.files[0].name)
@@ -641,11 +597,7 @@
                 this.$store.commit("SET_IMAGE_MESSAGE", "error");
             });
         }
-
-
-
           profileinput = document.querySelector('.profileinput')
-
           if(profileinput.files[0]) {
             this.$store.commit('SET_LOADING',true);
             this.setPreviewimages('profiletop','profileinput','image')
@@ -683,11 +635,8 @@
                   this.$store.commit("SET_IMAGE_MESSAGE", "error");
               });
           }
-
           await this.save(slug)
       },
-
-
       
        
     },
@@ -707,6 +656,3 @@
     },
   };
   </script>
-  
-
-  
