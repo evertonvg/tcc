@@ -17,7 +17,7 @@
                   type="search"
                   v-model="search"
                   class=" transition-all  text-black relative m-0 -mr-px block w-[1%] min-w-0 flex-auto rounded-l border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-1.5 text-base font-normal text-neutral-700 outline-none  duration-300 ease-in-out focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:text-neutral-200 dark:placeholder:text-neutral-200"
-                  placeholder="Minimo 3 caracteres"
+                  placeholder=""
                   aria-label="Search"
                   aria-describedby="button-addon1" />
               <button
@@ -45,9 +45,9 @@
                 <div class="w-10 h-full absolute left-0 right-0 pointer-events-none">
                   <img :src="`${item.image}`" class="w-full h-full object-cover" />
                 </div>
-                <p class="pointer-events-none">{{ item.name }}</p>
+                <p class="pointer-events-none text-left">{{ item.name }}</p>
               </div>
-              <div class="w-full h-10 flex items-center justify-start bg-gray border p-1 pl-4 text-black" v-if="search.length>=3&&!filteredList.length">
+              <div class="w-full h-12 flex items-center justify-start bg-gray border p-1 pl-4 text-black" v-if="search.length>=3&&!filteredList.length">
                 <p>Nenhum resultado encontrado</p>
               </div>
             </div>

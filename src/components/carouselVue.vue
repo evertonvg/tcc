@@ -75,4 +75,16 @@ export default {
 .carousel__prev--in-active, .carousel__next--in-active{
   @apply hidden;
 }
+.carousel__prev,.carousel__next{
+    @apply bg-blue transition-all;
+}
+.carousel__prev:hover,.carousel__next:hover{
+    @apply bg-darkblue;
+}
+.carousel__pagination-button{
+    @apply bg-blue;
+}
+.carousel__pagination-button--active{
+    @apply bg-darkblue;
+}
 </style>
