@@ -9,7 +9,9 @@
         alt="konata"
         class="absolute top-0 left-0 w-32 transform -translate-y-full"
       />
-      {{ $store.state.message }}
+      <div v-html="$store.state.message">
+
+      </div>
     </div>
   </transition>
 </template>

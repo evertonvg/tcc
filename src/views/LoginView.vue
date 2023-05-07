@@ -101,7 +101,9 @@ export default {
             if(this.user.active==false){
               this.$store.commit(
               "SET_MESSAGE",
-              `Sua conta foi temporariamente suspensa. Motivo:${this.user.banText}. Entre em contato com os administradores`
+              `Sua conta foi temporariamente suspensa. Motivo:${this.user.banText}. Entre em <a class="text-red font-bold font-xl" href="mailto:evertoniee@yahoo.com.br" target="_blank">
+                contato
+              </a> com os administradores`
             );
             this.$store.commit("SET_IMAGE_MESSAGE", "error");
               return false;
