@@ -68,36 +68,7 @@
                 >
                   Categories
                 </th>
-                <th
-                  scope="col"
-                  class="text-sm font-medium text-gray-900 px-6 py-4 text-center"
-                >
-                  release
-                </th>
-                <th
-                  scope="col"
-                  class="text-sm font-medium text-gray-900 px-6 py-4 text-center"
-                >
-                  closure
-                </th>
-                <th
-                  scope="col"
-                  class="text-sm font-medium text-gray-900 px-6 py-4 text-center"
-                >
-                  Season
-                </th>
-                <th
-                  scope="col"
-                  class="text-sm font-medium text-gray-900 px-6 py-4 text-center"
-                >
-                  Movies
-                </th>
-                <th
-                  scope="col"
-                  class="text-sm font-medium text-gray-900 px-6 py-4 text-center"
-                >
-                  Ovas
-                </th>
+                
                 <th
                   scope="col"
                   class="text-sm font-medium text-gray-900 px-6 py-4 text-center"
@@ -160,21 +131,7 @@
                 <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                   {{ ani.categories }}
                 </td>
-                <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                  {{ ani.release }}
-                </td>
-                <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                  {{ ani.closure }}
-                </td>
-                <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                  {{ ani.seasons}}
-                </td>
-                <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                  {{ ani.movies }}
-                </td>
-                <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                  {{ ani.ovas }}
-                </td>
+                
                 <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                   {{ ani.active }}
                 </td>
@@ -318,7 +275,7 @@
                 ]"
               />
             </div>
-            <div class="relative mb-4">
+            <!-- <div class="relative mb-4">
               <label for="release" class="leading-7 text-sm text-gray-600 block text-left"
                 >lançamento
               </label>
@@ -360,8 +317,8 @@
                   'w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out',
                 ]"
               />
-            </div>
-            <div class="relative mb-4">
+            </div> -->
+            <!-- <div class="relative mb-4">
               <label for="movies" class="leading-7 text-sm text-gray-600 block text-left"
                 >filmes
               </label>
@@ -375,8 +332,8 @@
                   'w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out',
                 ]"
               />
-            </div>
-            <div class="relative mb-4">
+            </div> -->
+            <!-- <div class="relative mb-4">
               <label for="ovas" class="leading-7 text-sm text-gray-600 block text-left"
                 >ovas
               </label>
@@ -390,7 +347,7 @@
                   'w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out',
                 ]"
               />
-            </div>
+            </div> -->
             <div class="relative mb-4">
               <label
                 for="categories"
@@ -623,11 +580,11 @@ export default {
       this.anime.activeSeason = false;
       this.anime.newSeason = false,
       this.anime.newAnime = false,
-      this.anime.release = "";
-      this.anime.closure = "";
-      this.anime.movies = "";
-      this.anime.seasons = "";
-      this.anime.ovas = "";
+      // this.anime.release = "";
+      // this.anime.closure = "";
+      // this.anime.movies = "";
+      // this.anime.seasons = "";
+      // this.anime.ovas = "";
       this.anime.categories = [];
     },
     setItems(ev){
@@ -642,11 +599,11 @@ export default {
       this.anime.activeSeason = ev.target.dataset.acseason == 'true' ? true : ev.target.dataset.acseason == true? true : false;
       this.anime.newSeason = ev.target.dataset.newseason == 'true' ? true : ev.target.dataset.newseason == true? true : false;
       this.anime.newAnime = ev.target.dataset.newanime == 'true' ? true : ev.target.dataset.newanime == true? true : false;
-      this.anime.release = ev.target.dataset.release;
-      this.anime.closure = ev.target.dataset.closure;
-      this.anime.movies = parseInt(ev.target.dataset.movies);
-      this.anime.seasons = parseInt(ev.target.dataset.seasons);
-      this.anime.ovas = parseInt(ev.target.dataset.ovas);
+      // this.anime.release = ev.target.dataset.release;
+      // this.anime.closure = ev.target.dataset.closure;
+      // this.anime.movies = parseInt(ev.target.dataset.movies);
+      // this.anime.seasons = parseInt(ev.target.dataset.seasons);
+      // this.anime.ovas = parseInt(ev.target.dataset.ovas);
       this.anime.categories = ev.target.dataset.categories.split(','); //
     },
 
@@ -703,11 +660,11 @@ export default {
                   activeSeason: false,
                   newSeason:false,
                   newAnime:false,
-                  release: this.anime.release,
-                  closure:this.anime.closure,
-                  movies:this.anime.movies,
-                  seasons:this.anime.seasons,
-                  ovas:this.anime.ovas,
+                  // release: this.anime.release,
+                  // closure:this.anime.closure,
+                  // movies:this.anime.movies,
+                  // seasons:this.anime.seasons,
+                  // ovas:this.anime.ovas,
                   categories:this.anime.categories,
                 }).then(() => {
                     this.closeModals();
@@ -787,11 +744,11 @@ export default {
             activeSeason: this.anime.activeSeason,
             newSeason:this.anime.newSeason,
             newAnime:this.anime.newAnime,
-            release: this.anime.release,
-            closure:this.anime.closure,
-            movies:this.anime.movies,
-            seasons:this.anime.seasons,
-            ovas:this.anime.ovas,
+            // release: this.anime.release,
+            // closure:this.anime.closure,
+            // movies:this.anime.movies,
+            // seasons:this.anime.seasons,
+            // ovas:this.anime.ovas,
             categories:this.anime.categories,
           }).then(() => {
               this.closeModals();
