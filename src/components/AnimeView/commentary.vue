@@ -17,12 +17,9 @@
                     <alert size="20" title="reportar comentário" :data-id="id" :data-text="comment"  fillColor="#AC3D54"  />
                 </button>
                 
-                <!-- <button   @click="eventDelete" :data-id="id" :data-text="comment" class="cursor-pointer ml-3 block lg:hidden group-hover:block">
-                    {{$cookies.get('loginIdAnime')}} <br>
-                    {{ iduser }}
-                    
-                    <delete size="24" title="reportar comentário" :data-user="iduser" :data-id="id" :data-text="comment"  fillColor="#1CD9B8"  />
-                </button> -->
+                <button v-if="$cookies.get('idUser') == iduser" @click="deletecomment" :data-id="id"  :data-text="comment" class="cursor-pointer ml-3 block lg:hidden group-hover:block">
+                    <trash-can size="20" title="deletar comentário" :data-user="iduser" :data-id="id" :data-text="comment"  fillColor="#1CD9B8"  />
+                </button>
             </div>
             <div class="text-left rounded border border-black p-4 mt-2 relative">
                 <p>
@@ -47,7 +44,7 @@
 <script>
 import imgDefault from '@/assets/img/default.jpg';
 export default {
-    props:['comment','photo','data','name','id','report','idReport','reportComent','iduser','users','idsocial','likes','setlike',"idcomment",'checkiflike'],
+    props:['comment','photo','data','name','id','report','idReport','reportComent','iduser','users','idsocial','likes','setlike',"idcomment",'checkiflike','deletecomment'],
     name:'comentarysView',
     emits: ['update:report','update:idReport','update:reportComent'],
     data() {

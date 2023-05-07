@@ -127,8 +127,8 @@
                         </h2>
                         <!-- {{ comments }} -->
                         <transition-group name="fade">
-                            <commentaryView v-for="(comment,index) in comments.slice().reverse()" :key="index" :id="comment.id" v-model:idReport="idReport" v-model:reportComent="reportComent" v-model:report="report" v-show="index < commentaryLimit && comment.active==true" 
-                            :iduser="comment.idUser" :comment="comment.comment" :photo="comment.photo" :data="commentedformatted(comment.date)" :name="comment.user" :users="users" :idsocial="comment.idSocial" 
+                            <commentaryView v-for="(comment,index) in comments.slice().reverse()" :key="index" v-model:deletecomment="deletecomment" :id="comment.id" v-model:idReport="idReport" v-model:reportComent="reportComent" v-model:report="report" v-show="index < commentaryLimit && comment.active==true" 
+                            :iduser="comment.idSocial" :comment="comment.comment" :photo="comment.photo" :data="commentedformatted(comment.date)" :name="comment.user" :users="users" :idsocial="comment.idSocial" 
                                :likes="likes" v-model:setlike="setlike" :idcomment = "comment.id" 
                             />
                         </transition-group>
@@ -421,6 +421,28 @@ export default {
                     index++
                 });
             });   
+        },
+        deletecomment(ev){
+            this.$store.commit('SET_LOADING',true)
+            let ref = firebase.database().ref("comments");
+            ref.child(ev.currentTarget.dataset.id).remove()
+            .then(()=>{
+                this.$store.commit('SET_LOADING',false)
+                this.$store.commit(
+                    "SET_MESSAGE",
+                    `Comentário deletado com sucesso`   
+                );
+                this.$store.commit("SET_IMAGE_MESSAGE", "logout");
+            })
+            .catch((err)=>{
+                console.log(err);
+                this.$store.commit('SET_LOADING',false)
+                this.$store.commit(
+                    "SET_MESSAGE",
+                    `Erro ao atualizar os favoritos. Tente novamente mais tarde`   
+                );
+                this.$store.commit("SET_IMAGE_MESSAGE", "error");
+            })
         },
         setlike(ev){
             let ref = firebase.database().ref('likes');
