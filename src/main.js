@@ -28,6 +28,7 @@ import HeartPlus from 'vue-material-design-icons/HeartPlus.vue'
 import HeartMinus from 'vue-material-design-icons/HeartMinus.vue'
 import ThumbUp from 'vue-material-design-icons/ThumbUp.vue'
 import ThumbDown from 'vue-material-design-icons/ThumbDown.vue'
+import TrashCan from 'vue-material-design-icons/TrashCan.vue'
 
 
 createApp(App)
@@ -37,6 +38,7 @@ createApp(App)
 .component('logout', Logout)
 .component('thumb-up', ThumbUp)
 .component('thumb-down', ThumbDown)
+.component('trash-can', TrashCan)
 .component('island', Island)
 .component('delete', Delete)
 .component('close', Close)

@@ -91,14 +91,20 @@
             <h2 class="text-left text-2xl font-bold pb-6">Favoritos de {{userData.name}}</h2>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 lg:grid-cols-4 gap-4">
-              <router-link v-for="(fav,index) in favorites" :key="index" :to="`/animes/${fav.animeLink}`" class="h-12 bg-gray flex items-center justify-start gap-2">
-                <div class="h-full w-12">
-                  <img :src="fav.animeImage" :alt="fav.animeName" class="w-full h-full object-cover"/>
-                </div>
-                <span class="text-black text-left flex-1">
-                  {{ fav.animeName }}
-                </span>
-              </router-link>
+              <div v-for="(fav,index) in favorites" :key="index" class="relative group">
+                <router-link  :to="`/animes/${fav.animeLink}`" class="h-12 bg-gray flex items-center justify-start gap-2">
+                  <div class="h-full w-12">
+                    <img :src="fav.animeImage" :alt="fav.animeName" class="w-full h-full object-cover"/>
+                  </div>
+                  <span class="text-black text-left flex-1">
+                    {{ fav.animeName }}
+                  </span>
+                  
+                </router-link>
+                <button class="absolute w-12 h-full  items-center top-0 right-0 justify-center bg-grayblack z-20 hidden group-hover:flex transition-all" :data-id="fav.id" @click="deleteFav">
+                  <trash-can title="deletar item" :size="32" fillColor="#E7711B"></trash-can>
+                </button>
+            </div>
             </div>
           </div>
         </section>
@@ -262,11 +268,31 @@
       }
     },
     methods:{
+      deleteFav(ev){
+        this.$store.commit('SET_LOADING',true)
+
+        let ref = firebase.database().ref('favorites').child(ev.currentTarget.dataset.id);
+        ref.update({
+          value: false,
+        })
+        .then(()=>{
+          this.$store.commit('SET_LOADING',false)
+          this.$store.commit("SET_MESSAGE",`Seus favoritos foram atualizados com sucesso ^^`);
+          this.$store.commit("SET_IMAGE_MESSAGE", "welcome");
+        })
+        .catch((err)=>{
+          console.log(err)
+          this.$store.commit('SET_LOADING',false)
+          this.$store.commit("SET_MESSAGE",`Seu perfil foi atualizado com sucesso ^^`);
+          this.$store.commit("SET_IMAGE_MESSAGE", "error");
+        })
+      },
       async getFavoritesFromUser(){ 
         
         let refrr = firebase.database().ref('favorites');
-        refrr.orderByChild('userId').equalTo(this.$route.params.slug.split('ososlklk')[1].toString()).once("value", (snapshot) => {
+        refrr.orderByChild('userId').equalTo(this.$route.params.slug.split('ososlklk')[1].toString()).on("value", (snapshot) => {
             let index = 0
+            this.favorites = []
             snapshot.forEach((ss) => {
                 this.favorites.push(ss.val())
                 if(this.favorites[index]){
@@ -274,8 +300,11 @@
                     index++
                 }
             });
-            this.favorites.filter((item)=>{
-              return item.active == true ? item : false
+            this.favorites = this.favorites.filter((item)=>{
+                if(item.value == true){
+                return item
+              }
+
             })
             
             this.favorites = this.favorites.filter((item)=>{
@@ -539,6 +568,7 @@
           this.$store.commit("SET_IMAGE_MESSAGE", "welcome");
           this.$router.push(`/profile/${this.newData.name}ososlklk${this.userData.idUser}`)
       },
+
       async updateProfile(){
         let profileinput,bannerinput
         // let id = this.user.idUser
@@ -556,18 +586,12 @@
           this.userData.bio = this.newData.bio
           this.userData.location = this.newData.location
         })
-  
-        .catch((err) => {
-          console.log(err);
-          this.$store.commit('SET_LOADING',false)
-          this.$store.commit("SET_MESSAGE",`Erro ao atualizar o perfil, tente mais tarde`);
-          this.$store.commit("SET_IMAGE_MESSAGE", "error");
-        });
-        bannerinput = document.querySelector('.bannerinput')
-        if(bannerinput.files[0]) {
+        .then(()=>{
+          bannerinput = document.querySelector('.bannerinput')
+          if(bannerinput.files[0]) {
           this.$store.commit('SET_LOADING',true);               
           this.setPreviewimages('bannertop','bannerinput','banner')
-          await firebase.storage()
+          firebase.storage()
                 .ref("users")
                 .child(bannerinput.files[0].name)
                 .put(bannerinput.files[0])
@@ -579,9 +603,6 @@
                     ref.update({
                       banner: img,
                     })
-                  })
-                  .then(()=>{
-                    this.$store.commit('SET_LOADING',false)
                   })
                   .catch((err) => {
                     this.$store.commit('SET_LOADING',false)
@@ -596,13 +617,15 @@
                 this.$store.commit("SET_MESSAGE",`Erro ao inserir a imagem de banner no sistema. Tente novamente mais tarde.`);
                 this.$store.commit("SET_IMAGE_MESSAGE", "error");
             });
-        }
+          }
+        })
+        .then(()=>{
           profileinput = document.querySelector('.profileinput')
           if(profileinput.files[0]) {
             this.$store.commit('SET_LOADING',true);
             this.setPreviewimages('profiletop','profileinput','image')
             
-            await firebase.storage()
+            firebase.storage()
                   .ref("users")
                   .child(profileinput.files[0].name)
                   .put(profileinput.files[0])
@@ -635,7 +658,22 @@
                   this.$store.commit("SET_IMAGE_MESSAGE", "error");
               });
           }
-          await this.save(slug)
+        })
+        .then(()=>{
+          this.save(slug)
+        })
+        .catch((err) => {
+          console.log(err);
+          this.$store.commit('SET_LOADING',false)
+          this.$store.commit("SET_MESSAGE",`Erro ao atualizar o perfil, tente mais tarde`);
+          this.$store.commit("SET_IMAGE_MESSAGE", "error");
+        });
+
+
+
+        
+          
+          
       },
       
        
