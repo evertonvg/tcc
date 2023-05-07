@@ -1,18 +1,4 @@
 <template>
-  <!-- <header class="h-[500px] w-full relative"> -->
-    <!-- <picture>
-      <source media="(max-width:650px)" :srcset="bannermobile">
-      <img  alt="banner" :src="banner" class="w-full h-full object-cover absolute top-2/4 left-0 -translate-y-2/4">
-    </picture> -->
-
-    <!-- <div class="container mx-auto relative h-full px-4">
-      <h1 class="absolute top-2/4 right-4  font-bold max-w-sm md:max-w-lg text-left text-3xl text-black shadow-blue drop-shadow-lg">Bem vindo ao Otaku Stars. Aqui você poderá avaliar e conferir diversos animes.</h1>
-    </div>
-  </header> -->
-
-  <!-- <div v-for="(n,index) in news" :key="index" v-html="n.description">
-
-  </div> -->
   <section class="mt-20">
     <div class="mx-auto container px-5">
       <h2 class="text-left text-2xl font-bold pt-6 my-4">Noticias</h2>
@@ -23,8 +9,8 @@
             
                 <img :src="n.image" :alt="n.title" class="object-cover w-full h-full"/>
                 
-                <div class=" flex flex-col gap-1 bottom-0 left-0 w-full p-5 absolute" style="background-image:linear-gradient(180deg, transparent 0%, rgb(20, 20, 20) 55%)">
-                  <span class="text-white font-semibold text-xl lg:text-2xl text-left max-w-[75%]">
+                <div class=" flex flex-col gap-1 bottom-0 left-0 w-full p-2 sm:p-5 absolute bg-black bg-opacity-30" >
+                  <span class="text-white font-semibold text- text-[0.9rem] sm:text-base text-left sm:max-w-[75%]">
                     {{ n.title }}
                   </span>
                   <span class="text-white lg:text-sm text-xs text-left max-w-[75%]">
