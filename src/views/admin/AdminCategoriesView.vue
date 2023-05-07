@@ -2,7 +2,7 @@
     <section class="flex flex-col" style="background: linear-gradient(to right, #ED8263, #F9CE7C);">
       <AdminHeader :openModal="openAddModal" local="categories"/>
 
-      <div class="overflow-x-auto container mx-auto">
+      <div class="overflow-x-auto container mx-auto bg-white ">
         <div class="py-2 inline-block min-w-full sm:px-6 lg:px-8">
           <div class="overflow-hidden">
             <table class="min-w-full">
@@ -413,6 +413,8 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+  *{
+    font-weight: bold;
+  }
 </style>

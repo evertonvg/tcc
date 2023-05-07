@@ -120,3 +120,8 @@ export default {
  
 }
 </script>
+<style scoped>
+  *{
+    font-weight: bold;
+  }
+</style>

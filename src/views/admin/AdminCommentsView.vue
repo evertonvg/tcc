@@ -1,7 +1,7 @@
 <template>
   <section class="flex flex-col" style="background: linear-gradient(to right, #ED8263, #F9CE7C);">
     <AdminHeader :openModal="openAddModal" local="categories"/>
-    <div class="flex justify-center container mx-auto mt-4">
+    <div class="flex justify-center container mx-auto bg-white  mt-4">
         <div class="mb-3 xl:w-full">
             <div class="relative mb-4 flex w-full flex-wrap items-stretch">
               <input
@@ -31,7 +31,7 @@
             </div>
         </div>
     </div>
-    <div class="overflow-x-auto container mx-auto">
+    <div class="overflow-x-auto container mx-auto bg-white ">
       <div class="py-2 inline-block min-w-full sm:px-6 lg:px-8">
         <div class="overflow-hidden">
           <table class="min-w-full">
@@ -344,6 +344,8 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+  *{
+    font-weight: bold;
+  }
 </style>

@@ -31,7 +31,7 @@
             </div>
         </div>
     </div>
-      <div class="overflow-x-auto container mx-auto">
+      <div class="overflow-x-auto container mx-auto bg-white ">
         <div class="py-2 inline-block min-w-full sm:px-6 lg:px-8">
           <div class="overflow-hidden">
             <table class="min-w-full">
@@ -437,6 +437,8 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+  *{
+    font-weight: bold;
+  }
 </style>

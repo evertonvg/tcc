@@ -207,7 +207,7 @@ export default {
             reportComent:'',
             categoryreportprop:'Racismo/Xenofobia/Transfobia/Homofobia',
             type:"",
-            words:['puta','viado','merda','caralho','buceta','pau','chupa','cacete','esperma','gozo','gozar','gozada','sexo','trepar','transar','fuder','foda','foda-se','retardado'],
+            words:['puta','puto','corno','porra','viado','viada','merda','caralho','buceta','pau','penis','shit','fuck','chupa','cacete','esperma','gozo','goza','gozar','gozada','sexo','trepar','transar','fuder','foda','foda-se','retardado','cuckold'],
             textreport:'',
             report:false,
             idAllComments:[],
@@ -724,7 +724,8 @@ export default {
             let words = this.commentary.split(' ')
             words = words.map((item)=>{
                 return item.toLowerCase()
-            })
+            });
+            
             if(words.some((item)=>{
                 return this.words.includes(item.toLowerCase())
             })){

@@ -32,10 +32,10 @@
         </div>
     </div>
   
-    <div class="overflow-x-auto container mx-auto">
+    <div class="overflow-x-auto container mx-auto  bg-white font-bold text-xl">
       <div class="py-2 inline-block min-w-full sm:px-6 lg:px-8">
         <div class="overflow-hidden">
-          <table class="min-w-full">
+          <table class="min-w-full font-bold text-xl">
             <thead class="border-b">
               <tr>
                 <th
@@ -820,6 +820,8 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+  *{
+    font-weight: bold;
+  }
 </style>
