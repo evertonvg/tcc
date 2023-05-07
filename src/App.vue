@@ -4,7 +4,7 @@
       <LoadingVue />
     </transition>
 
-    <MenuVue />
+    <MenuVue :animes="animes" />
   
     <transition name="fade">
       <WarningVue v-if="$store.state.message != null" />
@@ -31,8 +31,14 @@ import MenuVue from "./components/menuVue.vue";
 import WarningVue from "./components/warningVue.vue";
 import LoadingVue from "./components/loadingVue.vue";
 import FooterVue from "./components/footerVue.vue";
+import firebase from "firebase";
 
 export default {
+  data() {
+    return {
+      animes: [],
+    };
+  },
   methods:{
     closeWarnings(){
       window.addEventListener('keydown', (ev)=>{
@@ -40,7 +46,24 @@ export default {
           this.$store.commit("SET_MESSAGE", null);
         }
       })
-    }
+    },
+    getAllAnimes(){
+   
+            let ref = firebase.database().ref('animes');
+            ref.orderByChild('active').equalTo(true).on("value",async (snapshot) => {
+                this.animes = []
+                let index = 0
+                snapshot.forEach((ss) => {
+                    this.animes.push(ss.val());
+                    if(this.animes[index]){
+                      this.animes[index].id = ss.key
+                      index++
+
+                    }
+                });
+            });
+
+    },
   },
 
   components: {
@@ -51,6 +74,7 @@ export default {
 },
 mounted(){
   this.closeWarnings()
+  this.getAllAnimes()
 }
 };
 </script>

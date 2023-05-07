@@ -10,7 +10,49 @@
           <img src="@/assets/img/icon.png" class="h-16" />
         </router-link>
       </div>
-      <div :class="[`flex-1 flex justify-end items-center pr-5`]">
+      <div class="flex-1"></div>
+      <div class="mr-3 hidden sm:block relative">
+            <div class="relative flex w-full flex-wrap items-stretch">
+              <input
+                  type="search"
+                  v-model="search"
+                  class=" transition-all  text-black relative m-0 -mr-px block w-[1%] min-w-0 flex-auto rounded-l border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-1.5 text-base font-normal text-neutral-700 outline-none  duration-300 ease-in-out focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:text-neutral-200 dark:placeholder:text-neutral-200"
+                  placeholder="Minimo 3 caracteres"
+                  aria-label="Search"
+                  aria-describedby="button-addon1" />
+              <button
+                  class="border relative z-[2] flex items-center rounded-r bg-blue px-6 py-2.5 text-xs font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-primary-700 hover:shadow-lg focus:bg-primary-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-primary-800 active:shadow-lg "
+                  type="button"
+                  id="button-addon1"
+                  data-te-ripple-init
+                  data-te-ripple-color="light">
+                  <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  class="h-5 w-5">
+                  <path
+                      fill-rule="evenodd"
+                      d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
+                      clip-rule="evenodd" />
+                  </svg>
+              </button>
+            </div>
+            
+            <div class="absolute top-[100%] left-0 w-full flex flex-col">
+
+              <div :data-to="`${getRoute}/animes/${item.slug}`" class="cursor-pointer w-full h-10 flex items-center justify-start bg-gray border p-1 pl-12 text-black relative" v-for="(item,index) in filteredList" :key="index" v-show="search.length>=3&&filteredList.length" @click="gosearch">
+                <div class="w-10 h-full absolute left-0 right-0 pointer-events-none">
+                  <img :src="`${item.image}`" class="w-full h-full object-cover" />
+                </div>
+                <p class="pointer-events-none">{{ item.name }}</p>
+              </div>
+              <div class="w-full h-10 flex items-center justify-start bg-gray border p-1 pl-4 text-black" v-if="search.length>=3&&!filteredList.length">
+                <p>Nenhum resultado encontrado</p>
+              </div>
+            </div>
+        </div>
+      <div :class="[`flex justify-end items-center pr-5`]">
         <router-link :to="`/profile/${$cookies.get('slugName')}ososlklk${$cookies.get('idUser')}`" v-if="$cookies.get('loginIdAnime') != null" >
         <div
           
@@ -145,12 +187,29 @@
 import firebase from "firebase";
 import Logout from "vue-material-design-icons/Logout.vue";
 export default {
+  props:['animes'],
   data() {
     return {
       open: false,
+      search:''
     };
   },
+  computed:{
+    filteredList(){
+      return this.animes.filter(item => {
+              return item.name.toLowerCase().includes(this.search.toLowerCase()) || item?.englishName?.toLowerCase().includes(this.search.toLowerCase()) || item?.portugueseName?.toLowerCase().includes(this.search.toLowerCase())
+          }
+      );
+      
+    },
+    getRoute(){
+        return window.location.origin
+      }
+  },
   methods: {
+    gosearch(ev){
+      window.location.href = ev.currentTarget.dataset.to
+    },
     windowReload(){
       window.location.href = `/profile/${this.$cookies.get('slugName')}ososlklk${this.$cookies.get('idUser')}`
       
@@ -195,7 +254,7 @@ export default {
     window.addEventListener("scroll", () => {
       this.scrollMenuEffect(window.pageYOffset);
     });
-    console.log(this.$route)
+    console.log(this.$router)
 
   },
 };

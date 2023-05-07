@@ -7,7 +7,7 @@
       <div
         class="lg:w-2/6 md:w-1/2 bg-gray rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0"
       >
-        <div class="w-full md:pr-16 lg:pr-0 pr-0">
+        <div class="w-full  pr-0">
           <div class="text-center">
             <img
               src="../assets/img/icon.png"
@@ -48,6 +48,11 @@
               class="w-full h-full object-cover"
             />
           </div>
+        </div>
+        <div>
+          <router-link to="/" class="btn">
+            Ir para a home sem fazer login
+          </router-link>
         </div>
         <!-- <button class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg" @click="signup">Logar</button> -->
         <p class="text-xs text-gray-500 mt-3">*Seus dados pessoais não serão salvos.</p>

@@ -1,7 +1,7 @@
 <template>
     <div class="container mx-auto mt-20 pb-20 ">
         <div class="flex justify-center container mx-auto mt-32">
-        <div class="mb-3 xl:w-full">
+        <div class="mb-3 xl:w-2/4">
             <div class="relative mb-4 flex w-full flex-wrap items-stretch">
               <input
                   type="search"
