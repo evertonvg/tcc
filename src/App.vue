@@ -1,12 +1,12 @@
 <template>
   <main>
-    <transition name="fade" >
+    <transition name="fade" tag="div" >
       <LoadingVue />
     </transition>
 
     <MenuVue :animes="animes" />
   
-    <transition name="fade">
+    <transition name="fade" tag="div">
       <WarningVue v-if="$store.state.message != null" />
     </transition>
 
@@ -20,7 +20,7 @@
 
     </router-view>
 
-    <transition name="fade">
+    <transition name="fade" tag="div">
       <FooterVue/>
     </transition>
 

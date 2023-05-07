@@ -50,8 +50,8 @@
           </div>
         </div>
         <div>
-          <router-link to="/" class="btn">
-            Ir para a home sem fazer login
+          <router-link to="/" class="btn flex items-center justify-center gap-4 w-[161px] mx-auto">
+            <home-circle></home-circle>  Ir para a home
           </router-link>
         </div>
         <!-- <button class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg" @click="signup">Logar</button> -->
@@ -156,6 +156,8 @@ export default {
             ref.push({
                 active:true,
                 banText:'',
+                location:'',
+                bio:'',
                 slug:res.additionalUserInfo.profile.name.toLowerCase().replaceAll(' ','-').replaceAll(':','-').normalize('NFD').replaceAll(/[\u0300-\u036f]/g, ""),
                 idFirebaset: res.user.uid,
                 idUser: res.additionalUserInfo.profile.id.toString(),

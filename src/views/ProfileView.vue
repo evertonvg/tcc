@@ -571,7 +571,6 @@
 
       async updateProfile(){
         let profileinput,bannerinput
-        // let id = this.user.idUser
         let slug = this.newData.name.toString().toLowerCase().replaceAll(' ','-').replaceAll(/'/g, '').replaceAll(/"/g, '').replaceAll(':','-').normalize('NFD').replaceAll(/[\u0300-\u036f]/g, "")
         this.$store.commit('SET_LOADING',true);
         let ref = firebase.database().ref('users').child(this.user.id);
@@ -588,75 +587,81 @@
         })
         .then(()=>{
           bannerinput = document.querySelector('.bannerinput')
-          if(bannerinput.files[0]) {
-          this.$store.commit('SET_LOADING',true);               
-          this.setPreviewimages('bannertop','bannerinput','banner')
-          firebase.storage()
-                .ref("users")
-                .child(bannerinput.files[0].name)
-                .put(bannerinput.files[0])
-                .then((res) => {
-                  res.ref.getDownloadURL()
-                  .then((imageb) => {
-                    let img = imageb;
-                    let ref = firebase.database().ref("users").child(this.user.id);
-                    ref.update({
-                      banner: img,
-                    })
-                  })
-                  .catch((err) => {
-                    this.$store.commit('SET_LOADING',false)
-                    this.$store.commit("SET_MESSAGE",`Erro ao atualizar a imagem do banner. Tente novamente mais tarde.`);
-                    this.$store.commit("SET_IMAGE_MESSAGE", "error");
-                    console.log(err);
-                  });
-            })
-            .catch((err) => {
-                console.log(err);
-                this.$store.commit('SET_LOADING',false)
-                this.$store.commit("SET_MESSAGE",`Erro ao inserir a imagem de banner no sistema. Tente novamente mais tarde.`);
-                this.$store.commit("SET_IMAGE_MESSAGE", "error");
-            });
-          }
-        })
-        .then(()=>{
-          profileinput = document.querySelector('.profileinput')
-          if(profileinput.files[0]) {
-            this.$store.commit('SET_LOADING',true);
-            this.setPreviewimages('profiletop','profileinput','image')
-            
+          if(bannerinput){
+
+            if(bannerinput.files[0]) {
+            this.$store.commit('SET_LOADING',true);               
+            this.setPreviewimages('bannertop','bannerinput','banner')
             firebase.storage()
                   .ref("users")
-                  .child(profileinput.files[0].name)
-                  .put(profileinput.files[0])
+                  .child(bannerinput.files[0].name)
+                  .put(bannerinput.files[0])
                   .then((res) => {
                     res.ref.getDownloadURL()
                     .then((imageb) => {
                       let img = imageb;
                       let ref = firebase.database().ref("users").child(this.user.id);
                       ref.update({
-                        image: img,
+                        banner: img,
                       })
                     })
-                    .then(()=>{
-                      let homephoto = document.querySelector('.homephoto')
-                      homephoto.src= this.userData.image
-                      this.$cookies.set("imageAnime", this.userData.image);
-                      this.$store.commit('SET_LOADING',false)
-                    })
                     .catch((err) => {
-                        console.log(err);
-                        this.$store.commit('SET_LOADING',false)
-                        this.$store.commit("SET_MESSAGE",`Erro ao atualizar a imagem de perfil. Tente novamente mais tarde.`);
-                        this.$store.commit("SET_IMAGE_MESSAGE", "error");
+                      this.$store.commit('SET_LOADING',false)
+                      this.$store.commit("SET_MESSAGE",`Erro ao atualizar a imagem do banner. Tente novamente mais tarde.`);
+                      this.$store.commit("SET_IMAGE_MESSAGE", "error");
+                      console.log(err);
                     });
               })
               .catch((err) => {
                   console.log(err);
                   this.$store.commit('SET_LOADING',false)
-                  this.$store.commit("SET_MESSAGE",`Erro ao inserir a imagem de perfil no sistema. Tente novamente mais tarde.`);
+                  this.$store.commit("SET_MESSAGE",`Erro ao inserir a imagem de banner no sistema. Tente novamente mais tarde.`);
                   this.$store.commit("SET_IMAGE_MESSAGE", "error");
               });
+            }
+          }
+        })
+        .then(()=>{
+          profileinput = document.querySelector('.profileinput')
+          if(profileinput){
+
+            if(profileinput.files[0]) {
+              this.$store.commit('SET_LOADING',true);
+              this.setPreviewimages('profiletop','profileinput','image')
+              
+              firebase.storage()
+                    .ref("users")
+                    .child(profileinput.files[0].name)
+                    .put(profileinput.files[0])
+                    .then((res) => {
+                      res.ref.getDownloadURL()
+                      .then((imageb) => {
+                        let img = imageb;
+                        let ref = firebase.database().ref("users").child(this.user.id);
+                        ref.update({
+                          image: img,
+                        })
+                      })
+                      .then(()=>{
+                        let homephoto = document.querySelector('.homephoto')
+                        homephoto.src= this.userData.image
+                        this.$cookies.set("imageAnime", this.userData.image);
+                        this.$store.commit('SET_LOADING',false)
+                      })
+                      .catch((err) => {
+                          console.log(err);
+                          this.$store.commit('SET_LOADING',false)
+                          this.$store.commit("SET_MESSAGE",`Erro ao atualizar a imagem de perfil. Tente novamente mais tarde.`);
+                          this.$store.commit("SET_IMAGE_MESSAGE", "error");
+                      });
+                })
+                .catch((err) => {
+                    console.log(err);
+                    this.$store.commit('SET_LOADING',false)
+                    this.$store.commit("SET_MESSAGE",`Erro ao inserir a imagem de perfil no sistema. Tente novamente mais tarde.`);
+                    this.$store.commit("SET_IMAGE_MESSAGE", "error");
+                });
+            }
           }
         })
         .then(()=>{
@@ -668,12 +673,7 @@
           this.$store.commit("SET_MESSAGE",`Erro ao atualizar o perfil, tente mais tarde`);
           this.$store.commit("SET_IMAGE_MESSAGE", "error");
         });
-
-
-
-        
-          
-          
+   
       },
       
        

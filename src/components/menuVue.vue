@@ -254,7 +254,6 @@ export default {
     window.addEventListener("scroll", () => {
       this.scrollMenuEffect(window.pageYOffset);
     });
-    console.log(this.$router)
 
   },
 };

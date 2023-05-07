@@ -29,6 +29,7 @@ import HeartMinus from 'vue-material-design-icons/HeartMinus.vue'
 import ThumbUp from 'vue-material-design-icons/ThumbUp.vue'
 import ThumbDown from 'vue-material-design-icons/ThumbDown.vue'
 import TrashCan from 'vue-material-design-icons/TrashCan.vue'
+import HomeCircle from 'vue-material-design-icons/HomeCircle.vue'
 
 
 createApp(App)
@@ -40,6 +41,7 @@ createApp(App)
 .component('thumb-down', ThumbDown)
 .component('trash-can', TrashCan)
 .component('island', Island)
+.component('home-circle', HomeCircle)
 .component('delete', Delete)
 .component('close', Close)
 .component('person', Person)
