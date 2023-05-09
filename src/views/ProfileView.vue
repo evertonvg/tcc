@@ -101,7 +101,7 @@
                   </span>
                   
                 </router-link>
-                <button class="absolute w-12 h-full  items-center top-0 right-0 justify-center bg-grayblack z-20 hidden group-hover:flex transition-all" :data-id="fav.id" @click="deleteFav">
+                <button class="absolute w-12 h-full  items-center top-0 right-0 justify-center bg-grayblack z-20 flex lg:hidden group-hover:flex transition-all" :data-id="fav.id" @click="deleteFav">
                   <trash-can title="deletar item" :size="32" fillColor="#E7711B"></trash-can>
                 </button>
             </div>
