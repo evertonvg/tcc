@@ -207,7 +207,7 @@ export default {
             reportComent:'',
             categoryreportprop:'Racismo/Xenofobia/Transfobia/Homofobia',
             type:"",
-            words:['puta','puto','corno','porra','viado','viada','merda','caralho','buceta','pau','penis','shit','fuck','chupa','cacete','esperma','gozo','goza','gozar','gozada','sexo','trepar','transar','fuder','foda','foda-se','retardado','cuckold'],
+            words:['puta','puto','corno','porra','viado','viada','merda','caralho','buceta','pau','penis','shit','fuck','bosta','bitch','chupa','cacete','esperma','gozo','goza','gozar','gozada','sexo','trepar','transar','fuder','foda','foda-se','retardado','cuckold'],
             textreport:'',
             report:false,
             idAllComments:[],
@@ -274,6 +274,8 @@ export default {
         report(){
             if(this.report){
                 document.body.style.overflow = 'hidden'
+                this.reportComent = ''
+                this.categoryreportprop = 'Racismo/Xenofobia/Transfobia/Homofobia'
             }else{
                 document.body.style.overflow = 'auto'
             }
