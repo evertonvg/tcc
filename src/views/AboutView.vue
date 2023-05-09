@@ -17,7 +17,20 @@
         <br>
         Como funciona o sistema de notas:
         <br>
-        Cada temporada de um anime possui 4 notas: animação, personagens, história e trilha sonora, cada uma dessas
+        Cada temporada de um anime possui 4 notas: 
+        <span class="flex gap-2 flex-row-reverse items-start justify-end">
+          animação <person fillColor="#E7711B" />
+        </span>
+        <span class="flex gap-2 flex-row-reverse justify-end">
+          personagens <graphic fillColor="#E7711B" />
+        </span>
+        <span class="flex gap-2 flex-row-reverse justify-end" >
+          história <history fillColor="#E7711B" />
+        </span>
+        <span class="flex gap-2 flex-row-reverse justify-end">
+          trilha sonora <music fillColor="#E7711B" />
+        </span>
+        cada uma dessas
         podendo ir de 6 a 10, representados pelas estrelas clicaveis na tela de avaliação. Essas notas geram a nota total final do usuário da temporada através de uma média,
         ou seja, nota da animação, personagem, história e trilha sonora divido por 4.
         <br>
