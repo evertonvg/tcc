@@ -41,11 +41,11 @@
             
             <div class="absolute top-[100%] left-0 w-full flex flex-col">
 
-              <div :data-to="`${getRoute}/animes/${item.slug}`" class="cursor-pointer w-full h-10 flex items-center justify-start bg-gray border p-1 pl-12 text-black relative" v-for="(item,index) in filteredList" :key="index" v-show="search.length>=3&&filteredList.length" @click="gosearch">
-                <div class="w-10 h-full absolute left-0 right-0 pointer-events-none">
+              <div :data-to="`${getRoute}/animes/${item.slug}`" class="cursor-pointer w-full h-12 flex items-center justify-start bg-gray border p-1 pl-12 text-black relative" v-for="(item,index) in filteredList" :key="index" v-show="search.length>=3&&filteredList.length" @click="gosearch">
+                <div class="w-12 h-full absolute left-0 right-0 pointer-events-none">
                   <img :src="`${item.image}`" class="w-full h-full object-cover" />
                 </div>
-                <p class="pointer-events-none text-left">{{ item.name }}</p>
+                <p class="pointer-events-none text-left text-xs ml-3">{{ item.name }}</p>
               </div>
               <div class="w-full h-12 flex items-center justify-start bg-gray border p-1 pl-4 text-black" v-if="search.length>=3&&!filteredList.length">
                 <p>Nenhum resultado encontrado</p>
@@ -76,7 +76,7 @@
           v-else
           :class="[`bg-red rounded-sm p-2 flex items-center justify-center gap-2`]"
         >
-          <router-link to="/login" class="">Login</router-link>
+          <router-link to="/login" @click="open=false" class="">Login</router-link>
         </div>
       </div>
       <div class="hidden lg:block font-roboto text-lg">
