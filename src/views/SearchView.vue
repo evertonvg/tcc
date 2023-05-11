@@ -1,5 +1,5 @@
 <template>    
-    <SearchVue :pesquisa="pesquisa" :categories="categories" :settype="setType" v-on:attSearchEmit="attSearch" v-on:attFilterEmit="attSFilterCategory" v-on:attFilterTypes="attSFilterTypes"  />
+    <SearchVue :pesquisa="pesquisa" :categories="categories" v-model:settype="setType" v-on:attSearchEmit="attSearch" v-on:attFilterEmit="attSFilterCategory" v-on:attFilterTypes="attSFilterTypes"  />
     
     <div class="container mx-auto pb-20 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 px-5 xl:px-0 relative before:flex before:items-center before:justify-center  before:absolute  before:w-full before:h-full before:top-0 before:left-0">
         <transition name="fade">
@@ -265,7 +265,7 @@
                                 let b = y.evaluations
                                 return b-a
                             })
-                            console.log(this.filterDestaques)
+                
                         break;
                         case 'comments': 
                             this.filterDestaques = this.filterDestaques.sort((x,y)=>{
@@ -273,7 +273,7 @@
                                 let b = y.comments
                                 return b-a
                             })
-                            console.log(this.filterDestaques)
+                         
                         break;
                         default:
                             this.filterDestaques = this.filterDestaques.sort((x,y)=>{

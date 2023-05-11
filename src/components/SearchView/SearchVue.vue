@@ -56,12 +56,12 @@
                     </svg>
                 </button>
                 <select v-model="selectFilter" class="h-10 rounded px-4 outline-none cursor-pointer w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4 text-graytext">
-                    <option value="all">Todos</option>
-                    <option value="launchs">Novos animes</option>
-                    <option value="newtemps">Novas temporadas</option>
-                    <option value="exibition">Em exibição</option>
-                    <option value="evaluations">Mais avaliados</option>
-                    <option value="comments">Mais comentados</option>
+                    <option :checked="selectFilter=='all'" value="all">Todos</option>
+                    <option :checked="selectFilter=='launchs'" value="launchs">Novos animes</option>
+                    <option :checked="selectFilter=='newtemps'" value="newtemps">Novas temporadas</option>
+                    <option :checked="selectFilter=='exibition'" value="exibition">Em exibição</option>
+                    <option :checked="selectFilter=='evaluations'" value="evaluations">Mais avaliados</option>
+                    <option :checked="selectFilter=='comments'" value="comments">Mais comentados</option>
                 </select>
                 </div>
             </div>
@@ -95,7 +95,6 @@
  
         mounted(){
             this.datapesquisa = this.pesquisa
-            console.log(this.selectFilter)
             if(window.innerWidth <600){
                 this.enableCats = false
             }

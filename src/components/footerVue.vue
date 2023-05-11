@@ -15,6 +15,9 @@
                 <img src="@/assets/img/facebook.png" alt="" class="w-12">
             </a>
         </div>
+        <div class="flex gap-3">
+            <router-link class="btn" to="/admin">Acessar como administrador</router-link>
+        </div>
     </div>
   </footer>
 </template>
