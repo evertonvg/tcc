@@ -73,17 +73,24 @@
         </div>
       </section>
 
-      <div  :class="['mx-5 pt-4 flex gap-3 items-center justify-start']" v-show="editActive==false">
-        <button class="btn" :class="activetab=='favorites' ? 'bg-blue hover:bg-darkblue' : ''" v-show="favorites.length" @click="activetab='favorites'">
-          Favoritos
-        </button>
-        <button class="btn" :class="activetab=='progress' ? 'bg-blue hover:bg-darkblue' : ''" v-show="progress.length" @click="activetab='progress'">
-          Progresso
-        </button>
-        <button class="btn" :class="activetab=='notes' ? 'bg-blue hover:bg-darkblue' : ''" v-show="notes.length" @click="activetab='notes'">
-          Avaliações
-        </button>
+      <div class="flex flex-col sm:flex-row gap-4 justify-between items-center mx-5">
+        <div  :class="['pt-4 flex gap-3 items-center justify-start']" v-show="editActive==false">
+          <button class="btn" :class="activetab=='favorites' ? 'bg-blue hover:bg-darkblue' : ''" v-show="favorites.length" @click="activetab='favorites'">
+            Favoritos
+          </button>
+          <button class="btn" :class="activetab=='progress' ? 'bg-blue hover:bg-darkblue' : ''" v-show="progress.length" @click="activetab='progress'">
+            Progresso
+          </button>
+          <button class="btn" :class="activetab=='notes' ? 'bg-blue hover:bg-darkblue' : ''" v-show="notes.length" @click="activetab='notes'">
+            Avaliações
+          </button>
+        </div>
+        <div class="flex items-center justify-center">
+          <button class="border relative z-[2] flex items-center h-8 rounded-r bg-blue px-4  mt-4 text-xs font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-primary-700 hover:shadow-lg focus:bg-primary-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-primary-800 active:shadow-lg" type="button" id="button-addon1" data-te-ripple-init="" data-te-ripple-color="light"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5"><path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" clip-rule="evenodd"></path></svg></button>
+          <input v-model="searchanime" placeholder="Digite o nome de um anime para filtrar os campos" type="text" class="h-8  mt-4 px-4"/>
+        </div>
       </div>
+      
 
       <transition-group name="fade">
         <section v-show="favorites.length && activetab=='favorites' && editActive==false" class="mx-5">
@@ -91,7 +98,7 @@
             <h2 class="text-left text-2xl font-bold pb-6">Favoritos de {{userData.name}}</h2>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 lg:grid-cols-4 gap-4">
-              <div v-for="(fav,index) in favorites" :key="index" class="relative group">
+              <div v-for="(fav,index) in favorites" :key="index" class="relative group" v-show="searchanime=='' || fav.animeName.toLowerCase().includes(searchanime.toLowerCase())">
                 <router-link  :to="`/animes/${fav.animeLink}`" class="h-12 bg-gray flex items-center justify-start gap-2">
                   <div class="h-full w-12">
                     <img :src="fav.animeImage" :alt="fav.animeName" class="w-full h-full object-cover"/>
@@ -122,7 +129,7 @@
               <div class="text-black w-32  flex items-center justify-center">Status</div>
             </div>
             <div class="grid grid-cols-1 gap-1 w-[160%] sm:w-full">
-              <router-link v-for="(prog,index) in progress" :key="index" :to="`/animes/${prog.slugName}?temp=${prog.temporada}`" class="h-12 bg-gray flex items-center justify-start gap-2">
+              <router-link v-for="(prog,index) in progress" v-show="searchanime=='' || prog.nameAnime.toLowerCase().includes(searchanime.toLowerCase())" :key="index" :to="`/animes/${prog.slugName}?temp=${prog.temporada}`" class="h-12 bg-gray flex items-center justify-start gap-2">
                 <div class="h-full">
                   <img :src="prog.imageAnime" :alt="prog.nameAnime" class="w-full h-full object-cover"/>
                 </div>
@@ -169,7 +176,7 @@
               <div class="text-black w-6 sm:w-10 flex items-center justify-center"> <music title="trilha sonora" fillColor="#E7711B" :size="20"></music></div>
             </div>
             <div class="grid grid-cols-1 gap-1 w-[160%] sm:w-full">
-              <router-link v-for="(note,index) in notes" :key="index" :to="`/animes/${note.animeLink}?temp=${note.season}`" class="h-12 bg-gray flex items-center justify-start gap-2">
+              <router-link v-for="(note,index) in notes" v-show="searchanime==''|| note.animeName.toLowerCase().includes(searchanime.toLowerCase()) " :key="index" :to="`/animes/${note.animeLink}?temp=${note.season}`" class="h-12 bg-gray flex items-center justify-start gap-2">
                 <div class="h-full">
                   <img :src="note.animeImage" :alt="note.animeName" class="w-full h-full object-cover"/>
                 </div>
@@ -215,6 +222,7 @@
   export default {
     data() {
         return {
+          searchanime:'',
           limitBio:360,
           limitplace:20,
           limitName:15,
